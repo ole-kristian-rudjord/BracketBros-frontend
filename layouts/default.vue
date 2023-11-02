@@ -48,7 +48,9 @@
         ></v-app-bar-nav-icon>
       </template>
 
-      <v-app-bar-title class="ml-0 ml-md-6 text-center text-md-left">
+      <v-app-bar-title
+        class="flex-md-0-0 ml-0 ml-md-6 text-center text-md-left"
+      >
         <v-icon
           icon="fa-solid fa-laptop-code"
           size="small"
@@ -59,19 +61,17 @@
       </v-app-bar-title>
 
       <template v-if="display.mdAndUp.value">
-        <v-btn
-          v-for="(page, index) in pages"
-          :key="index"
-          :to="page.to"
-          class="nuxt-link-inline"
-          :class="{ 'margin-right-2px': index !== pages.length - 1 }"
-        >
-          {{ page.title }}
-        </v-btn>
-      </template>
-
-      <template v-if="display.mdAndUp.value">
-        <v-divider vertical class="h-25 my-auto mx-2"></v-divider>
+        <div class="d-flex justify-center flex-1-1">
+          <v-btn
+            v-for="(page, index) in pages"
+            :key="index"
+            :to="page.to"
+            class="nuxt-link-inline"
+            :class="{ 'margin-right-2px': index !== pages.length - 1 }"
+          >
+            {{ page.title }}
+          </v-btn>
+        </div>
       </template>
 
       <v-btn
