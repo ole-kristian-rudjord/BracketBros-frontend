@@ -108,12 +108,8 @@
 </template>
 
 <style scoped lang="scss">
-  :deep(.v-toolbar__content) {
-    // justify-content: space-between;
-
-    .v-toolbar__prepend {
-      margin-inline-end: unset;
-    }
+  :deep(.v-toolbar__prepend) {
+    margin-inline-end: unset;
   }
 
   .nuxt-link-inline {
