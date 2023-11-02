@@ -17,6 +17,9 @@ dependencies:
   vite-plugin-vuetify:
     specifier: ^1.0.2
     version: 1.0.2(vite@4.5.0)(vue@3.3.7)(vuetify@3.3.23)
+  vue3-toastify:
+    specifier: ^0.1.14
+    version: 0.1.14(vue@3.3.7)
   vuetify:
     specifier: 3.3.23
     version: 3.3.23(vite-plugin-vuetify@1.0.2)(vue@3.3.7)
@@ -5876,6 +5879,18 @@ packages:
       '@vue/devtools-api': 6.5.1
       vue: 3.3.7
     dev: true
+
+  /vue3-toastify@0.1.14(vue@3.3.7):
+    resolution: {integrity: sha512-2wyzMhWq8IjTclL25tqKWknDFdFI1vPueMGZpHNlPWf6TBfxBycBANS+2n4W1xD7tHhX4G6HhCe31sle6OpwYQ==}
+    engines: {node: '>=16', npm: '>=7'}
+    peerDependencies:
+      vue: '>=3.2.0'
+    peerDependenciesMeta:
+      vue:
+        optional: true
+    dependencies:
+      vue: 3.3.7
+    dev: false
 
   /vue@3.3.7:
     resolution: {integrity: sha512-YEMDia1ZTv1TeBbnu6VybatmSteGOS3A3YgfINOfraCbf85wdKHzscD6HSS/vB4GAtI7sa1XPX7HcQaJ1l24zA==}
