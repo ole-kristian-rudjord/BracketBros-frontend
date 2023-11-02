@@ -24,5 +24,5 @@ export default defineNuxtConfig({
     //   ],
     //   '@nuxt/content',
   ],
-  // css: ['@/assets/style/main.scss'],
+  css: ['@/assets/style/main.scss'],
 });
