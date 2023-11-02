@@ -13,16 +13,15 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify())
       );
     },
-    //   [
-    //     '@nuxtjs/google-fonts',
-    //     {
-    //       families: {
-    //         Roboto: true,
-    //         'Roboto+Mono': true,
-    //       },
-    //     },
-    //   ],
-    //   '@nuxt/content',
+    [
+      '@nuxtjs/google-fonts',
+      {
+        families: {
+          Roboto: true,
+          'Roboto+Mono': true,
+        },
+      },
+    ],
   ],
   css: ['@/assets/style/main.scss'],
 });
