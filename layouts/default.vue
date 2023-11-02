@@ -48,30 +48,28 @@
         ></v-app-bar-nav-icon>
       </template>
 
-      <v-app-bar-title
-        class="flex-md-0-0 ml-0 ml-md-6 text-center text-md-left"
-      >
+      <v-app-bar-title class="flex-0-0 mx-auto mx-md-0 ml-md-5">
         <v-icon
           icon="fa-solid fa-laptop-code"
           size="small"
           color="cyan"
-          class="ml-1 mr-3"
+          class="ml-1 mr-2"
         ></v-icon>
         BracketBros
       </v-app-bar-title>
 
       <template v-if="display.mdAndUp.value">
-        <div class="d-flex justify-center flex-1-1">
-          <v-btn
-            v-for="(page, index) in pages"
-            :key="index"
-            :to="page.to"
-            class="nuxt-link-inline"
-            :class="{ 'margin-right-2px': index !== pages.length - 1 }"
-          >
-            {{ page.title }}
-          </v-btn>
-        </div>
+        <v-divider vertical class="h-25 my-auto mx-5"></v-divider>
+
+        <v-btn
+          v-for="(page, index) in pages"
+          :key="index"
+          :to="page.to"
+          class="nuxt-link-inline"
+          :class="{ 'margin-right-2px': index !== pages.length - 1 }"
+        >
+          {{ page.title }}
+        </v-btn>
       </template>
 
       <v-btn
@@ -80,6 +78,7 @@
           theme.current.value.dark ? 'fa-solid fa-moon' : 'fa-solid fa-sun'
         "
         size="small"
+        class="ml-md-auto"
       ></v-btn>
     </v-app-bar>
 
@@ -109,6 +108,14 @@
 </template>
 
 <style scoped lang="scss">
+  :deep(.v-toolbar__content) {
+    // justify-content: space-between;
+
+    .v-toolbar__prepend {
+      margin-inline-end: unset;
+    }
+  }
+
   .nuxt-link-inline {
     text-transform: none;
   }
