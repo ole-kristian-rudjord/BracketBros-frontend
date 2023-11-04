@@ -54,7 +54,7 @@
   <v-card max-width="700" class="d-flex flex-row w-100 rounded-lg elevation-6">
     <div class="d-flex flex-column h-100 pa-3">
       <v-btn
-        icon="fa-regular fa-heart"
+        icon="fa-solid fa-heart"
         size="small"
         variant="plain"
         v-ripple="{ class: `text-red` }"
@@ -66,7 +66,7 @@
       </div>
 
       <v-btn
-        icon="fa-regular fa-comment"
+        icon="fa-solid fa-comment"
         size="small"
         variant="plain"
         v-ripple="{ class: `text-green` }"
@@ -80,7 +80,7 @@
       <v-divider class="w-75 mx-auto my-3"></v-divider>
 
       <v-btn
-        icon="fa-regular fa-bookmark"
+        icon="fa-solid fa-bookmark"
         size="small"
         variant="plain"
         v-ripple="{ class: `text-blue` }"
