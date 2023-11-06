@@ -69,12 +69,14 @@
         </v-tooltip>
       </v-btn>
 
+      <v-divider class="w-75 mx-auto my-3"></v-divider>
+
       <v-btn
         icon
         size="small"
         variant="plain"
         v-ripple="{ class: `text-orange` }"
-        class="rounded-lg mt-auto"
+        class="rounded-lg"
       >
         <v-icon icon="fa-solid fa-pen-to-square"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
