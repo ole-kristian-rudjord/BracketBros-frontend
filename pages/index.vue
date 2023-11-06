@@ -1,5 +1,14 @@
 <script setup lang="ts">
   import { placeholder_post } from '~/constants';
+
+  onMounted(async () => {
+    const { data, error } = await getAllPosts();
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(data);
+    }
+  });
 </script>
 
 <template>
