@@ -54,24 +54,32 @@
   <v-card max-width="700" class="d-flex flex-row w-100 rounded-lg elevation-6">
     <div class="d-flex flex-column h-100 pa-3">
       <v-btn
-        icon="fa-solid fa-heart"
+        icon
         size="small"
         variant="plain"
         v-ripple="{ class: `text-red` }"
         class="rounded-lg"
       >
+        <v-icon icon="fa-regular fa-heart"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Like this post
+        </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
         {{ propPost.totalLikes }}
       </div>
 
       <v-btn
-        icon="fa-solid fa-comment"
+        icon
         size="small"
         variant="plain"
         v-ripple="{ class: `text-green` }"
         class="rounded-lg"
       >
+        <v-icon icon="fa-regular fa-comment"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Comment on this post
+        </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
         {{ propPost.totalComments }}
@@ -80,21 +88,55 @@
       <v-divider class="w-75 mx-auto my-3"></v-divider>
 
       <v-btn
-        icon="fa-solid fa-bookmark"
+        icon
         size="small"
         variant="plain"
         v-ripple="{ class: `text-blue` }"
         class="rounded-lg"
       >
+        <v-icon icon="fa-regular fa-bookmark"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Save this post
+        </v-tooltip>
       </v-btn>
 
       <v-btn
-        icon="fa-solid fa-share"
+        icon
         size="small"
         variant="plain"
         v-ripple="{ class: `text-yellow` }"
         class="rounded-lg"
       >
+        <v-icon icon="fa-regular fa-share-from-square"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Share this post
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn
+        icon
+        size="small"
+        variant="plain"
+        v-ripple="{ class: `text-orange` }"
+        class="rounded-lg mt-auto"
+      >
+        <v-icon icon="fa-solid fa-pen-to-square"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Edit this post
+        </v-tooltip>
+      </v-btn>
+
+      <v-btn
+        icon
+        size="small"
+        variant="plain"
+        v-ripple="{ class: `text-red` }"
+        class="rounded-lg"
+      >
+        <v-icon icon="fa-solid fa-trash-can"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="1000">
+          Delete this post
+        </v-tooltip>
       </v-btn>
     </div>
 
