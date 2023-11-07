@@ -10,6 +10,7 @@ declare global {
     id: number;
     name: string;
     color: string;
+    picturePath: string;
   }
 
   interface tag {

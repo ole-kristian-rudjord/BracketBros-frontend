@@ -25,6 +25,7 @@ export const placeholder_category: category = {
   id: 0,
   name: 'Frontend',
   color: '#f5429e',
+  picturePath: 'https://www.shutterstock.com/image-photo/example-word-written-on-wooden-260nw-1765482248.jpg',
 };
 
 export const placeholder_tags: tag[] = [
