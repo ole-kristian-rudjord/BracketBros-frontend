@@ -21,8 +21,8 @@ declare global {
   interface post {
     id: number;
     user: user;
-    dateCreated: Date;
-    dateLastEdited: Date;
+    dateCreated: string;
+    dateLastEdited: string;
     category: category;
     tags: tag[];
     title: string;
