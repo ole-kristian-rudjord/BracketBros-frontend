@@ -1,7 +1,5 @@
 <script setup lang="ts">
-  import { placeholder_post } from '~/constants';
-
-  const posts = ref();
+  const posts = ref<post[]>();
 
   onMounted(async () => {
     const { data, error } = await getAllPosts();
@@ -16,12 +14,11 @@
 
 <template>
   <div class="d-flex flex-column align-center w-100 py-12 px-4">
-    <post :propPost="placeholder_post"></post>
-    <!-- <post
+    <post
       v-for="(post, index) in posts"
       :key="index"
-      :propPost="placeholder_post"
+      :propPost="post"
       class="mb-12"
-    ></post> -->
+    ></post>
   </div>
 </template>
