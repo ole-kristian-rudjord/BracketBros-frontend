@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { useTheme } from 'vuetify/lib/framework.mjs';
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
 
   const router = useRouter();
   const theme = useTheme();
@@ -51,6 +53,23 @@
     });
   };
 
+  const postLink = `/post/${props.propPost.id}`;
+
+  const sharePost = () => {
+    const fullUrl = window.location.origin + postLink;
+    navigator.clipboard
+      .writeText(fullUrl)
+      .then(() => {
+        toast.success(
+          'Link to post copied to clipboard',
+          defaultToastOptions.success
+        );
+      })
+      .catch((err) => {
+        console.error('Failed to copy text to clipboard', err);
+      });
+  };
+
   const goToPost = async (event: MouseEvent) => {
     for (let element of event.composedPath()) {
       if ((element as HTMLElement).tagName === 'A') {
@@ -58,7 +77,7 @@
       }
     }
 
-    await router.push({ path: `/post/${props.propPost.id}` });
+    await router.push({ path: postLink });
   };
 
   onMounted(() => {
@@ -143,6 +162,7 @@
         variant="plain"
         v-ripple="{ class: `text-yellow` }"
         class="rounded-lg"
+        @click="sharePost()"
       >
         <v-icon icon="fa-regular fa-share-from-square"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
