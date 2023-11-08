@@ -35,17 +35,6 @@
       icon: 'fa-solid fa-square-plus',
     },
   ];
-
-  const route = useRoute();
-
-  watchEffect(() => {
-    const currentPage = pages.find((page) => page.to === route.path);
-    if (currentPage) {
-      useHead({
-        title: currentPage.title + ' - BracketBros',
-      });
-    }
-  });
 </script>
 
 <template>
