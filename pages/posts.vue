@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  useHead({
+    title: 'Browse posts - BracketBros',
+  });
+
   const posts = ref<post[]>();
 
   onMounted(async () => {
