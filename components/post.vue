@@ -14,11 +14,18 @@
 
   const props = defineProps<{ propPost: post }>();
 
+  const createRandomBoolean = () => {
+    return Math.random() < 0.5;
+  };
+
+  const isMadeByUser = ref(createRandomBoolean());
+  const isLiked = ref(createRandomBoolean());
+  const hasCommented = ref(createRandomBoolean());
+  const isSaved = ref(createRandomBoolean());
+
   const formattedContent = computed(() => {
     return props.propPost.content.replace(/\n/g, '<br>');
   });
-
-  const madeByLoggedInUser = false;
 
   const contentContainer_ref = ref<HTMLElement | null>(null);
   const content_ref = ref<HTMLElement | null>(null);
@@ -56,11 +63,14 @@
       <v-btn
         icon
         size="small"
-        variant="plain"
+        :variant="isLiked ? 'text' : 'plain'"
         v-ripple="{ class: `text-red` }"
         class="rounded-lg"
       >
-        <v-icon icon="fa-regular fa-heart"></v-icon>
+        <v-icon
+          :icon="isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+          :color="isLiked ? 'red' : ''"
+        ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Like this post
         </v-tooltip>
@@ -72,11 +82,14 @@
       <v-btn
         icon
         size="small"
-        variant="plain"
+        :variant="hasCommented ? 'text' : 'plain'"
         v-ripple="{ class: `text-green` }"
         class="rounded-lg"
       >
-        <v-icon icon="fa-regular fa-comment"></v-icon>
+        <v-icon
+          :icon="hasCommented ? 'fa-solid fa-comment' : 'fa-regular fa-comment'"
+          :color="hasCommented ? 'green' : ''"
+        ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Comment on this post
         </v-tooltip>
@@ -90,11 +103,14 @@
       <v-btn
         icon
         size="small"
-        variant="plain"
+        :variant="isSaved ? 'text' : 'plain'"
         v-ripple="{ class: `text-blue` }"
         class="rounded-lg"
       >
-        <v-icon icon="fa-regular fa-bookmark"></v-icon>
+        <v-icon
+          :icon="isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'"
+          :color="isSaved ? 'blue' : ''"
+        ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Save this post
         </v-tooltip>
@@ -113,7 +129,7 @@
         </v-tooltip>
       </v-btn>
 
-      <template v-if="madeByLoggedInUser">
+      <template v-if="isMadeByUser">
         <v-divider class="w-75 mx-auto my-3"></v-divider>
 
         <v-btn
