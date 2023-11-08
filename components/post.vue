@@ -33,8 +33,8 @@
   const contentContainer_isOverflowing = ref(false);
   const contentContainer_showOverflow = ref(false);
 
-  const allowPostHighlight = ref(false);
-  const stopPostHighlight = ref(false);
+  const highlightPost = ref(false);
+  const stop_highlightPost = ref(false);
 
   const checkOverflow = () => {
     nextTick(() => {
@@ -48,6 +48,11 @@
           content_ref.value.offsetHeight;
       }
     });
+  };
+
+  const goToPost = async () => {
+    console.log(highlightPost.value, stop_highlightPost.value);
+    await navigateTo({ path: '/' });
   };
 
   onMounted(() => {
@@ -66,7 +71,7 @@
     max-width="700"
     class="post d-flex flex-row w-100 rounded-lg elevation-6"
     :class="{
-      highlight: allowPostHighlight && !stopPostHighlight,
+      highlight: highlightPost && !stop_highlightPost,
     }"
   >
     <div class="d-flex flex-column h-100 pa-3">
@@ -210,8 +215,9 @@
 
       <div
         class="h-100"
-        @mouseenter="allowPostHighlight = true"
-        @mouseleave="allowPostHighlight = false"
+        @mouseenter="highlightPost = true"
+        @mouseleave="highlightPost = false"
+        @click="goToPost()"
       >
         <div class="text-h4 pb-4">
           {{ propPost.title }}
@@ -248,11 +254,12 @@
                 :class="isHovering ? 'on-parent-hover' : ''"
                 size="small"
                 variant="tonal"
-                @mouseenter="stopPostHighlight = true"
-                @mouseleave="stopPostHighlight = false"
+                @mouseenter="stop_highlightPost = true"
+                @mouseleave="stop_highlightPost = false"
                 @click="
                   (contentContainer_showOverflow = true),
-                    (stopPostHighlight = false)
+                    (stop_highlightPost = false),
+                    $event.stopPropagation()
                 "
               >
                 Show more
