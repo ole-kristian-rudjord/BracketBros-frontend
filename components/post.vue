@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useTheme } from 'vuetify/lib/framework.mjs';
 
+  const router = useRouter();
   const theme = useTheme();
 
   const { current } = theme;
@@ -50,9 +51,13 @@
     });
   };
 
-  const goToPost = async () => {
-    const router = useRouter();
-    console.log(props.propPost.id);
+  const goToPost = async (event: MouseEvent) => {
+    for (let element of event.composedPath()) {
+      if ((element as HTMLElement).tagName === 'A') {
+        return;
+      }
+    }
+
     await router.push({ path: `/post/${props.propPost.id}` });
   };
 
@@ -218,7 +223,7 @@
         class="h-100"
         @mouseenter="highlightPost = true"
         @mouseleave="highlightPost = false"
-        @click="goToPost()"
+        @click="goToPost($event)"
       >
         <div class="text-h4 pb-4">
           {{ propPost.title }}
