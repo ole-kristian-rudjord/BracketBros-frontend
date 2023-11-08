@@ -2,17 +2,26 @@
   import { useTheme } from 'vuetify/lib/framework.mjs';
 
   const theme = useTheme();
-  const surfaceColor = ref(theme.current.value.colors.surface);
+
+  const surfaceColor = ref(theme.current.value.colors['on-surface']);
+  const postHighlightColor = ref(
+    theme.current.value.colors['on-surface-variant']
+  );
 
   watch(
-    () => theme.current.value.colors.surface,
-    (newSurfaceColor) => {
-      surfaceColor.value = newSurfaceColor;
+    () => theme.current.value,
+    (newTheme) => {
+      surfaceColor.value = newTheme.colors.surface;
+      if (newTheme.dark) {
+        postHighlightColor.value = newTheme.colors['on-surface-variant'];
+      } else {
+        postHighlightColor.value = newTheme.colors['on-surface'];
+      }
     },
     { immediate: true }
   );
 
-  const props = defineProps<{ propPost: post }>();
+  defineProps<{ propPost: post }>();
 
   const createRandomBoolean = () => {
     return Math.random() < 0.5;
@@ -23,15 +32,14 @@
   const hasCommented = ref(createRandomBoolean());
   const isSaved = ref(createRandomBoolean());
 
-  const formattedContent = computed(() => {
-    return props.propPost.content.replace(/\n/g, '<br>');
-  });
-
   const contentContainer_ref = ref<HTMLElement | null>(null);
   const content_ref = ref<HTMLElement | null>(null);
 
   const contentContainer_isOverflowing = ref(false);
   const contentContainer_showOverflow = ref(false);
+
+  const allowPostHighlight = ref(false);
+  const stopPostHighlight = ref(false);
 
   const checkOverflow = () => {
     nextTick(() => {
@@ -58,12 +66,18 @@
 </script>
 
 <template>
-  <v-card max-width="700" class="d-flex flex-row w-100 rounded-lg elevation-6">
+  <v-card
+    max-width="700"
+    class="post d-flex flex-row w-100 rounded-lg elevation-6"
+    :class="{
+      highlight: allowPostHighlight && !stopPostHighlight,
+    }"
+  >
     <div class="d-flex flex-column h-100 pa-3">
       <v-btn
         icon
         size="small"
-        :variant="isLiked ? 'text' : 'plain'"
+        variant="plain"
         v-ripple="{ class: `text-red` }"
         class="rounded-lg"
       >
@@ -82,7 +96,7 @@
       <v-btn
         icon
         size="small"
-        :variant="hasCommented ? 'text' : 'plain'"
+        variant="plain"
         v-ripple="{ class: `text-green` }"
         class="rounded-lg"
       >
@@ -103,7 +117,7 @@
       <v-btn
         icon
         size="small"
-        :variant="isSaved ? 'text' : 'plain'"
+        variant="plain"
         v-ripple="{ class: `text-blue` }"
         class="rounded-lg"
       >
@@ -162,7 +176,7 @@
 
     <v-divider vertical class="my-5"></v-divider>
 
-    <div class="w-100 pa-5">
+    <div class="main-container w-100 pa-5">
       <div class="d-flex justify-space-between align-center mb-4">
         <div class="text-medium-emphasis">
           <v-chip variant="flat" size="small" :color="propPost.category.color">
@@ -197,49 +211,77 @@
           </v-avatar>
         </div>
       </div>
-      <div class="text-h4 mb-5">{{ propPost.title }}</div>
-      <v-hover>
-        <template v-slot:default="{ isHovering, props }">
-          <div
-            v-bind="props"
-            ref="contentContainer_ref"
-            class="content-container"
-            :class="
-              contentContainer_isOverflowing
-                ? contentContainer_showOverflow
-                  ? 'show-overflow'
-                  : 'hide-overflow'
-                : ''
-            "
-          >
+
+      <div
+        class="h-100"
+        @mouseenter="allowPostHighlight = true"
+        @mouseleave="allowPostHighlight = false"
+      >
+        <div class="text-h4 pb-4">
+          {{ propPost.title }}
+        </div>
+
+        <v-hover>
+          <template v-slot:default="{ isHovering, props }">
             <div
-              ref="content_ref"
-              class="content"
-              v-html="formattedContent"
-            ></div>
-            <v-btn
-              v-if="
-                contentContainer_isOverflowing && !contentContainer_showOverflow
+              v-bind="props"
+              ref="contentContainer_ref"
+              class="content-container"
+              :class="
+                contentContainer_isOverflowing
+                  ? contentContainer_showOverflow
+                    ? 'show-overflow'
+                    : 'hide-overflow'
+                  : ''
               "
-              class="show-btn"
-              :class="isHovering ? 'on-parent-hover' : ''"
-              size="small"
-              variant="tonal"
-              @click="contentContainer_showOverflow = true"
             >
-              Show more
-              <template v-slot:append>
-                <v-icon icon="fa-solid fa-chevron-down" size="small"></v-icon>
-              </template>
-            </v-btn>
-          </div>
-        </template>
-      </v-hover>
+              <div
+                ref="content_ref"
+                class="content d-flex flex-column justify-center align-center"
+              >
+                <markdown-renderer
+                  :content="propPost.content"
+                ></markdown-renderer>
+              </div>
+              <v-btn
+                v-if="
+                  contentContainer_isOverflowing &&
+                  !contentContainer_showOverflow
+                "
+                class="show-btn"
+                :class="isHovering ? 'on-parent-hover' : ''"
+                size="small"
+                variant="tonal"
+                @mouseenter="stopPostHighlight = true"
+                @mouseleave="stopPostHighlight = false"
+                @click="
+                  (contentContainer_showOverflow = true),
+                    (stopPostHighlight = false)
+                "
+              >
+                Show more
+                <template v-slot:append>
+                  <v-icon icon="fa-solid fa-chevron-down" size="small"></v-icon>
+                </template>
+              </v-btn>
+            </div>
+          </template>
+        </v-hover>
+      </div>
     </div>
   </v-card>
 </template>
 
 <style scoped lang="scss">
+  .post {
+    outline: 1px solid transparent;
+    transition: outline-color 200ms ease;
+
+    &.highlight {
+      outline-color: v-bind(postHighlightColor);
+    }
+  }
+
   .user-and-creation-info {
     line-height: normal;
   }
