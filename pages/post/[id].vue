@@ -1,8 +1,10 @@
 <script setup lang="ts">
-  const route = useRoute();
-  console.log(route.params);
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
 
-  const post = ref<post>();
+  const route = useRoute();
+
+  const post = ref<post | null>(null);
 
   const title = ref('BracketBros');
 
@@ -27,15 +29,19 @@
       const { data, error } = await getPostById(postId);
       if (error) {
         console.error('Error fetching post:', error);
+        toast.error('Error fetching post', defaultToastOptions.error);
       } else {
         post.value = data;
       }
     } else {
-      console.error('Invalid Post ID'); // TODO: Create toastify error instead
+      console.error('Invalid Post ID');
+      toast.error('Invalid Post ID', defaultToastOptions.error);
     }
   });
 </script>
 
 <template>
-  {{ post }}
+  <div class="d-flex flex-column align-center w-100 py-12 px-4">
+    <post-component v-if="post" :post="post"></post-component>
+  </div>
 </template>
