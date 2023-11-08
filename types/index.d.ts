@@ -3,18 +3,18 @@ export {};
 declare global {
   interface user {
     username: string;
-    profilePicture: string;
+    profilePicture: string | null;
   }
 
   interface category {
-    id: number;
+    categoryId: number;
     name: string;
     color: string;
-    picturePath: string;
+    url: string;
   }
 
   interface tag {
-    id: number;
+    tagId: number;
     name: string;
   }
 
