@@ -16,7 +16,7 @@
 
   watch(() => current.value, updateColors);
 
-  defineProps<{ propPost: post }>();
+  const props = defineProps<{ propPost: post }>();
 
   const createRandomBoolean = () => {
     return Math.random() < 0.5;
@@ -51,8 +51,9 @@
   };
 
   const goToPost = async () => {
-    console.log(highlightPost.value, stop_highlightPost.value);
-    await navigateTo({ path: '/' });
+    const router = useRouter();
+    console.log(props.propPost.id);
+    await router.push({ path: `/post/${props.propPost.id}` });
   };
 
   onMounted(() => {
