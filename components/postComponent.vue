@@ -19,7 +19,7 @@
 
   watch(() => current.value, updateColors);
 
-  const props = defineProps<{ propPost: post }>();
+  const props = defineProps<{ post: post }>();
 
   const createRandomBoolean = () => {
     return Math.random() < 0.5;
@@ -53,7 +53,7 @@
     });
   };
 
-  const postLink = `/post/${props.propPost.id}`;
+  const postLink = `/post/${props.post.id}`;
 
   const sharePost = () => {
     const fullUrl = window.location.origin + postLink;
@@ -116,7 +116,7 @@
         </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
-        {{ formatNumber(propPost.totalLikes) }}
+        {{ formatNumber(post.totalLikes) }}
       </div>
 
       <v-btn
@@ -135,7 +135,7 @@
         </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
-        {{ formatNumber(propPost.totalComments) }}
+        {{ formatNumber(post.totalComments) }}
       </div>
 
       <v-divider class="w-75 mx-auto my-3"></v-divider>
@@ -206,11 +206,11 @@
     <div class="main-container w-100 pa-5">
       <div class="d-flex justify-space-between align-center mb-4">
         <div class="text-medium-emphasis">
-          <v-chip variant="flat" size="small" :color="propPost.category.color">
-            {{ propPost.category.name }}
+          <v-chip variant="flat" size="small" :color="post.category.color">
+            {{ post.category.name }}
           </v-chip>
           <v-chip
-            v-for="(tag, index) in propPost.tags"
+            v-for="(tag, index) in post.tags"
             :key="index"
             size="small"
             class="ml-1"
@@ -223,16 +223,16 @@
             class="user-and-creation-info text-right text-caption text-medium-emphasis"
           >
             <div class="font-weight-bold">
-              {{ propPost.user.username }}
+              {{ post.user.username }}
             </div>
             <div>
-              {{ formatTimeAgo(propPost.dateCreated) }}
+              {{ formatTimeAgo(post.dateCreated) }}
             </div>
           </div>
           <v-avatar size="28px" class="ml-2">
             <v-img
-              v-if="propPost.user.profilePicture"
-              :src="propPost.user.profilePicture"
+              v-if="post.user.profilePicture"
+              :src="post.user.profilePicture"
             ></v-img>
             <v-icon v-else color="primary" icon="fa-solid fa-user"></v-icon>
           </v-avatar>
@@ -246,7 +246,7 @@
         @click="goToPost($event)"
       >
         <div class="text-h4 pb-4">
-          {{ propPost.title }}
+          {{ post.title }}
         </div>
 
         <v-hover>
@@ -267,9 +267,7 @@
                 ref="content_ref"
                 class="content d-flex flex-column justify-center align-center"
               >
-                <markdown-renderer
-                  :content="propPost.content"
-                ></markdown-renderer>
+                <markdown-renderer :content="post.content"></markdown-renderer>
               </div>
               <v-btn
                 v-if="

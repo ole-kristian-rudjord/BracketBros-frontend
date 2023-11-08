@@ -18,11 +18,11 @@
 
 <template>
   <div class="d-flex flex-column align-center w-100 py-12 px-4">
-    <post
+    <post-component
       v-for="(post, index) in posts"
       :key="index"
-      :propPost="post"
+      :post="post"
       class="mb-12"
-    ></post>
+    ></post-component>
   </div>
 </template>
