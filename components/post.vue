@@ -3,23 +3,18 @@
 
   const theme = useTheme();
 
-  const surfaceColor = ref(theme.current.value.colors['on-surface']);
-  const postHighlightColor = ref(
-    theme.current.value.colors['on-surface-variant']
-  );
+  const { current } = theme;
+  const surfaceColor = ref('');
+  const postHighlightColor = ref('');
 
-  watch(
-    () => theme.current.value,
-    (newTheme) => {
-      surfaceColor.value = newTheme.colors.surface;
-      if (newTheme.dark) {
-        postHighlightColor.value = newTheme.colors['on-surface-variant'];
-      } else {
-        postHighlightColor.value = newTheme.colors['on-surface'];
-      }
-    },
-    { immediate: true }
-  );
+  const updateColors = () => {
+    surfaceColor.value = current.value.colors.surface;
+    postHighlightColor.value = current.value.dark
+      ? current.value.colors['on-surface-variant']
+      : current.value.colors['on-surface'];
+  };
+
+  watch(() => current.value, updateColors);
 
   defineProps<{ propPost: post }>();
 
@@ -56,6 +51,7 @@
   };
 
   onMounted(() => {
+    updateColors();
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
   });
