@@ -30,6 +30,7 @@ yarn.lock
 # Unit testing
 BracketBrosTest/bin
 BracketBrosTest/obj
+BracketBrosTest/obj/*
 BracketBrosTest/*.user
 BracketBrosTest/*.userprefs
 BracketBrosTest/*.vs
