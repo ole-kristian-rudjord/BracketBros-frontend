@@ -26,3 +26,12 @@ logs
 # Auto generated
 package-lock.json
 yarn.lock
+
+# Unit testing
+BracketBrosTest/bin
+BracketBrosTest/obj
+BracketBrosTest/*.user
+BracketBrosTest/*.userprefs
+BracketBrosTest/*.vs
+BracketBrosTest/TestResults
+BracketBrosTest/.idea
