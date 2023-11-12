@@ -30,4 +30,16 @@ declare global {
     totalLikes: number;
     totalComments: number;
   }
+
+  interface comment {
+    commentId: number;
+    content: string;
+    totalLikes: number;
+    dateCreated: string;
+    dateLastEdited: string | null;
+    postId: number;
+    user: user;
+    isLiked: number;
+    commentReplies: comment[];
+  }
 }
