@@ -103,7 +103,7 @@
 <template>
   <v-card
     max-width="700"
-    class="post d-flex flex-row w-100 rounded-lg elevation-6"
+    class="post d-flex flex-row w-100 rounded-lg elevation-4"
     :class="{
       highlight: !preventHighlighting && highlightPost && !stop_highlightPost,
     }"
