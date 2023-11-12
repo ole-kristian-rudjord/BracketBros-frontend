@@ -5,6 +5,7 @@
   const route = useRoute();
 
   const post = ref<post | null>(null);
+  const comments = ref<comment[] | null>(null);
 
   const title = ref('BracketBros');
 
@@ -26,12 +27,21 @@
     const postId = Number(route.params.id);
 
     if (!isNaN(postId)) {
-      const { data, error } = await getPostById(postId);
-      if (error) {
-        console.error('Error fetching post:', error);
+      const { data: postData, error: postError } = await getPostById(postId);
+      if (postError) {
+        console.error('Error fetching post:', postError);
         toast.error('Error fetching post', defaultToastOptions.error);
       } else {
-        post.value = data;
+        post.value = postData;
+        const { data: commentsData, error: commentsError } = await getComments(
+          postId
+        );
+        if (commentsError) {
+          console.error('Error fetching comments:', commentsError);
+          toast.error('Error fetching comments', defaultToastOptions.error);
+        } else {
+          comments.value = commentsData;
+        }
       }
     } else {
       console.error('Invalid Post ID');
@@ -48,5 +58,13 @@
       :expandContent="true"
       :preventHighlighting="true"
     ></post-component>
+    <div class="d-flex flex-column w-100 my-4" style="max-width: 700px">
+      <comment-component
+        v-for="(comment, index) in comments"
+        :key="index"
+        :comment="comment"
+        class="w-100 mb-4"
+      ></comment-component>
+    </div>
   </div>
 </template>
