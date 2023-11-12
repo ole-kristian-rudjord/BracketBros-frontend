@@ -42,6 +42,11 @@
 
 <template>
   <div class="d-flex flex-column align-center w-100 py-12 px-4">
-    <post-component v-if="post" :post="post"></post-component>
+    <post-component
+      v-if="post"
+      :post="post"
+      :expandContent="true"
+      :preventHighlighting="true"
+    ></post-component>
   </div>
 </template>

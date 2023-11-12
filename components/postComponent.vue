@@ -19,7 +19,14 @@
 
   watch(() => current.value, updateColors);
 
-  const props = defineProps<{ post: post }>();
+  const props = withDefaults(
+    defineProps<{
+      post: post;
+      expandContent?: boolean;
+      preventHighlighting?: boolean;
+    }>(),
+    { expandContent: false, preventHighlighting: false }
+  );
 
   const createRandomBoolean = () => {
     return Math.random() < 0.5;
@@ -82,8 +89,10 @@
 
   onMounted(() => {
     updateColors();
-    checkOverflow();
-    window.addEventListener('resize', checkOverflow);
+    if (!props.expandContent) {
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+    }
   });
 
   onUnmounted(() => {
@@ -96,7 +105,7 @@
     max-width="700"
     class="post d-flex flex-row w-100 rounded-lg elevation-6"
     :class="{
-      highlight: highlightPost && !stop_highlightPost,
+      highlight: !preventHighlighting && highlightPost && !stop_highlightPost,
     }"
   >
     <div class="d-flex flex-column h-100 pa-3">
@@ -243,7 +252,7 @@
         class="h-100"
         @mouseenter="highlightPost = true"
         @mouseleave="highlightPost = false"
-        @click="goToPost($event)"
+        @click="!preventHighlighting && goToPost($event)"
       >
         <div class="text-h4 pb-4">
           {{ post.title }}
@@ -260,6 +269,8 @@
                   ? contentContainer_showOverflow
                     ? 'show-overflow'
                     : 'hide-overflow'
+                  : expandContent
+                  ? 'show-overflow'
                   : ''
               "
             >
