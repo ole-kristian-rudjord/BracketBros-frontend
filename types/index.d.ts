@@ -39,7 +39,7 @@ declare global {
     dateLastEdited: string | null;
     postId: number;
     user: user;
-    isLiked: number;
+    isLiked: boolean;
     commentReplies: comment[];
   }
 }
