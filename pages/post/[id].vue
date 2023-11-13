@@ -1,47 +1,47 @@
 <script setup lang="ts">
-import { toast } from 'vue3-toastify';
-import { defaultToastOptions } from '@/constants';
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
 
-const route = useRoute();
+  const route = useRoute();
 
-const post = ref<post | null>(null);
-const comments = ref<comment[] | null>(null);
+  const post = ref<post | null>(null);
+  const comments = ref<comment[] | null>(null);
 
-const title = ref('BracketBros');
+  const title = ref('BracketBros');
 
-watch(
-  post,
-  (newValue) => {
-    if (newValue?.title) {
-      title.value = `${newValue.title} - BracketBros`;
-    }
-  },
-  { immediate: true }
-);
+  watch(
+    post,
+    (newValue) => {
+      if (newValue?.title) {
+        title.value = `${newValue.title} - BracketBros`;
+      }
+    },
+    { immediate: true }
+  );
 
-useHead({
-  title: title,
-});
+  useHead({
+    title: title,
+  });
 
-onMounted(async () => {
-  const postId = Number(route.params.id);
+  onMounted(async () => {
+    const postId = Number(route.params.id);
 
-  if (!isNaN(postId)) {
-    const { data: postData, error: postError } = await getPostById(postId);
-    if (postError) {
-      console.error('Error fetching post:', postError);
-      toast.error('Error fetching post', defaultToastOptions.error);
-    } else {
-      post.value = postData;
-      const { data: commentsData, error: commentsError } = await getComments(
-        postId
-      );
-      if (commentsError) {
-        console.error('Error fetching comments:', commentsError);
-        toast.error('Error fetching comments', defaultToastOptions.error);
+    if (!isNaN(postId)) {
+      const { data: postData, error: postError } = await getPostById(postId);
+      if (postError) {
+        console.error('Error fetching post:', postError);
+        toast.error('Error fetching post', defaultToastOptions.error);
       } else {
-        //comments.value = commentsData;
-        comments.value = [
+        post.value = postData;
+        const { data: commentsData, error: commentsError } = await getComments(
+          postId
+        );
+        if (commentsError) {
+          console.error('Error fetching comments:', commentsError);
+          toast.error('Error fetching comments', defaultToastOptions.error);
+        } else {
+          comments.value = commentsData;
+          /* comments.value = [
           {
             user: {
               username: 'hackerman',
@@ -179,22 +179,31 @@ onMounted(async () => {
             postId: 22,
             isLiked: false,
           },
-        ];
+        ]; */
+        }
       }
+    } else {
+      console.error('Invalid Post ID');
+      toast.error('Invalid Post ID', defaultToastOptions.error);
     }
-  } else {
-    console.error('Invalid Post ID');
-    toast.error('Invalid Post ID', defaultToastOptions.error);
-  }
-});
+  });
 </script>
 
 <template>
   <div class="d-flex flex-column align-center w-100 py-12 px-4">
-    <post-component v-if="post" :post="post" :expandContent="true" :preventHighlighting="true"></post-component>
+    <post-component
+      v-if="post"
+      :post="post"
+      :expandContent="true"
+      :preventHighlighting="true"
+    ></post-component>
     <div class="d-flex flex-column w-100 my-4" style="max-width: 700px">
-      <comment-component v-for="(comment, index) in comments" :key="index" :comment="comment"
-        class="w-100 mb-4"></comment-component>
+      <comment-component
+        v-for="(comment, index) in comments"
+        :key="index"
+        :comment="comment"
+        class="w-100 mb-4"
+      ></comment-component>
     </div>
   </div>
 </template>
