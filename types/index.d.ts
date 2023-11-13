@@ -53,4 +53,10 @@ declare global {
     Password: string;
     RememberMe: boolean;
   }
+
+  interface registerData {
+    email: string;
+    username: string;
+    password: string;
+  }
 }
