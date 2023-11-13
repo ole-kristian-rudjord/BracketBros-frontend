@@ -313,6 +313,7 @@
 <style scoped lang="scss">
   .post {
     outline: 1px solid transparent;
+    outline-offset: -1px;
     transition: outline-color 200ms ease;
 
     &.highlight {
