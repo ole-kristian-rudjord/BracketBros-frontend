@@ -64,6 +64,7 @@
 
   const sharePost = () => {
     const fullUrl = window.location.origin + postLink;
+
     navigator.clipboard
       .writeText(fullUrl)
       .then(() => {
@@ -72,8 +73,8 @@
           defaultToastOptions.success
         );
       })
-      .catch((err) => {
-        console.error('Failed to copy text to clipboard', err);
+      .catch((error) => {
+        console.error('Failed to copy text to clipboard', error);
       });
   };
 
