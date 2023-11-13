@@ -1,66 +1,130 @@
 <script setup lang="ts">
   useHead({
-    title: 'Browse posts - BracketBros',
+    title: 'Register - BracketBros',
   });
 
-  const identifier = ref('');
+  const form = ref(false);
+  const email = ref('');
+  const username = ref('');
   const password = ref('');
+  const confirmPassword = ref('');
   const rememberMe = ref(false);
 
-  const login = async () => {
-    // Create an object with the login credentials
-    const loginData = {
-      Identifier: identifier.value,
-      Password: password.value,
-      RememberMe: rememberMe.value,
+  const showPassword = ref(false);
+  const showConfirmPassword = ref(false);
+  const isLoading = ref(false);
+  const error = ref<null | 'unexpectedError'>(null);
+
+  const rules = {
+    required: (value: string) => !!value || 'Field is required',
+    email: (value: string) => {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailPattern.test(value) || 'Please enter a valid email';
+    },
+    passwordMatch: () =>
+      password.value === confirmPassword.value || 'Passwords must match',
+  };
+
+  watch(password, () => {
+    // Trigger re-validation for the confirmPassword field
+    confirmPassword.value = confirmPassword.value;
+  });
+
+  const register = async () => {
+    isLoading.value = true;
+
+    const registerData: registerData = {
+      email: email.value,
+      username: username.value,
+      password: password.value,
     };
 
-    console.log(loginData);
+    const response = await registerUser(registerData);
 
-    try {
-      console.log('Trying to login');
-      const response = await fetch(`https://localhost:7205/api/Account/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add Authorization header if your endpoint requires it
-        },
-        credentials: 'include', // Add this line
-        body: JSON.stringify(loginData),
-      });
-
-      if (response.ok) {
-        const data = await response.text(); //= await response.json();
-        alert(data);
-
-        refreshUserActivity();
-        return { data, error: null };
-      } else {
-        console.error('Error fetching posts:', response.text);
-        alert(response.text);
-        return { data: null, error: response.statusText };
-      }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      return { data: null, error };
+    if (response.data) {
+      console.log('success');
+      // Set user
+      error.value = null;
+    } else {
+      error.value = 'unexpectedError';
     }
+
+    isLoading.value = false;
   };
 </script>
 
 <template>
-  <form @submit.prevent="login">
-    <label>
-      Email or username
-      <input type="text" v-model="identifier" />
-    </label>
-    <label>
-      Password
-      <input type="password" v-model="password" />
-    </label>
-    <label>
-      Remember me
-      <input type="checkbox" v-model="rememberMe" />
-    </label>
-    <button type="submit">Log in</button>
-  </form>
+  <NuxtLayout name="login-register">
+    <v-form v-model="form" @submit.prevent="register">
+      <v-text-field
+        label="Email"
+        v-model="email"
+        variant="outlined"
+        :rules="[rules.required, rules.email]"
+        class="mb-3"
+      ></v-text-field>
+      <v-text-field
+        label="Username"
+        v-model="username"
+        variant="outlined"
+        :rules="[rules.required]"
+        class="mb-3"
+      ></v-text-field>
+      <v-text-field
+        label="Password"
+        v-model="password"
+        :type="showPassword ? 'text' : 'password'"
+        variant="outlined"
+        :rules="[rules.required]"
+        class="mb-3"
+      >
+        <template v-slot:append-inner>
+          <v-icon
+            :icon="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+            size="x-small"
+            @click="showPassword = !showPassword"
+          ></v-icon>
+        </template>
+      </v-text-field>
+      <v-text-field
+        label="Confirm password"
+        v-model="confirmPassword"
+        :type="showConfirmPassword ? 'text' : 'password'"
+        variant="outlined"
+        :rules="[rules.required, rules.passwordMatch]"
+      >
+        <template v-slot:append-inner>
+          <v-icon
+            :icon="
+              showConfirmPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'
+            "
+            size="x-small"
+            @click="showConfirmPassword = !showConfirmPassword"
+          ></v-icon>
+        </template>
+      </v-text-field>
+      <v-checkbox
+        label="Remember me"
+        v-model="rememberMe"
+        false-icon="fa-regular fa-square"
+        true-icon="fa-regular fa-square-check"
+        hide-details
+        class="mb-5"
+      ></v-checkbox>
+      <v-btn
+        type="submit"
+        size="x-large"
+        variant="tonal"
+        block
+        class="text-body-1"
+        :disabled="!form"
+        :loading="isLoading"
+      >
+        Register
+      </v-btn>
+    </v-form>
+    <NuxtLink to="/login" class="d-block mt-8 text-body-2">
+      Already have an account? Log in here.
+    </NuxtLink>
+  </NuxtLayout>
 </template>
