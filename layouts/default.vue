@@ -35,8 +35,8 @@
       icon: 'fa-solid fa-square-plus',
     },
     {
-      to: '/sign-in',
-      title: 'Sign in',
+      to: '/login',
+      title: 'Log in',
       icon: 'fa-solid fa-right-to-bracket',
     },
     {
