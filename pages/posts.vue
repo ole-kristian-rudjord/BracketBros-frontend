@@ -3,23 +3,39 @@
     title: 'Browse posts - BracketBros',
   });
 
-  const posts = ref<post[]>();
+  const allPosts = useAllPosts();
+  const numberOfDisplayedPosts = ref(5);
 
-  onMounted(async () => {
-    const { data, error } = await getAllPosts();
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(data);
-      posts.value = data;
+  const isNearBottom = () => {
+    const scrollY = window.scrollY;
+    const visible = document.documentElement.clientHeight;
+    const pageHeight = document.documentElement.scrollHeight;
+    const bottomOfPage = visible + scrollY >= pageHeight - 200;
+    return bottomOfPage;
+  };
+
+  const handleScroll = () => {
+    if (
+      numberOfDisplayedPosts.value < allPosts.value.length &&
+      isNearBottom()
+    ) {
+      numberOfDisplayedPosts.value += 5;
     }
+  };
+
+  onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
   });
 </script>
 
 <template>
   <nuxt-layout name="centered-content">
     <post-component
-      v-for="(post, index) in posts"
+      v-for="(post, index) in allPosts.slice(0, numberOfDisplayedPosts)"
       :key="index"
       :post="post"
       class="mb-8"
