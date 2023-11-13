@@ -1,5 +1,8 @@
 export default () => {
-  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('UserActivity') !== null) {
+  if (
+    typeof sessionStorage !== 'undefined' &&
+    sessionStorage.getItem('UserActivity') !== null
+  ) {
     try {
       return JSON.parse(sessionStorage.getItem('UserActivity') as string);
     } catch (error) {
@@ -15,4 +18,3 @@ export default () => {
     return null;
   }
 };
-
