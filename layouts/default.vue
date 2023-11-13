@@ -34,6 +34,16 @@
       title: 'Create Post',
       icon: 'fa-solid fa-square-plus',
     },
+    {
+      to: '/sign-in',
+      title: 'Sign in',
+      icon: 'fa-solid fa-right-to-bracket',
+    },
+    {
+      to: '/register',
+      title: 'Register',
+      icon: 'fa-solid fa-user-plus',
+    },
   ];
 </script>
 
