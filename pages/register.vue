@@ -54,7 +54,7 @@
 </script>
 
 <template>
-  <NuxtLayout name="login-register">
+  <nuxt-layout name="login-register">
     <v-form v-model="form" @submit.prevent="register">
       <v-text-field
         label="Email"
@@ -123,8 +123,8 @@
         Register
       </v-btn>
     </v-form>
-    <NuxtLink to="/login" class="d-block mt-8 text-body-2">
+    <nuxt-link to="/login" class="d-block mt-8 text-body-2">
       Already have an account? Log in here.
-    </NuxtLink>
-  </NuxtLayout>
+    </nuxt-link>
+  </nuxt-layout>
 </template>

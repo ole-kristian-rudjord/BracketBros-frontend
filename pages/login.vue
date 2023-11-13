@@ -42,7 +42,7 @@
 </script>
 
 <template>
-  <NuxtLayout name="login-register">
+  <nuxt-layout name="login-register">
     <v-form v-model="form" @submit.prevent="login">
       <v-text-field
         label="Email or username"
@@ -86,9 +86,9 @@
         Log in
       </v-btn>
     </v-form>
-    <NuxtLink to="/register" class="d-block mt-8 text-body-2">
+    <nuxt-link to="/register" class="d-block mt-8 text-body-2">
       New here? Create an account.
-    </NuxtLink>
+    </nuxt-link>
     <v-alert
       v-if="error"
       color="error"
@@ -100,5 +100,5 @@
           : 'Unexpected error when trying to log in, please try again later.'
       "
     ></v-alert>
-  </NuxtLayout>
+  </nuxt-layout>
 </template>
