@@ -17,12 +17,12 @@
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center w-100 py-12 px-4">
+  <nuxt-layout name="centered-content">
     <post-component
       v-for="(post, index) in posts"
       :key="index"
       :post="post"
-      class="mb-12"
+      class="mb-8"
     ></post-component>
-  </div>
+  </nuxt-layout>
 </template>

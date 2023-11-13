@@ -190,7 +190,7 @@
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center w-100 py-12 px-4">
+  <nuxt-layout name="centered-content">
     <post-component
       v-if="post"
       :post="post"
@@ -205,5 +205,5 @@
         class="w-100 mb-4"
       ></comment-component>
     </div>
-  </div>
+  </nuxt-layout>
 </template>
