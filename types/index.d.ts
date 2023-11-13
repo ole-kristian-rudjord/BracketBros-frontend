@@ -4,6 +4,11 @@ declare global {
   interface user {
     username: string;
     profilePicture: string | null;
+    creationdate: string;
+    posts: int[] | null;
+    likedPosts: int[] | null;
+    comments: int[] | null;
+    likedComments: int[] | null;
   }
 
   interface category {
