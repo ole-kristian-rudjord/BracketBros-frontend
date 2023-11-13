@@ -47,4 +47,10 @@ declare global {
     isLiked: boolean;
     commentReplies: comment[];
   }
+
+  interface loginData {
+    Identifier: string;
+    Password: string;
+    RememberMe: boolean;
+  }
 }
