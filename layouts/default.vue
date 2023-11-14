@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
 
   const display = useDisplay();
   const theme = useTheme();
@@ -45,6 +47,20 @@
       icon: 'fa-solid fa-user-plus',
     },
   ];
+
+  const allPosts = useAllPosts();
+
+  onMounted(async () => {
+    const { data } = await getAllPosts();
+    if (data) {
+      allPosts.value = data;
+    } else {
+      toast.error(
+        'Error fetching posts from the database.',
+        defaultToastOptions.error
+      );
+    }
+  });
 </script>
 
 <template>
