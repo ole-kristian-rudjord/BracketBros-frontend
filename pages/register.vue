@@ -17,8 +17,12 @@
 
   const rules = {
     required: (value: string) => !!value || 'Field is required',
+    username: (value: string) => {
+      const usernamePattern = /^[a-zA-Z0-9]{3,20}$/;
+      return usernamePattern.test(value) || 'Please enter a valid username';
+    },
     email: (value: string) => {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const emailPattern = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
       return emailPattern.test(value) || 'Please enter a valid email';
     },
     passwordMatch: () =>
@@ -67,7 +71,7 @@
         label="Username"
         v-model="username"
         variant="outlined"
-        :rules="[rules.required]"
+        :rules="[rules.required, rules.username]"
         class="mb-3"
       ></v-text-field>
       <v-text-field
