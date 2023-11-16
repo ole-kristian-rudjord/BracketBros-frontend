@@ -12,7 +12,7 @@
     //    router.push('/login'); // Redirect to login if not logged in
     //   return;
     // } 
-    userActivity.value = user;
+    userActivity.value = user;   
 
 
     const fulluserActivity = getUserActivity(true);

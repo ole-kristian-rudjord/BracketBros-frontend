@@ -1,4 +1,4 @@
-export default async (full? : boolean = false) => {
+export default async (full? : boolean ) => {
   try {
     const response = await fetch(
       `https://localhost:7205/api/DashBoard/UserActivity/${full ? 'full' : ''}`, // If full is set, return object with all data insted of ids
