@@ -6,6 +6,7 @@
   const display = useDisplay();
   const theme = useTheme();
 
+
   const showNavigationDrawer = ref(false);
 
   const toggleTheme = () => {
@@ -20,33 +21,46 @@
     icon: string;
   }
 
+  let user = getUserActivity() ? getUserActivity() : null;
+
   const pages: page[] = [
-    {
-      to: '/',
-      title: 'Home',
-      icon: 'fa-solid fa-house',
-    },
-    {
-      to: '/posts',
-      title: 'Posts',
-      icon: 'fa-solid fa-comments',
-    },
-    {
-      to: '/create-post',
-      title: 'Create Post',
-      icon: 'fa-solid fa-square-plus',
-    },
-    {
-      to: '/login',
-      title: 'Log in',
-      icon: 'fa-solid fa-right-to-bracket',
-    },
-    {
-      to: '/register',
-      title: 'Register',
-      icon: 'fa-solid fa-user-plus',
-    },
-  ];
+  {
+    to: '/',
+    title: 'Home',
+    icon: 'fa-solid fa-house',
+  },
+  {
+    to: '/posts',
+    title: 'Posts',
+    icon: 'fa-solid fa-comments',
+  },
+  {
+    to: '/create-post',
+    title: 'Create Post',
+    icon: 'fa-solid fa-square-plus',
+  }, 
+  ...(user  // Check if logged in, if so, show activity page
+    ? [
+        {
+          to: '/user-activity',
+          title: `Hello ${user.username}!`,
+          icon: 'fa-solid fa-user',
+        },
+      ]
+    : [ // If not logged in, show login and register
+        {
+          to: '/login',
+          title: 'Log in',
+          icon: 'fa-solid fa-right-to-bracket',
+        },
+        {
+          to: '/register',
+          title: 'Register',
+          icon: 'fa-solid fa-user-plus',
+        },
+      ]),
+];
+
 
   const allPosts = useAllPosts();
 

@@ -1,3 +1,5 @@
+const router = useRouter();
+
 export default async (loginData: loginData) => {
   try {
     console.log('Trying to login');
@@ -12,6 +14,7 @@ export default async (loginData: loginData) => {
 
     if (response.ok) {
       const data = await response.text();
+      router.push('/user-activity');
       return { data, error: null };
     } else {
       return { data: null, error: response.status };

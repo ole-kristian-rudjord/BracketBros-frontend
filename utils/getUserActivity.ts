@@ -11,10 +11,6 @@ export default () => {
       return null;
     }
   } else {
-    // If not sessionStorage, make the user login
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login';
-    }
     return null;
   }
 };
