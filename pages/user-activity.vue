@@ -7,12 +7,16 @@
 
   const userActivity = ref<user>();
   onMounted(() => {
-    const user = getUserActivity();
-    if (!user) {
-       router.push('/login'); // Redirect to login if not logged in
-      return;
-    }
+    const user = getSavedUserActivity();
+    // if (!user) {
+    //    router.push('/login'); // Redirect to login if not logged in
+    //   return;
+    // } 
     userActivity.value = user;
+
+
+    const fulluserActivity = getUserActivity(true);
+    console.log(fulluserActivity);
   });
 </script>
 

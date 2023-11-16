@@ -21,7 +21,7 @@
     icon: string;
   }
 
-  let user = getUserActivity() ? getUserActivity() : null;
+  let user = getSavedUserActivity() ? getSavedUserActivity() : null;
 
   const pages: page[] = [
   {

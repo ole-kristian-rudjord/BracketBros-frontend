@@ -28,7 +28,7 @@
     const response = await loginUser(loginData);
 
     if (response.data) {
-      const userActivity = await refreshUserActivity();
+      const userActivity = await getUserActivity();
       console.log(userActivity);
       error.value = null;
     } else if (response.error === 401) {
