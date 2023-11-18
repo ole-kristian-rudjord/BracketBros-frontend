@@ -12,7 +12,6 @@ export default async (loginData: loginData) => {
     return { data: response.data, error: null };
   } else {
     return { data: null, error: response.error };  
-    
   }
   // try {
   //   console.log('Trying to login');

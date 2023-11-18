@@ -1,6 +1,6 @@
 
 // Generic fetch function, it takes in a url, method and object and returns the response
-export default async (url: string, method: string, object: any) => {
+export default async (url: string, method: string, object: any = null) => {
   try {
     const options: RequestInit = {
       method: method,
