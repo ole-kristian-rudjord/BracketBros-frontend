@@ -15,8 +15,7 @@
     userActivity.value = user;   
 
 
-    const fulluserActivity = getUserActivity(true);
-    console.log(fulluserActivity);
+    console.log(getUserActivity(true));
   });
 </script>
 
