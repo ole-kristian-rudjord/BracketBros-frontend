@@ -8,9 +8,9 @@ export default () => {
     } catch (error) {
       console.error('Error parsing JSON:', error);
       // Handle the error or return a default value
-      return null;
+      console.log("Trying to fetch UserActivity from server");
     }
-  } else {
-    return null;
   }
+  console.log("Could not find any user UserActivity from session storage, trying to fetch UserActivity from server");
+  return getUserActivity(false);
 };
