@@ -34,7 +34,7 @@ const login = async () => {
     // Redirect to home page if logged in
     await router.push('/');
     error.value = null;
-  } else if (response.error === 401) {
+  } else if (response.status === 401) {
     error.value = 'unauthorized';
   } else {
     error.value = 'unexpectedError';

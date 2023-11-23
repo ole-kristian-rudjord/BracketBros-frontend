@@ -10,8 +10,8 @@ const loadData = async () => {
   const { data: categoriesData } = await genericFetch('https://localhost:7205/api/Post/GetCategories', 'GET');
   const { data: tags } = await genericFetch('https://localhost:7205/api/Post/GetTags', 'GET');
   
-  categories.value = categoriesData;
-  tags.value = tags;
+ /* categories.value = categoriesData;
+  tags.value = tags;*/
 
 };
 

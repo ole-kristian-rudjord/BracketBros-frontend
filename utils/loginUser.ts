@@ -7,11 +7,11 @@ export default async (loginData: loginData) => {
 
   const response = await genericFetch('POST', `https://localhost:7205/api/Account/login`,  loginData);
 
-  if (response.error === null) {  // If no error, then login was successful
+  if (response.data) {  // If no error, then login was successful
     console.log('Login successful');
     return { data: response.data, error: null };
   } else {
-    return { data: null, error: response.error };  
+    return { data: null, error: response.error, status: response.status };
   }
   // try {
   //   console.log('Trying to login');

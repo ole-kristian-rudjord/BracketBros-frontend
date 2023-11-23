@@ -43,8 +43,8 @@ const changePassword = async () => {
   if (response.data) {
     alert(response.data);
     error.value = null;
-  } else if (response.error === 422) {
-    alert(response.data);
+  } else if (response.status === 422) {
+    alert(response.error);
     error.value = 'unauthorized';
   } else {
     alert(response.error);
