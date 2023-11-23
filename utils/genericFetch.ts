@@ -1,4 +1,3 @@
-
 // Generic fetch function, it takes in method, an url  and object and returns the response
 export default async (method: string, url: string, object: any = null) => {
   try {

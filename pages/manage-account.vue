@@ -1,22 +1,26 @@
 <script setup lang="ts">
-const router = useRouter();
-
 useHead({
   title: 'Manage your account - BracketBros',
 });
 
-
+const router = useRouter();
 const user = getSavedUserActivity();
 if (!user) {
   router.push('/login'); // Redirect to login page if not logged in
 }
 
 const form = ref(false);
+
 const oldPassword = ref('');
 const newPassword = ref('');
 
 const oldShowPassword = ref(false);
 const newShowPassword = ref(false);
+
+const profilePicture = ref('');
+const removeProfilePicture = ref(false);
+
+
 const isLoading = ref(false);
 const error = ref<null | 'unauthorized' | 'unexpectedError'>(null);
 
@@ -50,19 +54,48 @@ const changePassword = async () => {
   isLoading.value = false;
 };
 
+const profilePictureChange = async () => {
+  isLoading.value = true;
+
+  const ProfilePictureModel: object = {
+    ProfilePicture: profilePicture.value,
+    RemoveProfilePicture: removeProfilePicture.value,
+  };
+
+  console.log(profilePicture.value);
+
+
+  console.log(ProfilePictureModel);
+  const response = await genericFetch('POST', 'https://localhost:7205/api/Account/changeProfilePicture', ProfilePictureModel);
+  if (response.data) {
+    alert(response.data);
+    error.value = null;
+  } else if (response.error === 422) {
+    alert(response.data);
+    error.value = 'unauthorized';
+  } else {
+    alert(response.error);
+    error.value = 'unexpectedError';
+  }
+  isLoading.value = false;
+};
+const logout = () => {
+  logoutUser();
+  router.push('/login');
+};
+
 </script>
 
 <template>
   <nuxt-layout name="login-register">
-    <h2>Change password</h2>
     <v-form v-model="form" @submit.prevent="changePassword">
+      <h2>Change password</h2>
       <v-text-field
           label="Current password"
           v-model="oldPassword"
           :type="oldShowPassword ? 'text' : 'password'"
           variant="outlined"
-          :rules="[rules.required]"
-      >
+          :rules="[rules.required]">
         <template v-slot:append-inner>
           <v-icon
               :icon="oldShowPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
@@ -76,8 +109,7 @@ const changePassword = async () => {
           v-model="newPassword"
           :type="newShowPassword ? 'text' : 'password'"
           variant="outlined"
-          :rules="[rules.required, rules.noPasswordMatch()]"
-      >
+          :rules="[rules.required, rules.noPasswordMatch()]">
         <template v-slot:append-inner>
           <v-icon
               :icon="newShowPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
@@ -109,5 +141,41 @@ const changePassword = async () => {
           : 'Unexpected error when trying to log in, please try again later.'
       "
     ></v-alert>
+    <v-form v-model="form" @submit.prevent="profilePictureChange" enctype="multipart/form-data">
+      <h2>Change profile picture</h2>
+      <v-file-input
+          label="Profile picture"
+          v-model="profilePicture"
+          variant="outlined"
+      ></v-file-input>
+      <v-checkbox
+          label="Remove profile picture"
+          v-model="removeProfilePicture"
+          false-icon="fa-regular fa-square"
+          true-icon="fa-regular fa-square-check"
+          hide-details
+          class="mb-5"
+      ></v-checkbox>
+      <v-btn
+          type="submit"
+          size="x-large"
+          variant="tonal"
+          block=""
+          class="text-body-1"
+          :disabled="!form"
+          :loading="isLoading"
+      >
+        Change profile picture
+      </v-btn>
+    </v-form>
+    <v-btn
+        size="x-large"
+        variant="tonal"
+        block=""
+        class="text-body-1"
+        @click="logout"
+    >
+      Logout
+    </v-btn>
   </nuxt-layout>
 </template>

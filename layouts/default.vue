@@ -42,7 +42,12 @@
   ...(user  // Check if logged in, if so, show activity page
     ? [
         {
-          to: '/user-activity',
+          to: '/user-dashboard',
+          title: `Dashboard`,
+          icon: 'fa-solid fa-line-chart',
+        },
+        {
+          to: '/manage-account',
           title: `Hello ${user.username}!`,
           icon: 'fa-solid fa-user',
         },
