@@ -30,7 +30,7 @@ export default async (url: string, method: string, object: any = null) => {
       }
     } else {
       console.error(`Error fetching ${url} using ${method}: `, response.statusText);
-      return { data: null, error: response.statusText };
+      return { data: await response.text(), error: response.status };
     }
   } catch (error) {
     console.error(`Error fetching ${url} using ${method}: `, error);
