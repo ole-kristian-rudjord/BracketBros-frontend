@@ -2,7 +2,7 @@ import genericFetch from "./genericFetch";
 
 export default async (registerData: registerData) => {
 
-  const response = await genericFetch('https://localhost:7205/api/Account/register', 'POST', registerData);
+  const response = await genericFetch('POST', 'https://localhost:7205/api/Account/register', registerData);
 
   if (response.error === null) {
     console.log('Register successful');

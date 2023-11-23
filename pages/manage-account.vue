@@ -34,7 +34,7 @@ const changePassword = async () => {
     newPassword: newPassword.value,
   };
 
-  const response = await genericFetch('https://localhost:7205/api/Account/changePassword', 'POST', ChangePasswordModel);
+  const response = await genericFetch('POST', 'https://localhost:7205/api/Account/changePassword', ChangePasswordModel);
 
   if (response.data) {
     alert(response.data);

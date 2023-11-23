@@ -5,7 +5,7 @@ import genericFetch from "./genericFetch";
 export default async (loginData: loginData) => {
 
 
-  const response = await genericFetch(`https://localhost:7205/api/Account/login`, 'POST', loginData);
+  const response = await genericFetch('POST', `https://localhost:7205/api/Account/login`,  loginData);
 
   if (response.error === null) {  // If no error, then login was successful
     console.log('Login successful');

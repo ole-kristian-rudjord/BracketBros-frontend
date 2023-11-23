@@ -2,7 +2,7 @@ import genericFetch from "./genericFetch";
 
 export default async () => {
 
-const response = await genericFetch('https://localhost:7205/api/Account/logout', 'GET', null);
+const response = await genericFetch('GET','https://localhost:7205/api/Account/logout');
 
 if (response.error === null) {
   sessionStorage.clear();  // Remove all data from sessionStorage 
