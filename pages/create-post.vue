@@ -12,7 +12,7 @@
   const form = ref(false);
   const title = ref('');
   const selectedCategory = ref<category>();
-  const selectedTags = ref<tag[]>();
+  const selectedTags = ref<tag[]>([]);
   const content = ref('');
 
   const availableCategories_isLoading = ref(false);
@@ -20,7 +20,15 @@
   const createPost_isLoading = ref(false);
 
   const rules = {
-    required: (value: string) => !!value || 'Field is required',
+    required: (value: any) => {
+      if (typeof value === 'string') {
+        return value.trim().length > 0 || 'Field is required';
+      }
+      if (Array.isArray(value)) {
+        return value.length > 0 || 'Field is required';
+      }
+      return !!value || 'Field is required';
+    },
     title: (value: string) => {
       const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/:?.!#@$%&*()]{2,64}$/;
       return (
@@ -37,7 +45,7 @@
     },
   };
 
-  const register = async () => {
+  const register = () => {
     createPost_isLoading.value = true;
 
     // const post: post = {
@@ -130,19 +138,20 @@
           v-model="content"
           variant="outlined"
           :rules="[rules.required, rules.content]"
-          class="mb-3"
+          class="mb-6"
         ></v-textarea>
 
         <v-btn
           type="submit"
           size="x-large"
-          variant="tonal"
-          block=""
+          variant="flat"
           color="primary"
-          class="text-body-1"
           :disabled="!form"
           :loading="createPost_isLoading"
-          >Create post
+          block
+          class="text-body-1"
+        >
+          Create post
         </v-btn>
       </v-form>
     </v-sheet>
