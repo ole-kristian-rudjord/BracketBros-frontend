@@ -5,40 +5,55 @@ useHead({
   title: 'Browse posts - BracketBros',
 });
 
-const userActivity = ref<user>();
-onMounted(() => {
+const createdPosts = ref<post[]>([]);
+const likedPosts = ref<post[]>([]);
+const createdComments = ref<comment[]>([]);
+const likedComments = ref<comment[]>([]);
+
+
+const basicUserActivity = ref<user>();
+onMounted(async () => {
   const user = getSavedUserActivity();
   if (!user) {
-    router.push('/login'); // Redirect to login if not logged in
+    await router.push('/login'); // Redirect to login if not logged in
     return;
   }
-  userActivity.value = user;
+  basicUserActivity.value = user;
 
+  const {data: {comments, likedcomments, likedposts, posts}} = await getUserActivity(true);
 
-  console.log(getUserActivity(true));
+  createdPosts.value = posts;
+  likedPosts.value = likedposts;
+  createdComments.value = comments;
+  likedComments.value = likedcomments;
+
 });
 </script>
 
 <template>
-  <div>
-    <h1>Activity</h1>
-    <div v-if="userActivity">
-      <p>Username: {{ userActivity.username }}</p>
-      <p>Creation date: {{ userActivity.creationdate }}</p>
-
-      <div v-if="userActivity.posts && userActivity.posts.length > 0">
+  <nuxt-layout name="centered-content">
+    <div>
+      <h1>Activity</h1>
+      <div v-if="createdPosts && createdPosts.length > 0">
         <h2>Your Posts</h2>
-        <div v-for="post in userActivity.posts" :key="post.id">
+        <div v-for="post in createdPosts" :key="post.id">
           <p>{{ post.title }}</p>
-          <p>{{ post.content }}</p>
-<!--
-          <p>{{ post.dateCreated }}</p>
--->
+          <v-btn @click="router.push(`/post/${post.id}`)">View</v-btn>
         </div>
       </div>
       <div v-else>
         <p>You have no posts</p>
       </div>
+      <div v-if="createdPosts && createdPosts.length > 0">
+        <h2>Your comments</h2>
+        <div v-for="comment in createdComments" :key="comment.commentId">
+          <p>{{ comment.content }}</p>
+          <v-btn @click="router.push(`/post/${comment.postId}`)">View</v-btn>
+        </div>
+      </div>
+      <div v-else>
+        <p>You have no comments</p>
+      </div>
     </div>
-  </div>
+  </nuxt-layout>
 </template>
