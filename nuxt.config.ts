@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     ssr: {
       noExternal: ['vuetify'],
     },
+    optimizeDeps: {
+      include: ['punycode'],
+    },
   },
   modules: [
     async (options, nuxt) => {

@@ -21,6 +21,7 @@
     "@nuxtjs/google-fonts": "^3.0.2",
     "@types/markdown-it": "^13.0.6",
     "markdown-it": "^13.0.2",
+    "punycode": "^2.3.1",
     "sass": "^1.69.5",
     "vite-plugin-vuetify": "^1.0.2",
     "vue3-toastify": "^0.1.14",
