@@ -1,7 +1,8 @@
-import genericFetch from './genericFetch';
-
 export default async () => {
-  return genericFetch('GET', 'https://localhost:7205/api/Post/posts');
+  return genericFetch({
+    method: 'GET',
+    url: 'https://localhost:7205/api/Post/posts',
+  });
 
   // try {
   //   const response = await fetch('https://localhost:7205/api/Post/posts', {

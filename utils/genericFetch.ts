@@ -1,41 +1,40 @@
-// Generic fetch function, it takes in method, an url  and object and returns the response
-export default async (method: string, url: string, object: any = null) => {
+type FetchOptions = {
+  method: string;
+  url: string;
+  body?: object;
+};
+
+export default async ({ method, url, body }: FetchOptions) => {
+  const isBodyAllowed = ['POST', 'PUT'].includes(method);
+
+  const options: RequestInit = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    ...(isBodyAllowed && body ? { body: JSON.stringify(body) } : {}),
+  };
+
   try {
-    const options: RequestInit = {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    };
-
-    // Add body to options if method is POST or PUT
-    if (method === 'POST' || method === 'PUT') {
-      options.body = JSON.stringify(object);
-    }
-
-    // Fetch data using options provided
     const response = await fetch(url, options);
-    const responseText = await response.text();
-    if (response.ok) {
-      // Try to parse data as JSON else return it as text
-      try {
-        // Try to parse data as JSON
-        const json = JSON.parse(responseText);
-        return { data: json, error: null, status: response.status };
-      } catch (error) {
-        // If it fails, return raw data instead
-        return { data: responseText, error: null, status: response.status };
-      }
-    } else {
-      console.error(
-        `Error fetching ${url} using ${method}: `,
-        response.statusText
-      );
-      return { data: null, error: responseText, status: response.status };
-    }
+    return await processResponse(response);
   } catch (error) {
-    console.error(`Error fetching ${url} using ${method}: `, error);
+    console.error(`Error fetching ${url} with ${method}: `, error);
     return { data: null, error, status: null };
   }
 };
+
+async function processResponse(response: Response) {
+  const responseData = await response.text();
+  try {
+    const data = JSON.parse(responseData);
+    return { data, error: null, status: response.status };
+  } catch (error) {
+    if (!response.ok) {
+      console.error(`Error in response: `, responseData);
+      return { data: null, error: responseData, status: response.status };
+    }
+    return { data: responseData, error: null, status: response.status };
+  }
+}
