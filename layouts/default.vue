@@ -5,8 +5,9 @@
 
   const display = useDisplay();
   const theme = useTheme();
-
   const showNavigationDrawer = ref(false);
+  const allPosts = useAllPosts();
+  const savedUser = ref(getSavedUserActivity());
 
   const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark
@@ -14,45 +15,34 @@
       : 'customDarkTheme';
   };
 
-  interface page {
+  interface Page {
     to: string;
     title: string;
     icon: string;
   }
 
-  let user = getSavedUserActivity() ? getSavedUserActivity() : null;
-
-  const pages: page[] = [
-    {
-      to: '/',
-      title: 'Home',
-      icon: 'fa:fa-solid fa-house',
-    },
-    {
-      to: '/posts',
-      title: 'Posts',
-      icon: 'fa:fa-solid fa-comments',
-    },
+  const pages = computed<Page[]>(() => [
+    { to: '/', title: 'Home', icon: 'fa:fa-solid fa-house' },
+    { to: '/posts', title: 'Posts', icon: 'fa:fa-solid fa-comments' },
     {
       to: '/create-post',
       title: 'Create Post',
       icon: 'fa:fa-solid fa-square-plus',
     },
-    ...(user // Check if logged in, if so, show activity page
+    ...(savedUser.value
       ? [
           {
             to: '/user-dashboard',
-            title: `Dashboard`,
+            title: 'Dashboard',
             icon: 'fa:fa-solid fa-line-chart',
           },
           {
             to: '/manage-account',
-            title: `Hello ${user.username}!`,
+            title: `Hello ${savedUser.value.username}!`,
             icon: 'fa:fa-solid fa-user',
           },
         ]
       : [
-          // If not logged in, show login and register
           {
             to: '/login',
             title: 'Log in',
@@ -64,9 +54,7 @@
             icon: 'fa:fa-solid fa-user-plus',
           },
         ]),
-  ];
-
-  const allPosts = useAllPosts();
+  ]);
 
   onMounted(async () => {
     const { data } = await getAllPosts();
