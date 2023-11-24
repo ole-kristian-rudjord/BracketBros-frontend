@@ -1,13 +1,9 @@
-//const router = useRouter();
-
-import genericFetch from './genericFetch';
-
 export default async (loginData: loginData) => {
-  const response = await genericFetch(
-    'POST',
-    `https://localhost:7205/api/Account/login`,
-    loginData
-  );
+  const response = await genericFetch({
+    method: 'POST',
+    url: `https://localhost:7205/api/Account/login`,
+    body: loginData,
+  });
 
   if (response.data) {
     // If no error, then login was successful

@@ -1,10 +1,10 @@
-import genericFetch from './genericFetch';
-
 export default async (full: boolean = false) => {
-  const response = await genericFetch(
-    'GET',
-    `https://localhost:7205/api/DashBoard/UserActivity/${full ? 'full' : ''}`
-  );
+  const response = await genericFetch({
+    method: 'GET',
+    url: `https://localhost:7205/api/DashBoard/UserActivity/${
+      full ? 'full' : ''
+    }`,
+  });
   if (response.error === null) {
     if (!full)
       sessionStorage.setItem('UserActivity', JSON.stringify(response.data));

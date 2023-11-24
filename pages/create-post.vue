@@ -6,26 +6,26 @@
   let availableCategories = ref<category[]>([]);
   let availableTags = ref<tag[]>([]);
 
-  const loadData = async () => {
-    const { data: categoriesData } = await genericFetch(
-      'https://localhost:7205/api/Post/GetCategories',
-      'GET'
-    );
-    const { data: tags } = await genericFetch(
-      'https://localhost:7205/api/Post/GetTags',
-      'GET'
-    );
+  // const loadData = async () => {
+  //   const { data: categoriesData } = await genericFetch(
+  //     'https://localhost:7205/api/Post/GetCategories',
+  //     'GET'
+  //   );
+  //   const { data: tags } = await genericFetch(
+  //     'https://localhost:7205/api/Post/GetTags',
+  //     'GET'
+  //   );
 
-    /* categories.value = categoriesData;
-  tags.value = tags;*/
-  };
+  //   /* categories.value = categoriesData;
+  // tags.value = tags;*/
+  // };
 
-  onMounted(() => {
-    // if (!user.value) {
-    //   router.push('/login');
-    // }
-    // loadData();
-  });
+  // onMounted(() => {
+  //   // if (!user.value) {
+  //   //   router.push('/login');
+  //   // }
+  //   // loadData();
+  // });
 
   const form = ref(false);
   const title = ref('');
