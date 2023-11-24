@@ -73,7 +73,7 @@
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
 
-    const { data: categoriesData } = await getAllCategories();
+    const categoriesData = await getAllCategories();
     if (categoriesData) {
       availableCategories.value = categoriesData;
     } else {
