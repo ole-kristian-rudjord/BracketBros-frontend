@@ -41,19 +41,13 @@
     );
 
     if (changePasswordResponse.data) {
-      // alert(changePasswordResponse.data);
-      // error.value = null;
       toast.success('Password has been changed.', defaultToastOptions.success);
     } else if (changePasswordResponse.status === 422) {
-      // alert(changePasswordResponse.error);
-      // error.value = 'unauthorized';
       toast.error(
         'You are not authorized to change the password of this user.',
         defaultToastOptions.error
       );
     } else {
-      // alert(changePasswordResponse.error);
-      // error.value = 'unexpectedError';
       toast.error(
         'An unexpected error occurred when trying to change password, please try again later.',
         defaultToastOptions.error
