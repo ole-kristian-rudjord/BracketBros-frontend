@@ -59,33 +59,6 @@
   };
 
   const profilePictureChange = async () => {
-    // changePassword_isLoading.value = true;
-
-    // const ProfilePictureModel = {
-    //   ProfilePicture: profilePicture.value,
-    //   RemoveProfilePicture: removeProfilePicture.value,
-    // };
-
-    // console.log(profilePicture.value);
-
-    // console.log(ProfilePictureModel);
-    // const response = await genericFetch({
-    //   method: 'POST',
-    //   url: 'https://localhost:7205/api/Account/changeProfilePicture',
-    //   body: ProfilePictureModel,
-    // });
-
-    // if (response.data) {
-    //   alert(response.data);
-    //   error.value = null;
-    // } else if (response.error === 422) {
-    //   alert(response.data);
-    //   error.value = 'unauthorized';
-    // } else {
-    //   alert(response.error);
-    //   error.value = 'unexpectedError';
-    // }
-
     changeProfilePicture_isLoading.value = true;
 
     const response = await changeProfilePicture(
