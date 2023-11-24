@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
+
   useHead({
     title: 'Manage your account - BracketBros',
   });
@@ -13,12 +16,13 @@
 
   const oldPassword = ref('');
   const newPassword = ref('');
-
-  const oldShowPassword = ref(false);
-  const newShowPassword = ref(false);
+  const showOldPassword = ref(false);
+  const showNewPassword = ref(false);
+  const changePassword_isLoading = ref(false);
 
   const profilePicture = ref('');
   const removeProfilePicture = ref(false);
+  const changeProfilePicture_isLoading = ref(false);
 
   const isLoading = ref(false);
   const error = ref<null | 'unauthorized' | 'unexpectedError'>(null);
@@ -30,61 +34,58 @@
   };
 
   const changePassword = async () => {
-    isLoading.value = true;
+    changePassword_isLoading.value = true;
 
-    const ChangePasswordModel: object = {
-      oldPassword: oldPassword.value,
-      newPassword: newPassword.value,
-    };
-
-    const response = await genericFetch({
-      method: 'POST',
-      url: 'https://localhost:7205/api/Account/changePassword',
-      body: ChangePasswordModel,
-    });
+    const response = await changeUserPassword(
+      oldPassword.value,
+      newPassword.value
+    );
 
     if (response.data) {
-      alert(response.data);
-      error.value = null;
+      toast.success('Password has been changed.', defaultToastOptions.success);
     } else if (response.status === 422) {
-      alert(response.error);
-      error.value = 'unauthorized';
+      toast.error(
+        'You are not authorized to change the password of this user.',
+        defaultToastOptions.error
+      );
     } else {
-      alert(response.error);
-      error.value = 'unexpectedError';
+      toast.error(
+        'An unexpected error occurred when trying to change password, please try again later.',
+        defaultToastOptions.error
+      );
     }
 
-    isLoading.value = false;
+    changePassword_isLoading.value = false;
   };
 
   const profilePictureChange = async () => {
-    isLoading.value = true;
+    changeProfilePicture_isLoading.value = true;
 
-    const ProfilePictureModel: object = {
-      ProfilePicture: profilePicture.value,
-      RemoveProfilePicture: removeProfilePicture.value,
-    };
+    const response = await changeProfilePicture(
+      profilePicture.value,
+      removeProfilePicture.value
+    );
 
-    console.log(profilePicture.value);
-
-    console.log(ProfilePictureModel);
-    const response = await genericFetch({
-      method: 'POST',
-      url: 'https://localhost:7205/api/Account/changeProfilePicture',
-      body: ProfilePictureModel,
-    });
     if (response.data) {
-      alert(response.data);
-      error.value = null;
-    } else if (response.error === 422) {
-      alert(response.data);
-      error.value = 'unauthorized';
+      toast.success(
+        'Profile picture has been updated.',
+        defaultToastOptions.success
+      );
+    } else if (response.status === 422) {
+      toast.error(
+        'You are not authorized to update the profile picture of this user.',
+        defaultToastOptions.error
+      );
     } else {
-      alert(response.error);
-      error.value = 'unexpectedError';
+      toast.error(
+        'An unexpected error occurred when trying to update the profile picture, please try again later.',
+        defaultToastOptions.error
+      );
     }
-    isLoading.value = false;
+
+    changeProfilePicture_isLoading.value = false;
   };
+
   const logout = () => {
     logoutUser();
     router.push('/login');
@@ -98,38 +99,38 @@
       <v-text-field
         label="Current password"
         v-model="oldPassword"
-        :type="oldShowPassword ? 'text' : 'password'"
+        :type="showOldPassword ? 'text' : 'password'"
         variant="outlined"
         :rules="[rules.required]"
       >
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              oldShowPassword
+              showOldPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
             size="x-small"
-            @click="oldShowPassword = !oldShowPassword"
+            @click="showOldPassword = !showOldPassword"
           ></v-icon>
         </template>
       </v-text-field>
       <v-text-field
         label="New password"
         v-model="newPassword"
-        :type="newShowPassword ? 'text' : 'password'"
+        :type="showNewPassword ? 'text' : 'password'"
         variant="outlined"
         :rules="[rules.required, rules.noPasswordMatch()]"
       >
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              newShowPassword
+              showNewPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
             size="x-small"
-            @click="newShowPassword = !newShowPassword"
+            @click="showNewPassword = !showNewPassword"
           ></v-icon>
         </template>
       </v-text-field>
