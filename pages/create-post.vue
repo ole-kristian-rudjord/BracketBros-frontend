@@ -3,8 +3,8 @@
     title: 'Create post - BracketBros',
   });
 
-  let categories = ref<category[]>([]);
-  let tags = ref<tag[]>([]);
+  let availableCategories = ref<category[]>([]);
+  let availableTags = ref<tag[]>([]);
 
   const loadData = async () => {
     const { data: categoriesData } = await genericFetch(
@@ -24,7 +24,7 @@
     // if (!user.value) {
     //   router.push('/login');
     // }
-    loadData();
+    // loadData();
   });
 
   const form = ref(false);
@@ -77,8 +77,6 @@
 </script>
 
 <template>
-  create post
-
   <nuxt-layout name="login-register">
     <!-- Please change this -->
     <v-form v-model="form" @submit.prevent="register">
@@ -93,7 +91,7 @@
       <v-select
         label="Category"
         v-model="category"
-        :items="categories"
+        :items="availableCategories"
         item-text="name"
         item-value="categoryId"
         variant="outlined"
