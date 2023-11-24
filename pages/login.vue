@@ -83,7 +83,7 @@
         type="submit"
         size="x-large"
         variant="tonal"
-        block=""
+        block
         class="text-body-1"
         :disabled="!form"
         :loading="isLoading"
