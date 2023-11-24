@@ -10,8 +10,7 @@
     const scrollY = window.scrollY;
     const visible = document.documentElement.clientHeight;
     const pageHeight = document.documentElement.scrollHeight;
-    const bottomOfPage = visible + scrollY >= pageHeight - 200;
-    return bottomOfPage;
+    return visible + scrollY >= pageHeight - 200;
   };
 
   const handleScroll = () => {
