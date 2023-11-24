@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
+
   useHead({
     title: 'Manage your account - BracketBros',
   });
@@ -14,8 +17,8 @@
   const oldPassword = ref('');
   const newPassword = ref('');
 
-  const oldShowPassword = ref(false);
-  const newShowPassword = ref(false);
+  const showOldPassword = ref(false);
+  const showNewPassword = ref(false);
 
   const profilePicture = ref('');
   const removeProfilePicture = ref(false);
@@ -32,26 +35,29 @@
   const changePassword = async () => {
     isLoading.value = true;
 
-    const ChangePasswordModel: object = {
-      oldPassword: oldPassword.value,
-      newPassword: newPassword.value,
-    };
+    const changePasswordResponse = await changeUserPassword(
+      oldPassword.value,
+      newPassword.value
+    );
 
-    const response = await genericFetch({
-      method: 'POST',
-      url: 'https://localhost:7205/api/Account/changePassword',
-      body: ChangePasswordModel,
-    });
-
-    if (response.data) {
-      alert(response.data);
-      error.value = null;
-    } else if (response.status === 422) {
-      alert(response.error);
-      error.value = 'unauthorized';
+    if (changePasswordResponse.data) {
+      // alert(changePasswordResponse.data);
+      // error.value = null;
+      toast.success('Password has been changed.', defaultToastOptions.success);
+    } else if (changePasswordResponse.status === 422) {
+      // alert(changePasswordResponse.error);
+      // error.value = 'unauthorized';
+      toast.error(
+        'You are not authorized to change the password of this user.',
+        defaultToastOptions.error
+      );
     } else {
-      alert(response.error);
-      error.value = 'unexpectedError';
+      // alert(changePasswordResponse.error);
+      // error.value = 'unexpectedError';
+      toast.error(
+        'An unexpected error occurred when trying to change password, please try again later.',
+        defaultToastOptions.error
+      );
     }
 
     isLoading.value = false;
@@ -98,38 +104,38 @@
       <v-text-field
         label="Current password"
         v-model="oldPassword"
-        :type="oldShowPassword ? 'text' : 'password'"
+        :type="showOldPassword ? 'text' : 'password'"
         variant="outlined"
         :rules="[rules.required]"
       >
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              oldShowPassword
+              showOldPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
             size="x-small"
-            @click="oldShowPassword = !oldShowPassword"
+            @click="showOldPassword = !showOldPassword"
           ></v-icon>
         </template>
       </v-text-field>
       <v-text-field
         label="New password"
         v-model="newPassword"
-        :type="newShowPassword ? 'text' : 'password'"
+        :type="showNewPassword ? 'text' : 'password'"
         variant="outlined"
         :rules="[rules.required, rules.noPasswordMatch()]"
       >
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              newShowPassword
+              showNewPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
             size="x-small"
-            @click="newShowPassword = !newShowPassword"
+            @click="showNewPassword = !showNewPassword"
           ></v-icon>
         </template>
       </v-text-field>
