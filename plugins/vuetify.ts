@@ -1,13 +1,16 @@
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles';
+import { mdi, aliases } from 'vuetify/iconsets/mdi';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { fa } from 'vuetify/iconsets/fa';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     icons: {
-      defaultSet: 'fa',
+      defaultSet: 'mdi',
+      aliases,
       sets: {
+        mdi,
         fa,
       },
     },
