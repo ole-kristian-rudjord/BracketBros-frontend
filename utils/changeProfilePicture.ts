@@ -1,5 +1,5 @@
 export default async (
-  profilePicture: string,
+  profilePicture: File[],
   removeProfilePicture: boolean
 ) => {
   return genericFetch({
