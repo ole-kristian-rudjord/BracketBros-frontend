@@ -1,8 +1,10 @@
-import genericFetch from "./genericFetch";
+import genericFetch from './genericFetch';
 
 export default async (postId: number) => {
-
-return genericFetch('GET', `https://localhost:7205/api/Post/GetComments/${postId}` );
+  return genericFetch(
+    'GET',
+    `https://localhost:7205/api/Post/GetComments/${postId}`
+  );
 
   // try {
   //   const response = await fetch(
