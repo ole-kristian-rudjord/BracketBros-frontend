@@ -16,12 +16,13 @@
 
   const oldPassword = ref('');
   const newPassword = ref('');
-
   const showOldPassword = ref(false);
   const showNewPassword = ref(false);
+  const changePassword_isLoading = ref(false);
 
   const profilePicture = ref('');
   const removeProfilePicture = ref(false);
+  const changeProfilePicture_isLoading = ref(false);
 
   const isLoading = ref(false);
   const error = ref<null | 'unauthorized' | 'unexpectedError'>(null);
@@ -33,16 +34,16 @@
   };
 
   const changePassword = async () => {
-    isLoading.value = true;
+    changePassword_isLoading.value = true;
 
-    const changePasswordResponse = await changeUserPassword(
+    const response = await changeUserPassword(
       oldPassword.value,
       newPassword.value
     );
 
-    if (changePasswordResponse.data) {
+    if (response.data) {
       toast.success('Password has been changed.', defaultToastOptions.success);
-    } else if (changePasswordResponse.status === 422) {
+    } else if (response.status === 422) {
       toast.error(
         'You are not authorized to change the password of this user.',
         defaultToastOptions.error
@@ -54,37 +55,64 @@
       );
     }
 
-    isLoading.value = false;
+    changePassword_isLoading.value = false;
   };
 
   const profilePictureChange = async () => {
-    isLoading.value = true;
+    // changePassword_isLoading.value = true;
 
-    const ProfilePictureModel: object = {
-      ProfilePicture: profilePicture.value,
-      RemoveProfilePicture: removeProfilePicture.value,
-    };
+    // const ProfilePictureModel = {
+    //   ProfilePicture: profilePicture.value,
+    //   RemoveProfilePicture: removeProfilePicture.value,
+    // };
 
-    console.log(profilePicture.value);
+    // console.log(profilePicture.value);
 
-    console.log(ProfilePictureModel);
-    const response = await genericFetch({
-      method: 'POST',
-      url: 'https://localhost:7205/api/Account/changeProfilePicture',
-      body: ProfilePictureModel,
-    });
+    // console.log(ProfilePictureModel);
+    // const response = await genericFetch({
+    //   method: 'POST',
+    //   url: 'https://localhost:7205/api/Account/changeProfilePicture',
+    //   body: ProfilePictureModel,
+    // });
+
+    // if (response.data) {
+    //   alert(response.data);
+    //   error.value = null;
+    // } else if (response.error === 422) {
+    //   alert(response.data);
+    //   error.value = 'unauthorized';
+    // } else {
+    //   alert(response.error);
+    //   error.value = 'unexpectedError';
+    // }
+
+    changeProfilePicture_isLoading.value = true;
+
+    const response = await changeProfilePicture(
+      profilePicture.value,
+      removeProfilePicture.value
+    );
+
     if (response.data) {
-      alert(response.data);
-      error.value = null;
-    } else if (response.error === 422) {
-      alert(response.data);
-      error.value = 'unauthorized';
+      toast.success(
+        'Profile picture has been updated.',
+        defaultToastOptions.success
+      );
+    } else if (response.status === 422) {
+      toast.error(
+        'You are not authorized to update the profile picture of this user.',
+        defaultToastOptions.error
+      );
     } else {
-      alert(response.error);
-      error.value = 'unexpectedError';
+      toast.error(
+        'An unexpected error occurred when trying to update the profile picture, please try again later.',
+        defaultToastOptions.error
+      );
     }
-    isLoading.value = false;
+
+    changeProfilePicture_isLoading.value = false;
   };
+
   const logout = () => {
     logoutUser();
     router.push('/login');
