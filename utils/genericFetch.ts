@@ -1,10 +1,20 @@
-type FetchOptions = {
+interface FetchOptions {
   method: string;
   url: string;
   body?: object;
-};
+}
 
-export default async ({ method, url, body }: FetchOptions) => {
+interface FetchReturn {
+  data: any;
+  error: any;
+  status: number | null;
+}
+
+export default async ({
+  method,
+  url,
+  body,
+}: FetchOptions): Promise<FetchReturn> => {
   const isBodyAllowed = ['POST', 'PUT'].includes(method);
 
   const options: RequestInit = {
@@ -21,20 +31,20 @@ export default async ({ method, url, body }: FetchOptions) => {
     return await processResponse(response);
   } catch (error) {
     console.error(`Error fetching ${url} with ${method}: `, error);
-    return { data: null, error, status: null };
+    return { data: null, error: error, status: null };
   }
 };
 
-async function processResponse(response: Response) {
-  const responseData = await response.text();
+const processResponse = async (response: Response) => {
+  const responseText = await response.text();
   try {
-    const data = JSON.parse(responseData);
-    return { data, error: null, status: response.status };
+    const responseJSON = JSON.parse(responseText);
+    return { data: responseJSON, error: null, status: response.status };
   } catch (error) {
     if (!response.ok) {
-      console.error(`Error in response: `, responseData);
-      return { data: null, error: responseData, status: response.status };
+      console.error(`Error in response: `, responseText);
+      return { data: null, error: responseText, status: response.status };
     }
-    return { data: responseData, error: null, status: response.status };
+    return { data: responseText, error: null, status: response.status };
   }
-}
+};
