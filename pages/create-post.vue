@@ -100,6 +100,15 @@
 <template>
   <nuxt-layout name="centered-content">
     <v-sheet class="pa-12 rounded-lg elevation-4">
+      <h1 class="d-flex justify-center align-center mb-8 text-h5">
+        Create Post
+        <v-icon
+          icon="fa:fa-solid fa-pen-to-square"
+          size="x-small"
+          class="ml-4"
+        ></v-icon>
+      </h1>
+
       <v-form v-model="form" @submit.prevent="register">
         <v-text-field
           label="Title"
@@ -138,7 +147,7 @@
           v-model="content"
           variant="outlined"
           :rules="[rules.required, rules.content]"
-          class="mb-6"
+          class="mb-3"
         ></v-textarea>
 
         <v-btn
@@ -151,7 +160,10 @@
           block
           class="text-body-1"
         >
-          Create post
+          Publish
+          <template v-slot:append>
+            <v-icon icon="fa:fa-regular fa-paper-plane" size="small"></v-icon>
+          </template>
         </v-btn>
       </v-form>
     </v-sheet>
