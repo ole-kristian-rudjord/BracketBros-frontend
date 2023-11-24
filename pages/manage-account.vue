@@ -105,7 +105,9 @@
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              oldShowPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'
+              oldShowPassword
+                ? 'fa:fa-solid fa-eye-slash'
+                : 'fa:fa-solid fa-eye'
             "
             size="x-small"
             @click="oldShowPassword = !oldShowPassword"
@@ -122,7 +124,9 @@
         <template v-slot:append-inner>
           <v-icon
             :icon="
-              newShowPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'
+              newShowPassword
+                ? 'fa:fa-solid fa-eye-slash'
+                : 'fa:fa-solid fa-eye'
             "
             size="x-small"
             @click="newShowPassword = !newShowPassword"
@@ -144,7 +148,7 @@
     <v-alert
       v-if="error"
       color="error"
-      icon="fa-solid fa-circle-exclamation"
+      icon="fa:fa-solid fa-circle-exclamation"
       class="mt-6"
       :text="
         error === 'unauthorized'
@@ -166,8 +170,8 @@
       <v-checkbox
         label="Remove profile picture"
         v-model="removeProfilePicture"
-        false-icon="fa-regular fa-square"
-        true-icon="fa-regular fa-square-check"
+        false-icon="fa:fa-regular fa-square"
+        true-icon="fa:fa-regular fa-square-check"
         hide-details
         class="mb-5"
       ></v-checkbox>

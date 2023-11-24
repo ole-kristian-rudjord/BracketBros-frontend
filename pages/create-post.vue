@@ -11,8 +11,8 @@
 
   const form = ref(false);
   const title = ref('');
-  const selectedCategory = ref('');
-  const selectedTags = ref<tag[]>([]);
+  const selectedCategory = ref<category>();
+  const selectedTags = ref<tag[]>();
   const content = ref('');
 
   const availableCategories_isLoading = ref(false);
@@ -90,65 +90,61 @@
 </script>
 
 <template>
-  create post
+  <nuxt-layout name="centered-content">
+    <v-sheet class="pa-12 rounded-lg elevation-4">
+      <v-form v-model="form" @submit.prevent="register">
+        <v-text-field
+          label="Title"
+          v-model="title"
+          variant="outlined"
+          :rules="[rules.required, rules.title]"
+          class="mb-3"
+        ></v-text-field>
 
-  <nuxt-layout name="login-register">
-    <!-- Please change this -->
-    <v-form v-model="form" @submit.prevent="register">
-      <v-text-field
-        label="Title"
-        v-model="title"
-        variant="outlined"
-        :rules="[rules.required, rules.title]"
-        class="mb-3"
-      ></v-text-field>
-      <v-select
-        v-model="selectedCategory"
-        :items="availableCategories"
-        item-value="categoryId"
-        item-title="name"
-        return-object
-        label="Category"
-        placeholder="Select a category"
-        outlined
-        :rules="[rules.required]"
-        class="mb-3"
-      >
-      </v-select>
-      <v-select
-        v-model="selectedTags"
-        :items="availableTags"
-        item-value="tagId"
-        item-title="name"
-        return-object
-        multiple="true"
-        label="Tags"
-        placeholder="Select tags"
-        outlined
-        :rules="[rules.required]"
-        class="mb-3"
-      >
-      </v-select>
+        <v-select
+          label="Category"
+          :items="availableCategories"
+          :item-title="(category: category) => category.name"
+          v-model="selectedCategory"
+          :rules="[rules.required]"
+          variant="outlined"
+          class="mb-3"
+        >
+        </v-select>
 
-      <v-textarea
-        label="Content"
-        v-model="content"
-        variant="outlined"
-        :rules="[rules.required, rules.content]"
-        class="mb-3"
-      ></v-textarea>
+        <v-select
+          label="Tags"
+          :items="availableTags"
+          :item-title="(tag: tag) => tag.name"
+          v-model="selectedTags"
+          :rules="[rules.required]"
+          multiple
+          chips
+          variant="outlined"
+          class="mb-3"
+        >
+        </v-select>
 
-      <v-btn
-        type="submit"
-        size="x-large"
-        variant="tonal"
-        block=""
-        color="primary"
-        class="text-body-1"
-        :disabled="!form"
-        :loading="createPost_isLoading"
-        >Create post
-      </v-btn>
-    </v-form>
+        <v-textarea
+          label="Content"
+          v-model="content"
+          variant="outlined"
+          :rules="[rules.required, rules.content]"
+          class="mb-3"
+        ></v-textarea>
+
+        <v-btn
+          type="submit"
+          size="x-large"
+          variant="tonal"
+          block=""
+          color="primary"
+          class="text-body-1"
+          :disabled="!form"
+          :loading="createPost_isLoading"
+          >Create post
+        </v-btn>
+      </v-form>
+    </v-sheet>
   </nuxt-layout>
 </template>

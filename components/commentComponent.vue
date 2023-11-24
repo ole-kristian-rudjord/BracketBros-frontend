@@ -33,7 +33,7 @@
               <v-icon
                 v-else
                 color="primary"
-                icon="fa-solid fa-user"
+                icon="fa:fa-solid fa-user"
                 size="xx-small"
               ></v-icon>
             </v-avatar>
@@ -56,7 +56,9 @@
           <v-btn variant="plain" size="x-small">
             <template v-slot:prepend>
               <v-icon
-                :icon="isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+                :icon="
+                  isLiked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
+                "
                 :color="isLiked ? 'red' : ''"
               ></v-icon>
             </template>
@@ -66,7 +68,9 @@
             <template v-slot:prepend>
               <v-icon
                 :icon="
-                  hasCommented ? 'fa-solid fa-comment' : 'fa-regular fa-comment'
+                  hasCommented
+                    ? 'fa:fa-solid fa-comment'
+                    : 'fa:fa-regular fa-comment'
                 "
                 :color="hasCommented ? 'green' : ''"
               ></v-icon>
@@ -82,7 +86,9 @@
           >
             <v-icon
               :icon="
-                isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'
+                isSaved
+                  ? 'fa:fa-solid fa-bookmark'
+                  : 'fa:fa-regular fa-bookmark'
               "
               :color="isSaved ? 'blue' : ''"
               size="small"
@@ -97,7 +103,7 @@
             density="comfortable"
             class="rounded"
           >
-            <v-icon icon="fa-solid fa-pen-to-square" size="small"></v-icon>
+            <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
           </v-btn>
           <v-btn
             variant="plain"
@@ -106,7 +112,7 @@
             density="comfortable"
             class="rounded"
           >
-            <v-icon icon="fa-solid fa-trash-can" size="small"></v-icon>
+            <v-icon icon="fa:fa-solid fa-trash-can" size="small"></v-icon>
           </v-btn>
         </div>
       </div>

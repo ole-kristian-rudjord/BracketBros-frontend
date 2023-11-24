@@ -26,29 +26,29 @@
     {
       to: '/',
       title: 'Home',
-      icon: 'fa-solid fa-house',
+      icon: 'fa:fa-solid fa-house',
     },
     {
       to: '/posts',
       title: 'Posts',
-      icon: 'fa-solid fa-comments',
+      icon: 'fa:fa-solid fa-comments',
     },
     {
       to: '/create-post',
       title: 'Create Post',
-      icon: 'fa-solid fa-square-plus',
+      icon: 'fa:fa-solid fa-square-plus',
     },
     ...(user // Check if logged in, if so, show activity page
       ? [
           {
             to: '/user-dashboard',
             title: `Dashboard`,
-            icon: 'fa-solid fa-line-chart',
+            icon: 'fa:fa-solid fa-line-chart',
           },
           {
             to: '/manage-account',
             title: `Hello ${user.username}!`,
-            icon: 'fa-solid fa-user',
+            icon: 'fa:fa-solid fa-user',
           },
         ]
       : [
@@ -56,12 +56,12 @@
           {
             to: '/login',
             title: 'Log in',
-            icon: 'fa-solid fa-right-to-bracket',
+            icon: 'fa:fa-solid fa-right-to-bracket',
           },
           {
             to: '/register',
             title: 'Register',
-            icon: 'fa-solid fa-user-plus',
+            icon: 'fa:fa-solid fa-user-plus',
           },
         ]),
   ];
@@ -86,7 +86,7 @@
     <v-app-bar :height="display.mdAndUp.value ? '64' : '56'" elevation="3">
       <template v-slot:prepend v-if="display.smAndDown.value">
         <v-app-bar-nav-icon
-          icon="fa-solid fa-bars"
+          icon="fa:fa-solid fa-bars"
           size="small"
           @click.stop="showNavigationDrawer = !showNavigationDrawer"
         ></v-app-bar-nav-icon>
@@ -94,7 +94,7 @@
 
       <v-app-bar-title class="flex-0-0 mx-auto mx-md-0 ml-md-5">
         <v-icon
-          icon="fa-solid fa-laptop-code"
+          icon="fa:fa-solid fa-laptop-code"
           size="small"
           color="cyan"
           class="ml-1 mr-2"
@@ -119,7 +119,9 @@
       <v-btn
         @click="toggleTheme"
         :icon="
-          theme.current.value.dark ? 'fa-solid fa-moon' : 'fa-solid fa-sun'
+          theme.current.value.dark
+            ? 'fa:fa-solid fa-moon'
+            : 'fa:fa-solid fa-sun'
         "
         size="small"
         class="ml-md-auto"

@@ -117,7 +117,7 @@
         class="rounded-lg"
       >
         <v-icon
-          :icon="isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+          :icon="isLiked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'"
           :color="isLiked ? 'red' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -136,7 +136,9 @@
         class="rounded-lg"
       >
         <v-icon
-          :icon="hasCommented ? 'fa-solid fa-comment' : 'fa-regular fa-comment'"
+          :icon="
+            hasCommented ? 'fa:fa-solid fa-comment' : 'fa:fa-regular fa-comment'
+          "
           :color="hasCommented ? 'green' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -157,7 +159,9 @@
         class="rounded-lg"
       >
         <v-icon
-          :icon="isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'"
+          :icon="
+            isSaved ? 'fa:fa-solid fa-bookmark' : 'fa:fa-regular fa-bookmark'
+          "
           :color="isSaved ? 'blue' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -173,7 +177,7 @@
         class="rounded-lg"
         @click="sharePost()"
       >
-        <v-icon icon="fa-regular fa-share-from-square"></v-icon>
+        <v-icon icon="fa:fa-regular fa-share-from-square"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Share this post
         </v-tooltip>
@@ -189,7 +193,7 @@
           v-ripple="{ class: `text-orange` }"
           class="rounded-lg"
         >
-          <v-icon icon="fa-solid fa-pen-to-square"></v-icon>
+          <v-icon icon="fa:fa-solid fa-pen-to-square"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="1000">
             Edit this post
           </v-tooltip>
@@ -202,7 +206,7 @@
           v-ripple="{ class: `text-red` }"
           class="rounded-lg"
         >
-          <v-icon icon="fa-solid fa-trash-can"></v-icon>
+          <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="1000">
             Delete this post
           </v-tooltip>
@@ -243,7 +247,7 @@
               v-if="post.user.profilePicture"
               :src="post.user.profilePicture"
             ></v-img>
-            <v-icon v-else color="primary" icon="fa-solid fa-user"></v-icon>
+            <v-icon v-else color="primary" icon="fa:fa-solid fa-user"></v-icon>
           </v-avatar>
         </div>
       </div>
@@ -299,7 +303,10 @@
               >
                 Show more
                 <template v-slot:append>
-                  <v-icon icon="fa-solid fa-chevron-down" size="small"></v-icon>
+                  <v-icon
+                    icon="fa:fa-solid fa-chevron-down"
+                    size="small"
+                  ></v-icon>
                 </template>
               </v-btn>
             </div>
