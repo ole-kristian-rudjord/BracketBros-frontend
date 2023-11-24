@@ -1,100 +1,140 @@
 <script setup lang="ts">
-  import { toast } from 'vue3-toastify';
-  import { defaultToastOptions } from '@/constants';
+import {toast} from 'vue3-toastify';
+import {defaultToastOptions} from '@/constants';
 
-  useHead({
-    title: 'Create post - BracketBros',
-  });
+useHead({
+  title: 'Create post - BracketBros',
+});
 
-  const availableCategories = ref<category[]>([]);
-  const availableTags = ref<tag[]>([]);
+const availableCategories = ref<category[]>([]);
+const availableTags = ref<tag[]>([]);
 
-  const form = ref(false);
-  const title = ref('');
-  const selectedCategory = ref<category>();
-  const selectedTags = ref<tag[]>([]);
-  const content = ref('');
+const form = ref(false);
+const title = ref('');
+const selectedCategory = ref<category>();
+const selectedTags = ref<tag[]>([]);
+const content = ref('');
 
-  const availableCategories_isLoading = ref(false);
-  const availableTags_isLoading = ref(false);
-  const createPost_isLoading = ref(false);
+const availableCategories_isLoading = ref(false);
+const availableTags_isLoading = ref(false);
+const createPost_isLoading = ref(false);
 
-  const rules = {
-    required: (value: any) => {
-      if (typeof value === 'string') {
-        return value.trim().length > 0 || 'Field is required';
-      }
-      if (Array.isArray(value)) {
-        return value.length > 0 || 'Field is required';
-      }
-      return !!value || 'Field is required';
-    },
-    title: (value: string) => {
-      const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/:?.!#@$%&*()]{2,64}$/;
-      return (
+const rules = {
+  required: (value: any) => {
+    if (typeof value === 'string') {
+      return value.trim().length > 0 || 'Field is required';
+    }
+    if (Array.isArray(value)) {
+      return value.length > 0 || 'Field is required';
+    }
+    return !!value || 'Field is required';
+  },
+  title: (value: string) => {
+    const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/:?.!#@$%&*()]{2,64}$/;
+    return (
         titlePattern.test(value) ||
         'The title can only contain numbers, letters, or characters -:?.!,@#$%&*(), and must be between 2 to 64 characters.'
-      );
-    },
-    content: (value: string) => {
-      const contentPattern = /^.{2,4096}$/;
-      return (
+    );
+  },
+  content: (value: string) => {
+    const contentPattern = /^.{2,4096}$/;
+    return (
         contentPattern.test(value) ||
         'The content must be between 2 to 4096 characters.'
-      );
-    },
+    );
+  },
+};
+
+const register = async () => {
+  createPost_isLoading.value = true;
+
+/*
+
+  const selectedTagsIds: number[] = [];
+
+  console.log(selectedTags.value);
+
+  selectedTags.value.forEach((id) => {
+    selectedTagsIds.push(id);
+    console.log(id);
+  });
+
+  console.log(selectedTagsIds);
+*/
+
+  /*const post: object = {
+    Title: title.value,
+    CategoryId: selectedCategory.value,
+    TagsId: selectedTagsIds,
+    Content: content.value,
+  };*/
+
+  const post = {
+    Title: "Example Post",
+    Content: "This is the content of the post.",
+    CategoryId: "2",
+    TagsId: [3, 4]
   };
 
-  const register = () => {
-    createPost_isLoading.value = true;
+  console.log("Sending ")
+  console.log(post)
 
-    // const post: post = {
-    //   title: title.value,
-    //   category: category.value,
-    //   content: content.value,
-    // };
+  const response = await genericFetch({
+    url: 'https://localhost:7205/api/Post/createPost',
+    method: 'POST',
+    body: post,
+  });
 
-    // const response = await createPost(registerData);
+  console.log(response)
 
-    // if (response.data) {
-    //   console.log('success');
-    //   // Set user
-    //   error.value = null;
-    // } else {
-    //   error.value = 'unexpectedError';
-    // }
 
-    createPost_isLoading.value = false;
-  };
+  // const post: post = {
+  //   title: title.value,
+  //   category: category.value,
+  //   content: content.value,
+  // };
 
-  onMounted(async () => {
-    // TODO: reroute user to login if not logged in
+  // const response = await createPost(registerData);
 
-    availableCategories_isLoading.value = true;
-    availableTags_isLoading.value = true;
+  // if (response.data) {
+  //   console.log('success');
+  //   // Set user
+  //   error.value = null;
+  // } else {
+  //   error.value = 'unexpectedError';
+  // }
 
-    const categoriesData = await getAllCategories();
-    if (categoriesData) {
-      availableCategories.value = categoriesData;
-    } else {
-      toast.error(
+  createPost_isLoading.value = false;
+};
+
+onMounted(async () => {
+  // TODO: reroute user to login if not logged in
+
+  availableCategories_isLoading.value = true;
+  availableTags_isLoading.value = true;
+
+  const categoriesData = await getAllCategories();
+  if (categoriesData) {
+    availableCategories.value = categoriesData;
+  } else {
+    toast.error(
         'Error fetching categories from the database.',
         defaultToastOptions.error
-      );
-    }
-    availableCategories_isLoading.value = false;
+    );
+  }
+  availableCategories_isLoading.value = false;
 
-    const { data: tagsData } = await getAllTags();
-    if (tagsData) {
-      availableTags.value = tagsData;
-    } else {
-      toast.error(
+  const {data: tagsData} = await getAllTags();
+  if (tagsData) {
+    availableTags.value = tagsData;
+  } else {
+    toast.error(
         'Error fetching tags from the database.',
         defaultToastOptions.error
-      );
-    }
-    availableTags_isLoading.value = false;
-  });
+    );
+  }
+  availableTags_isLoading.value = false;
+});
 </script>
 
 <template>
@@ -103,62 +143,64 @@
       <h1 class="d-flex justify-center align-center mb-8 text-h5">
         Create Post
         <v-icon
-          icon="fa:fa-solid fa-pen-to-square"
-          size="x-small"
-          class="ml-4"
+            icon="fa:fa-solid fa-pen-to-square"
+            size="x-small"
+            class="ml-4"
         ></v-icon>
       </h1>
 
       <v-form v-model="form" @submit.prevent="register">
         <v-text-field
-          label="Title"
-          v-model="title"
-          variant="outlined"
-          :rules="[rules.required, rules.title]"
-          class="mb-3"
+            label="Title"
+            v-model="title"
+            variant="outlined"
+            :rules="[rules.required, rules.title]"
+            class="mb-3"
         ></v-text-field>
 
         <v-select
-          label="Category"
-          :items="availableCategories"
-          :item-title="(category: category) => category.name"
-          v-model="selectedCategory"
-          :rules="[rules.required]"
-          variant="outlined"
-          class="mb-3"
+            label="Category"
+            :items="availableCategories"
+            :item-value="(category: category) => category.categoryId"
+            :item-title="(category: category) => category.name"
+            v-model="selectedCategory"
+            :rules="[rules.required]"
+            variant="outlined"
+            class="mb-3"
         >
         </v-select>
 
         <v-select
-          label="Tags"
-          :items="availableTags"
-          :item-title="(tag: tag) => tag.name"
-          v-model="selectedTags"
-          :rules="[rules.required]"
-          multiple
-          chips
-          variant="outlined"
-          class="mb-3"
+            label="Tags"
+            :items="availableTags"
+            :item-value="(tag: tag) => tag.tagId"
+            :item-title="(tag: tag) => tag.name"
+            v-model="selectedTags"
+            :rules="[rules.required]"
+            multiple=""
+            chips=""
+            variant="outlined"
+            class="mb-3"
         >
         </v-select>
 
         <v-textarea
-          label="Content"
-          v-model="content"
-          variant="outlined"
-          :rules="[rules.required, rules.content]"
-          class="mb-3"
+            label="Content"
+            v-model="content"
+            variant="outlined"
+            :rules="[rules.required, rules.content]"
+            class="mb-3"
         ></v-textarea>
 
         <v-btn
-          type="submit"
-          size="x-large"
-          variant="flat"
-          color="primary"
-          :disabled="!form"
-          :loading="createPost_isLoading"
-          block
-          class="text-body-1"
+            type="submit"
+            size="x-large"
+            variant="flat"
+            color="primary"
+            :disabled="!form"
+            :loading="createPost_isLoading"
+            block=""
+            class="text-body-1"
         >
           Publish
           <template v-slot:append>
