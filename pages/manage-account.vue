@@ -12,25 +12,22 @@
     router.push('/login'); // Redirect to login page if not logged in
   }
 
-  const form = ref(false);
-
+  const passwordForm = ref(false);
+  const passwordFormRef = ref();
   const oldPassword = ref('');
   const newPassword = ref('');
   const showOldPassword = ref(false);
   const showNewPassword = ref(false);
   const changePassword_isLoading = ref(false);
 
-  const profilePicture = ref('');
-  const removeProfilePicture = ref(false);
+  const profilePicture = ref<File[]>([]);
   const changeProfilePicture_isLoading = ref(false);
-
-  const isLoading = ref(false);
-  const error = ref<null | 'unauthorized' | 'unexpectedError'>(null);
+  const removeProfilePicture_isLoading = ref(false);
 
   const rules = {
     required: (value: string) => !!value || 'Field is required',
     noPasswordMatch: () =>
-      oldPassword.value !== newPassword.value || `Passwords can't match`,
+      oldPassword.value !== newPassword.value || `Passwords cannot be the same`,
   };
 
   const changePassword = async () => {
@@ -55,20 +52,23 @@
       );
     }
 
+    passwordFormRef.value.reset();
+    showOldPassword.value = false;
+    showNewPassword.value = false;
     changePassword_isLoading.value = false;
   };
 
-  const profilePictureChange = async () => {
-    changeProfilePicture_isLoading.value = true;
+  const updateProfilePicture = async (picture: File[], isRemoving = false) => {
+    const loadingState = isRemoving
+      ? removeProfilePicture_isLoading
+      : changeProfilePicture_isLoading;
+    loadingState.value = true;
 
-    const response = await changeProfilePicture(
-      profilePicture.value,
-      removeProfilePicture.value
-    );
+    const response = await changeProfilePicture(picture, isRemoving);
 
     if (response.data) {
       toast.success(
-        'Profile picture has been updated.',
+        `Profile picture has been ${isRemoving ? 'removed' : 'updated'}.`,
         defaultToastOptions.success
       );
     } else if (response.status === 422) {
@@ -78,12 +78,15 @@
       );
     } else {
       toast.error(
-        'An unexpected error occurred when trying to update the profile picture, please try again later.',
+        'An unexpected error occurred, please try again later.',
         defaultToastOptions.error
       );
     }
 
-    changeProfilePicture_isLoading.value = false;
+    if (!isRemoving) {
+      profilePicture.value = [];
+    }
+    loadingState.value = false;
   };
 
   const logout = () => {
@@ -94,14 +97,24 @@
 
 <template>
   <nuxt-layout name="login-register">
-    <v-form v-model="form" @submit.prevent="changePassword">
-      <h2>Change password</h2>
+    <v-form
+      ref="passwordFormRef"
+      v-model="passwordForm"
+      @submit.prevent="changePassword"
+    >
+      <h1 class="d-flex align-center mb-5 text-body-1">
+        <v-icon icon="fa:fa-solid fa-lock" size="x-small" class="mr-2"></v-icon>
+        Password
+      </h1>
+
       <v-text-field
         label="Current password"
         v-model="oldPassword"
         :type="showOldPassword ? 'text' : 'password'"
-        variant="outlined"
         :rules="[rules.required]"
+        density="compact"
+        variant="outlined"
+        class="mb-1"
       >
         <template v-slot:append-inner>
           <v-icon
@@ -115,12 +128,14 @@
           ></v-icon>
         </template>
       </v-text-field>
+
       <v-text-field
         label="New password"
         v-model="newPassword"
         :type="showNewPassword ? 'text' : 'password'"
-        variant="outlined"
         :rules="[rules.required, rules.noPasswordMatch()]"
+        density="compact"
+        variant="outlined"
       >
         <template v-slot:append-inner>
           <v-icon
@@ -134,64 +149,68 @@
           ></v-icon>
         </template>
       </v-text-field>
+
       <v-btn
         type="submit"
-        size="x-large"
+        size="large"
         variant="tonal"
-        block=""
+        block
         class="text-body-1"
-        :disabled="!form"
-        :loading="isLoading"
+        :disabled="!passwordForm"
+        :loading="changePassword_isLoading"
       >
         Change password
       </v-btn>
     </v-form>
-    <v-alert
-      v-if="error"
-      color="error"
-      icon="fa:fa-solid fa-circle-exclamation"
-      class="mt-6"
-      :text="
-        error === 'unauthorized'
-          ? 'Email/username and password does not match with any existing user.'
-          : 'Unexpected error when trying to log in, please try again later.'
-      "
-    ></v-alert>
-    <v-form
-      v-model="form"
-      @submit.prevent="profilePictureChange"
-      enctype="multipart/form-data"
+
+    <v-divider class="my-8"></v-divider>
+
+    <h1 class="d-flex align-center mb-5 text-body-1">
+      <v-icon icon="fa:fa-solid fa-image" size="x-small" class="mr-2"></v-icon>
+      Profile Picture
+    </h1>
+
+    <v-file-input
+      label="Select profile picture"
+      v-model="profilePicture"
+      accept="image/png, image/jpeg"
+      density="compact"
+      variant="outlined"
+      prepend-icon=""
     >
-      <h2>Change profile picture</h2>
-      <v-file-input
-        label="Profile picture"
-        v-model="profilePicture"
-        variant="outlined"
-      ></v-file-input>
-      <v-checkbox
-        label="Remove profile picture"
-        v-model="removeProfilePicture"
-        false-icon="fa:fa-regular fa-square"
-        true-icon="fa:fa-regular fa-square-check"
-        hide-details
-        class="mb-5"
-      ></v-checkbox>
-      <v-btn
-        type="submit"
-        size="x-large"
-        variant="tonal"
-        block=""
-        class="text-body-1"
-        :disabled="!form"
-        :loading="isLoading"
-      >
-        Change profile picture
-      </v-btn>
-    </v-form>
+    </v-file-input>
+
     <v-btn
-      size="x-large"
+      type="submit"
+      size="large"
       variant="tonal"
-      block=""
+      block
+      class="text-body-1 mb-6"
+      :disabled="profilePicture.length === 0"
+      :loading="changeProfilePicture_isLoading"
+      @click="updateProfilePicture(profilePicture, false)"
+    >
+      Change profile picture
+    </v-btn>
+
+    <v-btn
+      type="submit"
+      size="large"
+      variant="tonal"
+      block
+      class="text-body-1"
+      :loading="removeProfilePicture_isLoading"
+      @click="updateProfilePicture([], true)"
+    >
+      Remove profile picture
+    </v-btn>
+
+    <v-divider class="my-8"></v-divider>
+
+    <v-btn
+      size="large"
+      variant="tonal"
+      block
       class="text-body-1"
       @click="logout"
     >
