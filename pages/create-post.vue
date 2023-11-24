@@ -1,58 +1,31 @@
 <script setup lang="ts">
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
+
   useHead({
     title: 'Create post - BracketBros',
   });
 
-  onMounted(() => {
-    // if (!user.value) {
-    //   router.push('/login');
-    // }
-    loadCategoryTags();
-  });
-
-  const loadCategoryTags = async () => {
-    try {
-      const { data: categoriesData } = await genericFetch(
-        'GET',
-        'https://localhost:7205/api/Post/GetCategories'
-      );
-      const { data: tagsData } = await genericFetch(
-        'GET',
-        'https://localhost:7205/api/Post/GetTags'
-      );
-
-      categoryList.value = categoriesData;
-      categoryList.value.sort((a: category, b: category) => {
-        return a.name.localeCompare(b.name);
-      });
-
-      tagsList.value = tagsData;
-      tagsList.value.sort((a: tag, b: tag) => {
-        return a.name.localeCompare(b.name);
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const availableCategories = ref<category[]>([]);
+  const availableTags = ref<tag[]>([]);
 
   const form = ref(false);
   const title = ref('');
-  const categorySelected = ref('');
-  let categoryList = ref<category[]>([]);
-  let tagsSelected = ref<tag[]>([]);
-  let tagsList = ref<tag[]>([]);
+  const selectedCategory = ref('');
+  const selectedTags = ref<tag[]>([]);
   const content = ref('');
 
-  const isLoading = ref(false);
-  const error = ref<null | 'unexpectedError'>(null);
+  const availableCategories_isLoading = ref(false);
+  const availableTags_isLoading = ref(false);
+  const createPost_isLoading = ref(false);
 
   const rules = {
     required: (value: string) => !!value || 'Field is required',
     title: (value: string) => {
-      const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-/:?.!#]{2,64}$/;
+      const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/:?.!#@$%&*()]{2,64}$/;
       return (
         titlePattern.test(value) ||
-        'The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.'
+        'The title can only contain numbers, letters, or characters -:?.!,@#$%&*(), and must be between 2 to 64 characters.'
       );
     },
     content: (value: string) => {
@@ -65,7 +38,7 @@
   };
 
   const register = async () => {
-    isLoading.value = true;
+    createPost_isLoading.value = true;
 
     // const post: post = {
     //   title: title.value,
@@ -83,8 +56,37 @@
     //   error.value = 'unexpectedError';
     // }
 
-    isLoading.value = false;
+    createPost_isLoading.value = false;
   };
+
+  onMounted(async () => {
+    // TODO: reroute user to login if not logged in
+
+    availableCategories_isLoading.value = true;
+    availableTags_isLoading.value = true;
+
+    const { data: categoriesData } = await getAllCategories();
+    if (categoriesData) {
+      availableCategories.value = categoriesData;
+    } else {
+      toast.error(
+        'Error fetching categories from the database.',
+        defaultToastOptions.error
+      );
+    }
+    availableCategories_isLoading.value = false;
+
+    const { data: tagsData } = await getAllTags();
+    if (tagsData) {
+      availableTags.value = tagsData;
+    } else {
+      toast.error(
+        'Error fetching tags from the database.',
+        defaultToastOptions.error
+      );
+    }
+    availableTags_isLoading.value = false;
+  });
 </script>
 
 <template>
@@ -101,8 +103,8 @@
         class="mb-3"
       ></v-text-field>
       <v-select
-        v-model="categorySelected"
-        :items="categoryList"
+        v-model="selectedCategory"
+        :items="availableCategories"
         item-value="categoryId"
         item-title="name"
         return-object
@@ -114,8 +116,8 @@
       >
       </v-select>
       <v-select
-        v-model="tagsSelected"
-        :items="tagsList"
+        v-model="selectedTags"
+        :items="availableTags"
         item-value="tagId"
         item-title="name"
         return-object
@@ -144,7 +146,7 @@
         color="primary"
         class="text-body-1"
         :disabled="!form"
-        :loading="isLoading"
+        :loading="createPost_isLoading"
         >Create post
       </v-btn>
     </v-form>
