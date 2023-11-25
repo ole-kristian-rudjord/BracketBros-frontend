@@ -1,33 +1,29 @@
 <script setup lang="ts">
-const router = useRouter();
+  const router = useRouter();
 
-useHead({
-  title: 'Browse posts - BracketBros',
-});
+  useHead({
+    title: 'Browse posts - BracketBros',
+  });
 
-const createdPosts = ref<post[]>([]);
-const likedPosts = ref<post[]>([]);
-const createdComments = ref<comment[]>([]);
-const likedComments = ref<comment[]>([]);
+  const createdPosts = ref<post[]>([]);
+  const likedPosts = ref<post[]>([]);
+  const createdComments = ref<comment[]>([]);
+  const likedComments = ref<comment[]>([]);
 
-
-const basicUserActivity = ref<user>();
-onMounted(async () => {
-  const user = getSavedUserActivity();
-  if (!user) {
-    await router.push('/login'); // Redirect to login if not logged in
-    return;
-  }
-  basicUserActivity.value = user;
-
-  const {data: {comments, likedcomments, likedposts, posts}} = await getUserActivity(true);
-
-  createdPosts.value = posts;
-  likedPosts.value = likedposts;
-  createdComments.value = comments;
-  likedComments.value = likedcomments;
-
-});
+  const basicUserActivity = ref<user>();
+  onMounted(async () => {
+    // const user = getSavedUserActivity();
+    // if (!user) {
+    //   await router.push('/login'); // Redirect to login if not logged in
+    //   return;
+    // }
+    // basicUserActivity.value = user;
+    // const {data: {comments, likedcomments, likedposts, posts}} = await getUserActivity(true);
+    // createdPosts.value = posts;
+    // likedPosts.value = likedposts;
+    // createdComments.value = comments;
+    // likedComments.value = likedcomments;
+  });
 </script>
 
 <template>

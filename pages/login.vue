@@ -30,7 +30,8 @@
 
     if (response.data) {
       // Fetch the user activity, which will be saved in local storage
-      await getUserActivity();
+      // await getUserActivity(); // setUserActivity
+
       // Redirect to home page if logged in
       await router.push('/');
       error.value = null;
