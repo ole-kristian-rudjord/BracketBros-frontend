@@ -7,10 +7,6 @@
   });
 
   const router = useRouter();
-  // const user = getSavedUserActivity();
-  // if (!user) {
-  //   router.push('/login'); // Redirect to login page if not logged in
-  // }
 
   const passwordForm = ref(false);
   const passwordFormRef = ref();
@@ -91,8 +87,12 @@
 
   const logout = () => {
     logoutUser();
-    router.push('/login');
+    router.replace('/login');
   };
+
+  onMounted(() => {
+    checkLoginAndReroute();
+  });
 </script>
 
 <template>
