@@ -28,9 +28,10 @@
 
     const response = await loginUser(loginData);
 
+    console.log(response);
+
     if (response.data) {
-      await router.replace('/');
-      error.value = null;
+      router.replace('/');
     } else if (response.status === 401) {
       error.value = 'unauthorized';
     } else {
@@ -39,6 +40,13 @@
 
     isLoading.value = false;
   };
+
+  onMounted(() => {
+    const userActivity = useUserActivity();
+    if (userActivity.value) {
+      router.replace('/');
+    }
+  });
 </script>
 
 <template>

@@ -1,7 +1,10 @@
 export default async (post: createPostBody) => {
-  return genericFetch({
+  const response = await genericFetch({
     url: 'https://localhost:7205/api/Post/createPost',
     method: 'POST',
     body: post,
   });
+
+  updateAllPosts();
+  return response;
 };

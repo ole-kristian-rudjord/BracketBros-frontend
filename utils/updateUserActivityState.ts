@@ -4,8 +4,11 @@ export default async () => {
     url: 'https://localhost:7205/api/DashBoard/UserActivity',
   });
 
+  const userActivity = useUserActivity();
+
   if (data) {
-    const userActivity = useUserActivity();
     userActivity.value = data;
+  } else {
+    userActivity.value = null;
   }
 };
