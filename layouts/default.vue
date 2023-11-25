@@ -58,16 +58,17 @@
 
   onMounted(async () => {
     updateUserActivityState();
+    updateAllPosts();
 
-    const getAllPosts_response = await getAllPosts();
-    if (getAllPosts_response.data) {
-      allPosts.value = getAllPosts_response.data;
-    } else {
-      toast.error(
-        'Error fetching posts from the database.',
-        defaultToastOptions.error
-      );
-    }
+    // const getAllPosts_response = await getAllPosts();
+    // if (getAllPosts_response.data) {
+    //   allPosts.value = getAllPosts_response.data;
+    // } else {
+    //   toast.error(
+    //     'Error fetching posts from the database.',
+    //     defaultToastOptions.error
+    //   );
+    // }
   });
 </script>
 
