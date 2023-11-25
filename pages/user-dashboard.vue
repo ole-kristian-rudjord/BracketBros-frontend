@@ -15,6 +15,10 @@
     onMounted(() => {
       checkLoginAndReroute();
     });
+
+    const response = getFullUserActivity();
+
+    console.log(response);
     // const user = getSavedUserActivity();
     // if (!user) {
     //   await router.push('/login'); // Redirect to login if not logged in
