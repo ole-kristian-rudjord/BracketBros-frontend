@@ -45,6 +45,6 @@ const processResponse = async (response: Response) => {
       console.error(`Error in response: `, responseText);
       return { data: null, error: responseText, status: response.status };
     }
-    return { data: responseText, error: null, status: response.status };
+    return { data: null, error: responseText, status: response.status };
   }
 };
