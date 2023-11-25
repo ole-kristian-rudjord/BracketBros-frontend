@@ -48,36 +48,26 @@
   const register = async () => {
     createPost_isLoading.value = true;
 
-    /*
+    const selectedTagsIds: number[] = [];
 
-  const selectedTagsIds: number[] = [];
+    console.log(selectedTags.value);
 
-  console.log(selectedTags.value);
+    selectedTags.value.forEach((id) => {
+      selectedTagsIds.push(id);
+      console.log(id);
+    });
 
-  selectedTags.value.forEach((id) => {
-    selectedTagsIds.push(id);
-    console.log(id);
-  });
+    console.log(selectedTagsIds);
 
-  console.log(selectedTagsIds);
-*/
-
-    /*const post: object = {
-    Title: title.value,
-    CategoryId: selectedCategory.value,
-    TagsId: selectedTagsIds,
-    Content: content.value,
-  };*/
-
-    const post = {
-      Title: 'Example Post',
-      Content: 'This is the content of the post.',
-      CategoryId: '2',
-      TagsId: [3, 4],
+    const post: object = {
+      Title: title.value,
+      CategoryId: selectedCategory.value,
+      TagsId: selectedTagsIds,
+      Content: content.value,
     };
 
-    console.log('Sending ');
-    console.log(post);
+    console.log("Sending ")
+    console.log(post)
 
     const response = await genericFetch({
       url: 'https://localhost:7205/api/Post/createPost',
@@ -85,7 +75,8 @@
       body: post,
     });
 
-    console.log(response);
+    console.log(response)
+
 
     // const post: post = {
     //   title: title.value,
