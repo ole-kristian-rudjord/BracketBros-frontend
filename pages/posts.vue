@@ -74,6 +74,8 @@
     tags.value.forEach((tag) => {
       tag.selected = false;
     });
+
+    toast.success('Filters have been reset', defaultToastOptions.success);
   };
 
   const isNearBottom = () => {
@@ -131,7 +133,7 @@
 
 <template>
   <v-navigation-drawer rail permanent>
-    <v-tooltip text="Filter" open-delay="500">
+    <v-tooltip text="Filter and search posts" open-delay="500">
       <template v-slot:activator="{ props }">
         <v-list-item
           v-bind="props"
