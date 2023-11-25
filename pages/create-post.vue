@@ -6,6 +6,8 @@
     title: 'Create post - BracketBros',
   });
 
+  const router = useRouter();
+
   const availableCategories = ref<category[]>([]);
   const availableTags = ref<tag[]>([]);
 
@@ -56,12 +58,14 @@
       Content: content.value,
     };
 
-    console.log(post);
-
     const response = await createPost(post);
 
     if (response.data) {
-      console.log(response);
+      router.push(`/post/${response.data}`);
+    } else {
+      toast.error(
+        'Unexpected error when trying creating post, please try again later.'
+      );
     }
 
     createPost_isLoading.value = false;
