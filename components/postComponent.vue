@@ -35,7 +35,11 @@
   const savedByUser = ref(false);
 
   watchEffect(() => {
-    if (userActivity.value) {
+    if (
+      userActivity.value &&
+      userActivity.value.likedPosts &&
+      userActivity.value.likedComments
+    ) {
       madeByUser.value = userActivity.value.posts.includes(props.post.id);
       likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
       // TODO: Add save post feature
@@ -153,7 +157,7 @@
         </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
-        {{ formatNumber(post.totalLikes) }}
+        {{ formatNumber(post.totalLikes + (likedByUser ? 1 : 0)) }}
       </div>
 
       <v-btn
