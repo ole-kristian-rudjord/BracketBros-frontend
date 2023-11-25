@@ -1,6 +1,16 @@
 export {};
 
 declare global {
+  interface UserActivity {
+    username: string;
+    profilePicture: string | null;
+    createationdate: string;
+    posts: number[];
+    likedPosts: number[];
+    comments: number[];
+    likedComments: number[];
+  }
+
   interface user {
     username: string;
     profilePicture: string | null;
