@@ -66,8 +66,8 @@
       Content: content.value,
     };
 
-    console.log("Sending ")
-    console.log(post)
+    console.log('Sending ');
+    console.log(post);
 
     const response = await genericFetch({
       url: 'https://localhost:7205/api/Post/createPost',
@@ -75,8 +75,7 @@
       body: post,
     });
 
-    console.log(response)
-
+    console.log(response);
 
     // const post: post = {
     //   title: title.value,
