@@ -69,4 +69,11 @@ declare global {
     username: string;
     password: string;
   }
+
+  interface createPostBody {
+    Title: string;
+    CategoryId: number;
+    TagsId: number[];
+    Content: string;
+  }
 }
