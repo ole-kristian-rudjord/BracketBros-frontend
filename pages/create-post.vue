@@ -48,7 +48,6 @@ const rules = {
 const register = async () => {
   createPost_isLoading.value = true;
 
-/*
 
   const selectedTagsIds: number[] = [];
 
@@ -60,20 +59,12 @@ const register = async () => {
   });
 
   console.log(selectedTagsIds);
-*/
 
-  /*const post: object = {
+  const post: object = {
     Title: title.value,
     CategoryId: selectedCategory.value,
     TagsId: selectedTagsIds,
     Content: content.value,
-  };*/
-
-  const post = {
-    Title: "Example Post",
-    Content: "This is the content of the post.",
-    CategoryId: "2",
-    TagsId: [3, 4]
   };
 
   console.log("Sending ")
