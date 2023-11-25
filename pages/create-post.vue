@@ -11,8 +11,8 @@
 
   const form = ref(false);
   const title = ref('');
-  const selectedCategory = ref<category>();
-  const selectedTags = ref<tag[]>([]);
+  const selectedCategoryId = ref<number>();
+  const selectedTagIds = ref<number[]>([]);
   const content = ref('');
 
   const availableCategories_isLoading = ref(false);
@@ -48,50 +48,21 @@
   const register = async () => {
     createPost_isLoading.value = true;
 
-    const selectedTagsIds: number[] = [];
-
-    console.log(selectedTags.value);
-
-    selectedTags.value.forEach((id) => {
-      selectedTagsIds.push(id);
-      console.log(id);
-    });
-
-    console.log(selectedTagsIds);
-
-    const post: object = {
+    const post: createPostBody = {
       Title: title.value,
-      CategoryId: selectedCategory.value,
-      TagsId: selectedTagsIds,
+      // @ts-ignore - CategoryId is handled by Vuetify validation
+      CategoryId: selectedCategoryId.value,
+      TagsId: selectedTagIds.value,
       Content: content.value,
     };
 
-    console.log('Sending ');
     console.log(post);
 
-    const response = await genericFetch({
-      url: 'https://localhost:7205/api/Post/createPost',
-      method: 'POST',
-      body: post,
-    });
+    const response = await createPost(post);
 
-    console.log(response);
-
-    // const post: post = {
-    //   title: title.value,
-    //   category: category.value,
-    //   content: content.value,
-    // };
-
-    // const response = await createPost(registerData);
-
-    // if (response.data) {
-    //   console.log('success');
-    //   // Set user
-    //   error.value = null;
-    // } else {
-    //   error.value = 'unexpectedError';
-    // }
+    if (response.data) {
+      console.log(response);
+    }
 
     createPost_isLoading.value = false;
   };
@@ -151,7 +122,8 @@
           label="Category"
           :items="availableCategories"
           :item-title="(category: category) => category.name"
-          v-model="selectedCategory"
+          :item-value="(category: category) => category.categoryId"
+          v-model="selectedCategoryId"
           :rules="[rules.required]"
           variant="outlined"
           class="mb-3"
@@ -162,7 +134,8 @@
           label="Tags"
           :items="availableTags"
           :item-title="(tag: tag) => tag.name"
-          v-model="selectedTags"
+          :item-value="(tag: tag) => tag.tagId"
+          v-model="selectedTagIds"
           :rules="[rules.required]"
           multiple
           chips
