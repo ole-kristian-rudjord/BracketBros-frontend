@@ -28,14 +28,20 @@
     { expandContent: false, preventHighlighting: false }
   );
 
-  const createRandomBoolean = () => {
-    return Math.random() < 0.5;
-  };
+  const userActivity = useUserActivity();
 
-  const isMadeByUser = ref(createRandomBoolean());
-  const isLiked = ref(createRandomBoolean());
-  const hasCommented = ref(createRandomBoolean());
-  const isSaved = ref(createRandomBoolean());
+  const madeByUser = ref(false);
+  const likedByUser = ref(false);
+  const savedByUser = ref(false);
+
+  watchEffect(() => {
+    if (userActivity.value) {
+      madeByUser.value = userActivity.value.posts.includes(props.post.id);
+      likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
+      // TODO: Add save post feature
+      // savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
+    }
+  });
 
   const contentContainer_ref = ref<HTMLElement | null>(null);
   const content_ref = ref<HTMLElement | null>(null);
@@ -62,7 +68,23 @@
 
   const postLink = `/post/${props.post.id}`;
 
-  const sharePost = () => {
+  const goToPost = () => {
+    router.push({ path: postLink });
+  };
+
+  const handleLikeClick = async () => {
+    likePost(props.post.id);
+  };
+
+  const handleCommentClick = () => {
+    goToPost();
+  };
+
+  const handleSaveClick = () => {
+    savePost(props.post.id);
+  };
+
+  const handleShareClick = () => {
     const fullUrl = window.location.origin + postLink;
 
     navigator.clipboard
@@ -78,14 +100,17 @@
       });
   };
 
-  const goToPost = async (event: MouseEvent) => {
+  const handleEditClick = () => {};
+
+  const handleDeleteClick = () => {};
+
+  const handlePostClick = async (event: MouseEvent) => {
     for (let element of event.composedPath()) {
       if ((element as HTMLElement).tagName === 'A') {
         return;
       }
     }
-
-    await router.push({ path: postLink });
+    goToPost();
   };
 
   onMounted(() => {
@@ -115,10 +140,13 @@
         variant="plain"
         v-ripple="{ class: `text-red` }"
         class="rounded-lg"
+        @click="handleLikeClick"
       >
         <v-icon
-          :icon="isLiked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'"
-          :color="isLiked ? 'red' : ''"
+          :icon="
+            likedByUser ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
+          "
+          :color="likedByUser ? 'red' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Like this post
@@ -134,13 +162,9 @@
         variant="plain"
         v-ripple="{ class: `text-green` }"
         class="rounded-lg"
+        @click="handleCommentClick"
       >
-        <v-icon
-          :icon="
-            hasCommented ? 'fa:fa-solid fa-comment' : 'fa:fa-regular fa-comment'
-          "
-          :color="hasCommented ? 'green' : ''"
-        ></v-icon>
+        <v-icon icon="fa:fa-regular fa-comment"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Comment on this post
         </v-tooltip>
@@ -157,12 +181,15 @@
         variant="plain"
         v-ripple="{ class: `text-blue` }"
         class="rounded-lg"
+        @click="handleSaveClick"
       >
         <v-icon
           :icon="
-            isSaved ? 'fa:fa-solid fa-bookmark' : 'fa:fa-regular fa-bookmark'
+            savedByUser
+              ? 'fa:fa-solid fa-bookmark'
+              : 'fa:fa-regular fa-bookmark'
           "
-          :color="isSaved ? 'blue' : ''"
+          :color="savedByUser ? 'blue' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
           Save this post
@@ -175,7 +202,7 @@
         variant="plain"
         v-ripple="{ class: `text-yellow` }"
         class="rounded-lg"
-        @click="sharePost()"
+        @click="handleShareClick"
       >
         <v-icon icon="fa:fa-regular fa-share-from-square"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -183,15 +210,16 @@
         </v-tooltip>
       </v-btn>
 
-      <template v-if="isMadeByUser">
+      <template v-if="madeByUser">
         <v-divider class="w-75 mx-auto my-3"></v-divider>
 
         <v-btn
           icon
           size="small"
           variant="plain"
-          v-ripple="{ class: `text-orange` }"
+          color="warning"
           class="rounded-lg"
+          @click="handleEditClick"
         >
           <v-icon icon="fa:fa-solid fa-pen-to-square"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -203,8 +231,9 @@
           icon
           size="small"
           variant="plain"
-          v-ripple="{ class: `text-red` }"
+          color="error"
           class="rounded-lg"
+          @click="handleDeleteClick"
         >
           <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="1000">
@@ -256,7 +285,7 @@
         class="h-100"
         @mouseenter="highlightPost = true"
         @mouseleave="highlightPost = false"
-        @click="!preventHighlighting && goToPost($event)"
+        @click="!preventHighlighting && handlePostClick($event)"
       >
         <div class="text-h4 pb-4">
           {{ post.title }}
