@@ -68,7 +68,7 @@
   };
 
   onMounted(async () => {
-    // TODO: reroute user to login if not logged in
+    checkLoginAndReroute();
 
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
