@@ -28,13 +28,10 @@
 
     const response = await loginUser(loginData);
 
-    if (response.data) {
-      // Fetch the user activity, which will be saved in local storage
-      // await getUserActivity(); // setUserActivity
+    console.log(response);
 
-      // Redirect to home page if logged in
-      await router.push('/');
-      error.value = null;
+    if (response.data) {
+      router.replace('/');
     } else if (response.status === 401) {
       error.value = 'unauthorized';
     } else {
@@ -43,6 +40,13 @@
 
     isLoading.value = false;
   };
+
+  onMounted(() => {
+    const userActivity = useUserActivity();
+    if (userActivity.value) {
+      router.replace('/');
+    }
+  });
 </script>
 
 <template>

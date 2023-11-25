@@ -10,8 +10,6 @@
   const availableCategories_isLoading = ref(false);
 
   onMounted(async () => {
-    // TODO: reroute user to login if not logged in
-
     availableCategories_isLoading.value = true;
 
     const categoriesData = await getAllCategories();

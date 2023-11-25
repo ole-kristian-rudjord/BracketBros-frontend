@@ -1,8 +1,10 @@
 export default async () => {
-  sessionStorage.clear();
-
-  return await genericFetch({
+  const response = await genericFetch({
     method: 'GET',
     url: 'http://localhost:5112/api/Account/logout',
   });
+
+  sessionStorage.clear();
+  updateUserActivityState();
+  return response;
 };

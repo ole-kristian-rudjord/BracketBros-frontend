@@ -1,7 +1,10 @@
 export default async (registerData: registerData) => {
-  return genericFetch({
+  const response = await genericFetch({
     method: 'POST',
-    url: 'http://localhost:5112/api/Account/login',
+    url: 'https://localhost:5112/api/Account/register',
     body: registerData,
   });
+
+  await updateUserActivityState();
+  return response;
 };

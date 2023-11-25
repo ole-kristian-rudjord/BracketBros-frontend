@@ -4,8 +4,12 @@ export default async () => {
     url: 'http://localhost:5112/api/DashBoard/UserActivity',
   });
 
-  if (data) {
-    const userActivity = useUserActivity();
+  const userActivity = useUserActivity();
+
+  // FIXME: temp fix by using username because it the API returns login-page from backend, instead of null
+  if (data.username) {
     userActivity.value = data;
+  } else {
+    userActivity.value = null;
   }
 };

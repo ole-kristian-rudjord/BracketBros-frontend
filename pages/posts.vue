@@ -9,7 +9,7 @@
   const allPosts = useAllPosts();
   const numberOfDisplayedPosts = ref(5);
 
-  const showFilterSidebar = ref(true);
+  const showFilterSidebar = ref(false);
   const search = ref('');
   const liked = ref(false); // TODO:
   const commented = ref(false); // TODO:
