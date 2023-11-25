@@ -7,7 +7,8 @@
   const theme = useTheme();
   const showNavigationDrawer = ref(false);
   const allPosts = useAllPosts();
-  const savedUser = ref(getSavedUserActivity());
+  // const savedUser = ref(getSavedUserActivity());
+  const savedUser = ref();
 
   const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark
@@ -38,7 +39,7 @@
           },
           {
             to: '/manage-account',
-            title: `Hello ${savedUser.value.username}!`,
+            title: 'Manage Account',
             icon: 'fa:fa-solid fa-user',
           },
         ]
