@@ -2,12 +2,16 @@
   import { toast } from 'vue3-toastify';
   import { defaultToastOptions } from '@/constants';
 
+  const title = ref('BracketBros');
+
+  useHead({
+    title: title,
+  });
+
   const route = useRoute();
 
   const post = ref<post | null>(null);
   const comments = ref<comment[] | null>(null);
-
-  const title = ref('BracketBros');
 
   watch(
     post,
@@ -18,10 +22,6 @@
     },
     { immediate: true }
   );
-
-  useHead({
-    title: title,
-  });
 
   onMounted(async () => {
     const postId = Number(route.params.id);
