@@ -19,13 +19,18 @@
 
   const filteredPosts = computed(() => {
     return allPosts.value.filter((post) => {
-      // Check if the search string is present and matches the post's details
-      const matchesSearch = search.value
-        ? post.title.includes(search.value) ||
-          post.content.includes(search.value) ||
-          post.category.name.includes(search.value) ||
-          post.tags.some((tag) => tag.name.includes(search.value)) ||
-          post.user.username.includes(search.value)
+      // Convert search string to lower case
+      const lowerCaseSearch = search.value.toLowerCase();
+
+      // Check if the search string is present and matches the post's details, case-insensitively
+      const matchesSearch = lowerCaseSearch
+        ? post.title.toLowerCase().includes(lowerCaseSearch) ||
+          post.content.toLowerCase().includes(lowerCaseSearch) ||
+          post.category.name.toLowerCase().includes(lowerCaseSearch) ||
+          post.tags.some((tag) =>
+            tag.name.toLowerCase().includes(lowerCaseSearch)
+          ) ||
+          post.user.username.toLowerCase().includes(lowerCaseSearch)
         : true;
 
       // Determine if any category or tag is selected
@@ -219,10 +224,17 @@
 
   <nuxt-layout name="centered-content">
     <post-component
+      v-if="filteredPosts.length > 0"
       v-for="(post, index) in filteredPosts.slice(0, numberOfDisplayedPosts)"
       :key="index"
       :post="post"
       class="mb-8"
     ></post-component>
+    <div v-else-if="allPosts.length > 0" class="text-center">
+      No posts match these filters
+    </div>
+    <div v-else class="text-center">
+      No posts available due to error when fetching posts
+    </div>
   </nuxt-layout>
 </template>
