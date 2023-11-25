@@ -7,8 +7,7 @@
   const theme = useTheme();
   const showNavigationDrawer = ref(false);
   const allPosts = useAllPosts();
-  // const savedUser = ref(getSavedUserActivity());
-  const savedUser = ref();
+  const userActivity = useUserActivity();
 
   const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark
@@ -30,7 +29,7 @@
       title: 'Create Post',
       icon: 'fa:fa-solid fa-square-plus',
     },
-    ...(savedUser.value
+    ...(userActivity.value
       ? [
           {
             to: '/user-dashboard',
@@ -58,9 +57,11 @@
   ]);
 
   onMounted(async () => {
-    const { data } = await getAllPosts();
-    if (data) {
-      allPosts.value = data;
+    updateUserActivityState();
+
+    const getAllPosts_response = await getAllPosts();
+    if (getAllPosts_response.data) {
+      allPosts.value = getAllPosts_response.data;
     } else {
       toast.error(
         'Error fetching posts from the database.',
