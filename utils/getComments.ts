@@ -1,6 +1,6 @@
 export default async (postId: number) => {
   return genericFetch({
     method: 'GET',
-    url: `https://localhost:7205/api/Post/GetComments/${postId}`,
+    url: `http://localhost:5112/api/Post/GetComments/${postId}`,
   });
 };

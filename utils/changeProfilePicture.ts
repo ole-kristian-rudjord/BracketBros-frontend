@@ -4,7 +4,7 @@ export default async (
 ) => {
   return genericFetch({
     method: 'POST',
-    url: 'https://localhost:7205/api/Account/changeProfilePicture',
+    url: 'http://localhost:5112/api/Account/changeProfilePicture',
     body: {
       profilePicture: profilePicture,
       RemoveProfilePicture: removeProfilePicture,

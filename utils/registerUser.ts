@@ -1,7 +1,7 @@
 export default async (registerData: registerData) => {
   return genericFetch({
     method: 'POST',
-    url: 'https://localhost:7205/api/Account/register',
+    url: 'http://localhost:5112/api/Account/login',
     body: registerData,
   });
 };

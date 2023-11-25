@@ -1,6 +1,6 @@
 export default async () => {
   return genericFetch({
     method: 'GET',
-    url: 'https://localhost:7205/api/Post/posts',
+    url: 'http://localhost:5112/api/Post/posts',
   });
 };

@@ -3,6 +3,6 @@ export default async () => {
 
   return await genericFetch({
     method: 'GET',
-    url: 'https://localhost:7205/api/Account/logout',
+    url: 'http://localhost:5112/api/Account/logout',
   });
 };

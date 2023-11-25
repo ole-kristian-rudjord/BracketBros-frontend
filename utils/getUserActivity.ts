@@ -1,7 +1,7 @@
 export default async (full: boolean = false) => {
   const response = await genericFetch({
     method: 'GET',
-    url: `https://localhost:7205/api/DashBoard/UserActivity/${
+    url: `http://localhost:5112/api/DashBoard/UserActivity/${
       full ? 'full' : ''
     }`,
   });
