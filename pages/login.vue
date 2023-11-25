@@ -29,11 +29,7 @@
     const response = await loginUser(loginData);
 
     if (response.data) {
-      // Fetch the user activity, which will be saved in local storage
-      // await getUserActivity(); // setUserActivity
-
-      // Redirect to home page if logged in
-      await router.push('/');
+      await router.replace('/');
       error.value = null;
     } else if (response.status === 401) {
       error.value = 'unauthorized';
