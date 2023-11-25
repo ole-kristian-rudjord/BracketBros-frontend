@@ -1,12 +1,9 @@
 <script setup lang="ts">
   import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
-  import { toast } from 'vue3-toastify';
-  import { defaultToastOptions } from '@/constants';
 
   const display = useDisplay();
   const theme = useTheme();
   const showNavigationDrawer = ref(false);
-  const allPosts = useAllPosts();
   const userActivity = useUserActivity();
 
   const toggleTheme = () => {
@@ -24,13 +21,14 @@
   const pages = computed<Page[]>(() => [
     { to: '/', title: 'Home', icon: 'fa:fa-solid fa-house' },
     { to: '/posts', title: 'Posts', icon: 'fa:fa-solid fa-comments' },
-    {
-      to: '/create-post',
-      title: 'Create Post',
-      icon: 'fa:fa-solid fa-square-plus',
-    },
+
     ...(userActivity.value
       ? [
+          {
+            to: '/create-post',
+            title: 'Create Post',
+            icon: 'fa:fa-solid fa-square-plus',
+          },
           {
             to: '/user-dashboard',
             title: 'Dashboard',
