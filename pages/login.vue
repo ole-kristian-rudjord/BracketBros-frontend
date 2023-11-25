@@ -74,8 +74,6 @@
       <v-checkbox
         label="Remember me"
         v-model="rememberMe"
-        false-icon="fa:fa-regular fa-square"
-        true-icon="fa:fa-regular fa-square-check"
         hide-details
         class="mb-5"
       ></v-checkbox>
