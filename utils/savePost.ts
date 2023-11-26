@@ -1,5 +1,5 @@
 export default async (post: editPostBody) => {
-  if (!await checkLoginAndReroute()) {
+  if (!(await checkLoginAndReroute())) {
     return;
   }
 
