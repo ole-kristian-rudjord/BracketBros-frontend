@@ -6,23 +6,22 @@
     title: 'Browse posts - BracketBros',
   });
 
+  const userActivity = useUserActivity();
+
   const allPosts = useAllPosts();
   const numberOfDisplayedPosts = ref(5);
 
   const showFilterSidebar = ref(false);
   const search = ref('');
   const liked = ref(false); // TODO:
-  const commented = ref(false); // TODO:
   const saved = ref(false); // TODO:
   const categories = ref<{ category: category; selected: boolean }[]>([]);
   const tags = ref<{ tag: tag; selected: boolean }[]>([]);
 
   const filteredPosts = computed(() => {
     return allPosts.value.filter((post) => {
-      // Convert search string to lower case
+      // Existing search and category/tag matching logic
       const lowerCaseSearch = search.value.toLowerCase();
-
-      // Check if the search string is present and matches the post's details, case-insensitively
       const matchesSearch = lowerCaseSearch
         ? post.title.toLowerCase().includes(lowerCaseSearch) ||
           post.content.toLowerCase().includes(lowerCaseSearch) ||
@@ -32,14 +31,9 @@
           ) ||
           post.user.username.toLowerCase().includes(lowerCaseSearch)
         : true;
-
-      // Determine if any category or tag is selected
       const isAnyCategorySelected = categories.value.some(
         (cat) => cat.selected
       );
-      const isAnyTagSelected = tags.value.some((tag) => tag.selected);
-
-      // Check if the category of the post is selected, only if any category is selected
       const matchesCategory = isAnyCategorySelected
         ? categories.value.some(
             (cat) =>
@@ -47,8 +41,7 @@
               cat.category.categoryId === post.category.categoryId
           )
         : true;
-
-      // Check if any of the post's tags are selected, only if any tag is selected
+      const isAnyTagSelected = tags.value.some((tag) => tag.selected);
       const matchesTag = isAnyTagSelected
         ? post.tags.some((postTag) =>
             tags.value.some(
@@ -57,7 +50,26 @@
           )
         : true;
 
-      return matchesSearch && matchesCategory && matchesTag;
+      let matchesLiked = true;
+      let matchesSaved = true;
+
+      if (userActivity.value && userActivity.value.username) {
+        matchesLiked = liked.value
+          ? userActivity.value.likedPosts.includes(post.id)
+          : true;
+        // matchesSaved = saved.value
+        //   ? userActivity.value.savedPosts.includes(post.id)
+        //   : true; TODO: implement saved posts
+      }
+
+      // Only show posts that match all filters
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesTag &&
+        matchesLiked &&
+        matchesSaved
+      );
     });
   });
 
@@ -67,7 +79,6 @@
 
     // Unselect "My interactions"
     liked.value = false;
-    commented.value = false;
     saved.value = false;
 
     // Unselect all categories
@@ -208,24 +219,30 @@
 
       <v-divider class="my-8"></v-divider>
 
-      <div>My interactions</div>
+      <div v-if="!userActivity?.username" class="mb-4 text-caption">
+        <v-icon
+          icon="fa:fa-solid fa-info-circle"
+          size="small"
+          class="mr-2"
+        ></v-icon
+        >Log in to access "My interactions"
+      </div>
+      <div :class="!userActivity?.username ? 'text-disabled' : ''">
+        My interactions
+      </div>
       <v-checkbox
         label="Liked"
         v-model="liked"
         density="compact"
         hide-details
-      ></v-checkbox>
-      <v-checkbox
-        label="Commented"
-        v-model="commented"
-        density="compact"
-        hide-details
+        :disabled="!userActivity?.username"
       ></v-checkbox>
       <v-checkbox
         label="Saved"
         v-model="saved"
         density="compact"
         hide-details
+        :disabled="!userActivity?.username"
       ></v-checkbox>
 
       <v-divider class="my-8"></v-divider>
