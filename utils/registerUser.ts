@@ -1,7 +1,7 @@
 export default async (registerData: registerData) => {
   const response = await genericFetch({
     method: 'POST',
-    url: 'https://localhost:5112/api/Account/register',
+    url: 'http://localhost:5112/api/Account/register',
     body: registerData,
   });
 
