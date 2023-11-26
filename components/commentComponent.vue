@@ -7,8 +7,8 @@
   );
 
   const madeByUser = ref(false);
-  const liked = ref(false);
-  const saved = ref(false);
+  const likedByUser = ref(false);
+  const savedByUser = ref(false);
 
   const userActivity = useUserActivity();
 
@@ -18,26 +18,44 @@
       ? (madeByUser.value = true)
       : (madeByUser.value = false);
     refUserActivity.likedComments.includes(props.comment.commentId)
-      ? (liked.value = true)
-      : (liked.value = false);
+      ? (likedByUser.value = true)
+      : (likedByUser.value = false);
     refUserActivity?.savedComments.includes(props.comment.commentId)
-      ? (saved.value = true)
-      : (saved.value = false);
+      ? (savedByUser.value = true)
+      : (savedByUser.value = false);
   }
+
+  watchEffect(() => {
+    if (userActivity.value?.username) {
+      madeByUser.value = userActivity.value.comments.includes(
+        props.comment.commentId
+      );
+      likedByUser.value = userActivity.value.likedComments.includes(
+        props.comment.commentId
+      );
+      savedByUser.value = userActivity.value.savedComments.includes(
+        props.comment.commentId
+      );
+    }
+  });
 
   const handleLikeComment = async () => {
     const response = await likeComment(props.comment.commentId);
     if (response && response?.data) {
       if (response.data === 'Liked comment successfully') {
-        liked.value = true;
+        likedByUser.value = true;
         props.comment.totalLikes += 1;
       } else {
-        liked.value = false;
+        likedByUser.value = false;
         props.comment.totalLikes -= 1;
       }
     } else {
       console.log(response);
     }
+  };
+
+  const handleSaveComment = () => {
+    saveComment(props.comment.commentId);
   };
 
   const showDeleteCommentDialog = ref(false);
@@ -92,9 +110,11 @@
             <template v-slot:prepend>
               <v-icon
                 :icon="
-                  liked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
+                  likedByUser
+                    ? 'fa:fa-solid fa-heart'
+                    : 'fa:fa-regular fa-heart'
                 "
-                :color="liked ? 'red' : ''"
+                :color="likedByUser ? 'red' : ''"
               ></v-icon>
             </template>
             {{ formatNumber(comment.totalLikes) }}
@@ -106,7 +126,7 @@
             {{ formatNumber(comment.commentReplies.length) }}
           </v-btn>
           <v-btn
-            @click="updateSaveComment"
+            @click="handleSaveComment"
             variant="plain"
             icon
             size="x-small"
@@ -115,9 +135,11 @@
           >
             <v-icon
               :icon="
-                saved ? 'fa:fa-solid fa-bookmark' : 'fa:fa-regular fa-bookmark'
+                savedByUser
+                  ? 'fa:fa-solid fa-bookmark'
+                  : 'fa:fa-regular fa-bookmark'
               "
-              :color="saved ? 'blue' : ''"
+              :color="savedByUser ? 'blue' : ''"
               size="small"
             ></v-icon>
           </v-btn>
