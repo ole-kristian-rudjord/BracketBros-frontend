@@ -296,8 +296,8 @@
             {{ post.category.name }}
           </v-chip>
           <v-chip
-            v-for="(tag, index) in post.tags"
-            :key="index"
+            v-for="tag in post.tags"
+            :key="tag.tagId"
             size="small"
             class="ml-1"
           >
