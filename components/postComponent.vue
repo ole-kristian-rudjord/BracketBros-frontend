@@ -152,7 +152,7 @@
           "
           :color="likedByUser ? 'red' : ''"
         ></v-icon>
-        <v-tooltip activator="parent" location="start" open-delay="1000">
+        <v-tooltip activator="parent" location="start" open-delay="500">
           Like this post
         </v-tooltip>
       </v-btn>
@@ -169,7 +169,7 @@
         @click="handleCommentClick"
       >
         <v-icon icon="fa:fa-regular fa-comment"></v-icon>
-        <v-tooltip activator="parent" location="start" open-delay="1000">
+        <v-tooltip activator="parent" location="start" open-delay="500">
           Comment on this post
         </v-tooltip>
       </v-btn>
@@ -195,7 +195,7 @@
           "
           :color="savedByUser ? 'blue' : ''"
         ></v-icon>
-        <v-tooltip activator="parent" location="start" open-delay="1000">
+        <v-tooltip activator="parent" location="start" open-delay="500">
           Save this post
         </v-tooltip>
       </v-btn>
@@ -209,7 +209,7 @@
         @click="handleShareClick"
       >
         <v-icon icon="fa:fa-regular fa-share-from-square"></v-icon>
-        <v-tooltip activator="parent" location="start" open-delay="1000">
+        <v-tooltip activator="parent" location="start" open-delay="500">
           Share this post
         </v-tooltip>
       </v-btn>
@@ -226,7 +226,7 @@
           @click="handleEditClick"
         >
           <v-icon icon="fa:fa-solid fa-pen-to-square"></v-icon>
-          <v-tooltip activator="parent" location="start" open-delay="1000">
+          <v-tooltip activator="parent" location="start" open-delay="500">
             Edit this post
           </v-tooltip>
         </v-btn>
@@ -240,7 +240,7 @@
           @click="handleDeleteClick"
         >
           <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
-          <v-tooltip activator="parent" location="start" open-delay="1000">
+          <v-tooltip activator="parent" location="start" open-delay="500">
             Delete this post
           </v-tooltip>
         </v-btn>
