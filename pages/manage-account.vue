@@ -1,106 +1,176 @@
 <script setup lang="ts">
-  import { toast } from 'vue3-toastify';
-  import { defaultToastOptions } from '@/constants';
+import {toast} from 'vue3-toastify';
+import {defaultToastOptions} from '@/constants';
+import {fa} from "vuetify/iconsets/fa";
+import {append} from "domutils";
 
-  useHead({
-    title: 'Manage your account - BracketBros',
-  });
+useHead({
+  title: 'Manage your account - BracketBros',
+});
 
-  const router = useRouter();
+const router = useRouter();
 
-  const passwordForm = ref(false);
-  const passwordFormRef = ref();
-  const oldPassword = ref('');
-  const newPassword = ref('');
-  const showOldPassword = ref(false);
-  const showNewPassword = ref(false);
-  const changePassword_isLoading = ref(false);
+const passwordForm = ref(false);
+const passwordFormRef = ref();
+const oldPassword = ref('');
+const newPassword = ref('');
+const showOldPassword = ref(false);
+const showNewPassword = ref(false);
+const changePassword_isLoading = ref(false);
 
-  const profilePicture = ref<File[]>([]);
-  const changeProfilePicture_isLoading = ref(false);
-  const removeProfilePicture_isLoading = ref(false);
+const profilePicture = ref<File[]>([]);
+const changeProfilePicture_isLoading = ref(false);
+const removeProfilePicture_isLoading = ref(false);
 
-  const rules = {
-    required: (value: string) => !!value || 'Field is required',
-    noPasswordMatch: () =>
+const rules = {
+  required: (value: string) => !!value || 'Field is required',
+  noPasswordMatch: () =>
       oldPassword.value !== newPassword.value || `Passwords cannot be the same`,
-  };
+};
 
-  const changePassword = async () => {
-    changePassword_isLoading.value = true;
+const changePassword = async () => {
+  changePassword_isLoading.value = true;
 
-    const response = await changeUserPassword(
+  const response = await changeUserPassword(
       oldPassword.value,
       newPassword.value
-    );
+  );
 
-    if (response.data) {
-      toast.success('Password has been changed.', defaultToastOptions.success);
-    } else if (response.status === 422) {
-      toast.error(
+  if (response.data) {
+    toast.success('Password has been changed.', defaultToastOptions.success);
+  } else if (response.status === 422) {
+    toast.error(
         'You are not authorized to change the password of this user.',
         defaultToastOptions.error
-      );
-    } else {
-      toast.error(
+    );
+  } else {
+    toast.error(
         'An unexpected error occurred when trying to change password, please try again later.',
         defaultToastOptions.error
-      );
-    }
+    );
+  }
 
-    passwordFormRef.value.reset();
-    showOldPassword.value = false;
-    showNewPassword.value = false;
-    changePassword_isLoading.value = false;
-  };
+  passwordFormRef.value.reset();
+  showOldPassword.value = false;
+  showNewPassword.value = false;
+  changePassword_isLoading.value = false;
+};
 
-  const updateProfilePicture = async (picture: File[], isRemoving = false) => {
-    const loadingState = isRemoving
+const previewProfilePicture = computed(() => {
+  return profilePicture.value.length > 0
+      ? URL.createObjectURL(profilePicture.value[0])
+      : '';
+});
+
+
+//https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
+const fileInput = ref<HTMLInputElement | null>(null)
+const files = ref()
+
+function handleFileChange() {
+  files.value = fileInput.value?.files
+}
+
+// Source https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
+const doSomething = async () => {
+  const file = files.value[0]
+  console.log(file)
+  // and do other things...
+
+  const body = new FormData()
+
+  body.append('profilePicture', file);
+
+  /*
+    const body = new FormData()
+    body.append('profilePicture', file)*/
+  //body.append("RemoveProfilePicture", "false")
+  const res = await fetch('http://localhost:5112/api/Account/changeProfilePicture', {
+    body,
+    method: 'POST',
+    credentials: 'include',
+  })
+
+  console.log(res)
+
+
+}
+
+
+
+const updateProfilePicture = async (picture: File[], isRemoving = false) => {
+  const loadingState = isRemoving
       ? removeProfilePicture_isLoading
       : changeProfilePicture_isLoading;
-    loadingState.value = true;
+  loadingState.value = true;
 
-    const response = await changeProfilePicture(picture, isRemoving);
 
-    if (response.data) {
-      toast.success(
+  const response = await changeProfilePicture(picture, isRemoving);
+
+  if (response.data) {
+    toast.success(
         `Profile picture has been ${isRemoving ? 'removed' : 'updated'}.`,
         defaultToastOptions.success
-      );
-    } else if (response.status === 422) {
-      toast.error(
+    );
+  } else if (response.status === 422) {
+    toast.error(
         'You are not authorized to update the profile picture of this user.',
         defaultToastOptions.error
-      );
-    } else {
-      toast.error(
+    );
+  } else {
+    toast.error(
         'An unexpected error occurred, please try again later.',
         defaultToastOptions.error
-      );
-    }
+    );
+  }
 
-    if (!isRemoving) {
-      profilePicture.value = [];
-    }
-    loadingState.value = false;
-  };
+  if (!isRemoving) {
+    profilePicture.value = [];
+  }
+  loadingState.value = false;
+};
 
-  const logout = async () => {
-    await logoutUser();
-    await router.replace('/login');
-  };
 
-  onMounted(() => {
-    checkLoginAndReroute();
-  });
+const removeProfilePicture = async () => {
+
+  const response = await deleteProfilePicture();
+
+  if (response?.status === 200){
+    console.log("Removed picture ")
+
+  }
+}
+
+
+const logout = async () => {
+  await logoutUser();
+  await router.replace('/login');
+};
+
+onMounted(() => {
+  checkLoginAndReroute();
+});
+
+
+
 </script>
 
 <template>
+
+  <!--
+    https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
+  -->
+  <main>
+    <input ref="fileInput" type="file" @change="handleFileChange"/>
+    <button @click="doSomething">do something</button>
+  </main>
+
+
   <nuxt-layout name="login-register">
     <v-form
-      ref="passwordFormRef"
-      v-model="passwordForm"
-      @submit.prevent="changePassword"
+        ref="passwordFormRef"
+        v-model="passwordForm"
+        @submit.prevent="changePassword"
     >
       <h1 class="d-flex align-center mb-5 text-body-1">
         <v-icon icon="fa:fa-solid fa-lock" size="x-small" class="mr-2"></v-icon>
@@ -108,56 +178,56 @@
       </h1>
 
       <v-text-field
-        label="Current password"
-        v-model="oldPassword"
-        :type="showOldPassword ? 'text' : 'password'"
-        :rules="[rules.required]"
-        density="compact"
-        variant="outlined"
-        class="mb-1"
+          label="Current password"
+          v-model="oldPassword"
+          :type="showOldPassword ? 'text' : 'password'"
+          :rules="[rules.required]"
+          density="compact"
+          variant="outlined"
+          class="mb-1"
       >
         <template v-slot:append-inner>
           <v-icon
-            :icon="
+              :icon="
               showOldPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
-            size="x-small"
-            @click="showOldPassword = !showOldPassword"
+              size="x-small"
+              @click="showOldPassword = !showOldPassword"
           ></v-icon>
         </template>
       </v-text-field>
 
       <v-text-field
-        label="New password"
-        v-model="newPassword"
-        :type="showNewPassword ? 'text' : 'password'"
-        :rules="[rules.required, rules.noPasswordMatch()]"
-        density="compact"
-        variant="outlined"
+          label="New password"
+          v-model="newPassword"
+          :type="showNewPassword ? 'text' : 'password'"
+          :rules="[rules.required, rules.noPasswordMatch()]"
+          density="compact"
+          variant="outlined"
       >
         <template v-slot:append-inner>
           <v-icon
-            :icon="
+              :icon="
               showNewPassword
                 ? 'fa:fa-solid fa-eye-slash'
                 : 'fa:fa-solid fa-eye'
             "
-            size="x-small"
-            @click="showNewPassword = !showNewPassword"
+              size="x-small"
+              @click="showNewPassword = !showNewPassword"
           ></v-icon>
         </template>
       </v-text-field>
 
       <v-btn
-        type="submit"
-        size="large"
-        variant="tonal"
-        block
-        class="text-body-1"
-        :disabled="!passwordForm"
-        :loading="changePassword_isLoading"
+          type="submit"
+          size="large"
+          variant="tonal"
+          block
+          class="text-body-1"
+          :disabled="!passwordForm"
+          :loading="changePassword_isLoading"
       >
         Change password
       </v-btn>
@@ -170,37 +240,45 @@
       Profile Picture
     </h1>
 
-    <v-file-input
-      label="Select profile picture"
-      v-model="profilePicture"
-      accept="image/png, image/jpeg"
-      density="compact"
-      variant="outlined"
-      prepend-icon=""
+    <v-file-input @change="previewProfilePicture"
+                  label="Select profile picture"
+                  v-model="profilePicture"
+                  accept="image/png, image/jpeg"
+                  density="compact"
+                  variant="outlined"
+                  prepend-icon=""
     >
     </v-file-input>
 
+    <v-img
+        v-if="previewProfilePicture"
+        :src="previewProfilePicture"
+        class="mt-4 mb-6"
+        width="100%"
+        height="auto"
+        contain
+    ></v-img>
+
     <v-btn
-      type="submit"
-      size="large"
-      variant="tonal"
-      block
-      class="text-body-1 mb-6"
-      :disabled="profilePicture.length === 0"
-      :loading="changeProfilePicture_isLoading"
-      @click="updateProfilePicture(profilePicture, false)"
+        type="submit"
+        size="large"
+        variant="tonal"
+        block
+        class="text-body-1 mb-6"
+        :disabled="profilePicture.length === 0"
+        :loading="changeProfilePicture_isLoading"
+        @click="removeProfilePicture()"
     >
       Change profile picture
     </v-btn>
 
     <v-btn
-      type="submit"
-      size="large"
-      variant="tonal"
-      block
-      class="text-body-1"
-      :loading="removeProfilePicture_isLoading"
-      @click="updateProfilePicture([], true)"
+        type="submit"
+        size="large"
+        variant="tonal"
+        block
+        class="text-body-1"
+        :loading="removeProfilePicture_isLoading"
     >
       Remove profile picture
     </v-btn>
@@ -208,11 +286,11 @@
     <v-divider class="my-8"></v-divider>
 
     <v-btn
-      size="large"
-      variant="tonal"
-      block
-      class="text-body-1"
-      @click="logout"
+        size="large"
+        variant="tonal"
+        block
+        class="text-body-1"
+        @click="logout"
     >
       Logout
     </v-btn>
