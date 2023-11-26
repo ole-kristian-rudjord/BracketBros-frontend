@@ -5,7 +5,7 @@ export default async (id: number) => {
 
   const response = await genericFetch({
     url: `http://localhost:5112/api/Post/DeletePost/${id}`,
-    method: 'POST',
+    method: 'GET',
   });
 
   await updateAllPosts();
