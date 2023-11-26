@@ -104,7 +104,9 @@
       });
   };
 
-  const handleEditClick = () => {};
+  const handleEditClick = () => {
+  router.push(`/edit-post/${props.post.id}`)
+  };
 
   const handleDeleteClick = () => {};
 
