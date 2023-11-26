@@ -13,6 +13,14 @@
   const post = ref<post | null>(null);
   const comments = ref<comment[] | null>(null);
 
+  const handleDeletedComment = (deletedCommentId: number) => {
+    if (comments.value) {
+      comments.value = comments.value.filter(
+        (comment) => comment.commentId !== deletedCommentId
+      );
+    }
+  };
+
   watch(
     post,
     (newValue) => {
@@ -60,10 +68,11 @@
     ></post-component>
     <div class="d-flex flex-column w-100 my-4" style="max-width: 700px">
       <comment-component
-        v-for="(comment, index) in comments"
-        :key="index"
+        v-for="comment in comments"
+        :key="comment.commentId"
         :comment="comment"
         class="w-100 mb-4"
+        @commentDeleted="handleDeletedComment(comment.commentId)"
       ></comment-component>
     </div>
   </nuxt-layout>
