@@ -1,11 +1,12 @@
-export default async (id: number) => {
-  if (!checkLoginAndReroute()) {
+export default async (post: editPostBody) => {
+  if (!await checkLoginAndReroute()) {
     return;
   }
 
   const response = await genericFetch({
-    method: 'GET',
-    url: `http://localhost:5112/api/Post/SavePost/${id}`, // TODO: implement in back-end
+    url: 'http://localhost:5112/api/Post/SavePost',
+    method: 'POST',
+    body: post,
   });
 
   await updateUserActivityState();

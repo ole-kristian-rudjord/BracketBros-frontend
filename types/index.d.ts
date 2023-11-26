@@ -76,4 +76,7 @@ declare global {
     TagsId: number[];
     Content: string;
   }
+  interface editPostBody extends createPostBody {
+    id: number;
+  }
 }
