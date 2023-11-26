@@ -131,30 +131,28 @@
       );
     }
 
-    const categoryFromUrl = route.query.category;
-    const tagFromUrl = route.query.tag;
+    const categoryIdFromUrl = route.query.categoryId;
+    const tagIdFromUrl = route.query.tagId;
 
-    if (categoryFromUrl) {
+    if (categoryIdFromUrl) {
       const categoryToSelect = categories.value.find(
-        (c) =>
-          c.category.name.toLowerCase() ===
-          categoryFromUrl.toString().toLowerCase()
+        (c) => c.category.categoryId.toString() === categoryIdFromUrl
       );
       if (categoryToSelect) {
         categoryToSelect.selected = true;
       }
     }
 
-    if (tagFromUrl) {
+    if (tagIdFromUrl) {
       const tagToSelect = tags.value.find(
-        (t) => t.tag.name.toLowerCase() === tagFromUrl.toString().toLowerCase()
+        (t) => t.tag.tagId.toString() === tagIdFromUrl
       );
       if (tagToSelect) {
         tagToSelect.selected = true;
       }
     }
 
-    if (categoryFromUrl || tagFromUrl) {
+    if (categoryIdFromUrl || tagIdFromUrl) {
       router.replace({
         path: route.path,
       });
