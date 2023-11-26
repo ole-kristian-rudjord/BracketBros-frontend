@@ -14,7 +14,6 @@
 
   const showPassword = ref(false);
   const isLoading = ref(false);
-  const error = ref<null | 'unauthorized' | 'unexpectedError'>(null);
 
   const rules = {
     required: (value: string) => !!value || 'Field is required',
@@ -30,8 +29,6 @@
     };
 
     const response = await loginUser(loginData);
-
-    console.log(response);
 
     if (response.data) {
       await router.replace('/manage-account');
@@ -50,10 +47,10 @@
     isLoading.value = false;
   };
 
-  onMounted(() => {
+  onMounted(async () => {
     const userActivity = useUserActivity();
     if (userActivity.value) {
-      router.replace('/');
+      await router.replace('/');
     }
   });
 </script>
