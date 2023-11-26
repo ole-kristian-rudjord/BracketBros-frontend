@@ -99,6 +99,9 @@
     }
   };
 
+  const route = useRoute();
+  const router = useRouter();
+
   onMounted(async () => {
     const getAllCategories_response = await getAllCategories();
     if (getAllCategories_response) {
@@ -126,6 +129,35 @@
         'Error fetching tags from database.',
         defaultToastOptions.error
       );
+    }
+
+    const categoryFromUrl = route.query.category;
+    const tagFromUrl = route.query.tag;
+
+    if (categoryFromUrl) {
+      const categoryToSelect = categories.value.find(
+        (c) =>
+          c.category.name.toLowerCase() ===
+          categoryFromUrl.toString().toLowerCase()
+      );
+      if (categoryToSelect) {
+        categoryToSelect.selected = true;
+      }
+    }
+
+    if (tagFromUrl) {
+      const tagToSelect = tags.value.find(
+        (t) => t.tag.name.toLowerCase() === tagFromUrl.toString().toLowerCase()
+      );
+      if (tagToSelect) {
+        tagToSelect.selected = true;
+      }
+    }
+
+    if (categoryFromUrl || tagFromUrl) {
+      router.replace({
+        path: route.path,
+      });
     }
 
     window.addEventListener('scroll', handleScroll);

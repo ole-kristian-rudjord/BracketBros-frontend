@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '~/constants';
+
   useHead({
     title: 'Log in - BracketBros',
   });
@@ -29,17 +32,19 @@
     const response = await loginUser(loginData);
 
     console.log(response);
-    // Response status can be a 200 or 204.
-    if (
-      response.status !== null &&
-      response.status >= 200 &&
-      response.status <= 299
-    ) {
-      await router.replace('/');
-    } else if (response.status === 401) {
-      error.value = 'unauthorized';
+
+    if (response.data) {
+      router.replace('/manage-account');
+    } else if (response.status === 422 || response.status === 401) {
+      toast.error(
+        'Invalid email/username or password.',
+        defaultToastOptions.error
+      );
     } else {
-      error.value = 'unexpectedError';
+      toast.error(
+        'Unexpected error when trying to log in, please try again later.',
+        defaultToastOptions.error
+      );
     }
 
     isLoading.value = false;
@@ -101,16 +106,5 @@
     <nuxt-link to="/register" class="d-block mt-8 text-body-2">
       New here? Create an account.
     </nuxt-link>
-    <v-alert
-      v-if="error"
-      color="error"
-      icon="fa:fa-solid fa-circle-exclamation"
-      class="mt-6"
-      :text="
-        error === 'unauthorized'
-          ? 'Email/username and password does not match with any existing user.'
-          : 'Unexpected error when trying to log in, please try again later.'
-      "
-    ></v-alert>
   </nuxt-layout>
 </template>
