@@ -5,6 +5,6 @@ export default async (post: createPostBody) => {
     body: post,
   });
 
-  await updateAllPosts();
+  await updateAllPostsState();
   return response;
 };
