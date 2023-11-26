@@ -32,14 +32,14 @@
       return !!value || 'Field is required';
     },
     title: (value: string) => {
-      const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/:?.!#@$%&*()]{2,64}$/;
+      const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/':?.!#@$%&*()]{2,64}$/;
       return (
         titlePattern.test(value) ||
         'The title can only contain numbers, letters, or characters -:?.!,@#$%&*(), and must be between 2 to 64 characters.'
       );
     },
     content: (value: string) => {
-      const contentPattern = /^.{2,4096}$/;
+      const contentPattern = /.{2,4096}$/;
       return (
         contentPattern.test(value) ||
         'The content must be between 2 to 4096 characters.'
@@ -72,7 +72,7 @@
   };
 
   onMounted(async () => {
-    checkLoginAndReroute();
+     await checkLoginAndReroute();
 
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
