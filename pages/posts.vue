@@ -105,12 +105,12 @@
   onMounted(async () => {
     const getAllCategories_response = await getAllCategories();
     if (getAllCategories_response) {
-      categories.value = getAllCategories_response.map(
-        (category: category) => ({
+      categories.value = getAllCategories_response
+        .sort((a: category, b: category) => a.name.localeCompare(b.name))
+        .map((category: category) => ({
           category: category,
           selected: false,
-        })
-      );
+        }));
     } else {
       toast.error(
         'Error fetching categories from database.',
@@ -120,10 +120,12 @@
 
     const getAllTags_response = await getAllTags();
     if (getAllTags_response.data) {
-      tags.value = getAllTags_response.data.map((tag: tag) => ({
-        tag: tag,
-        selected: false,
-      }));
+      tags.value = getAllTags_response.data
+        .sort((a: tag, b: tag) => a.name.localeCompare(b.name))
+        .map((tag: tag) => ({
+          tag: tag,
+          selected: false,
+        }));
     } else {
       toast.error(
         'Error fetching tags from database.',
