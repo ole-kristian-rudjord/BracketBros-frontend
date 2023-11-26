@@ -5,6 +5,6 @@ export default async () => {
   });
 
   sessionStorage.clear();
-  updateUserActivityState();
+  await updateUserActivityState();
   return response;
 };

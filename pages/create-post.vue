@@ -61,7 +61,7 @@
     const response = await createPost(post);
 
     if (response.data) {
-      router.push(`/post/${response.data}`);
+      await router.push(`/post/${response.data}`);
     } else {
       toast.error(
         'Unexpected error when trying creating post, please try again later.'

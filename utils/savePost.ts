@@ -4,6 +4,6 @@ export default async (id: number) => {
     url: `http://localhost:5112/api/Post/SavePost/${id}`, // TODO: implement in back-end
   });
 
-  updateUserActivityState();
+  await updateUserActivityState();
   return response;
 };
