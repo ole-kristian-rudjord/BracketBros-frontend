@@ -35,7 +35,7 @@
       const titlePattern = /^[0-9a-zA-ZæøåÆØÅ \-\/':?.!#@$%&*()]{2,64}$/;
       return (
         titlePattern.test(value) ||
-        'The title can only contain numbers, letters, or characters -:?.!,@#$%&*(), and must be between 2 to 64 characters.'
+        "The title can only contain numbers, letters, or characters -:?.!,'@#$%&*(), and must be between 2 to 64 characters."
       );
     },
     content: (value: string) => {
@@ -72,7 +72,7 @@
   };
 
   onMounted(async () => {
-     await checkLoginAndReroute();
+    await checkLoginAndReroute();
 
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
