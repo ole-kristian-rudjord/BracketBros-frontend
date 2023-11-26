@@ -30,7 +30,11 @@
 
     console.log(response);
     // Response status can be a 200 or 204.
-    if (response.status !== null && response.status >= 200 && response.status <= 299 ) {
+    if (
+      response.status !== null &&
+      response.status >= 200 &&
+      response.status <= 299
+    ) {
       await router.replace('/');
     } else if (response.status === 401) {
       error.value = 'unauthorized';
