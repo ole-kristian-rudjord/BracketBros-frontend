@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const emit = defineEmits(['commentDeleted']);
+  const emit = defineEmits(['commentReplyAdded', 'commentDeleted']);
 
   const props = withDefaults(
     defineProps<{ comment: comment; showReplies?: boolean }>(),
@@ -44,10 +44,10 @@
     if (response && response?.data) {
       if (response.data === 'Liked comment successfully') {
         likedByUser.value = true;
-        props.comment.totalLikes += 1;
+        props.comment.totalLikes++;
       } else {
         likedByUser.value = false;
-        props.comment.totalLikes -= 1;
+        props.comment.totalLikes--;
       }
     } else {
       console.log(response);
@@ -56,6 +56,10 @@
 
   const handleSaveComment = () => {
     saveComment(props.comment.commentId);
+  };
+
+  const handleCommentAdded = () => {
+    emit('commentReplyAdded');
   };
 
   const showDeleteCommentDialog = ref(false);
@@ -124,6 +128,13 @@
               <v-icon icon="fa:fa-regular fa-comment"></v-icon>
             </template>
             {{ formatNumber(comment.commentReplies.length) }}
+            <create-comment-dialog
+              type="comment"
+              :title="comment.content"
+              :post-id="comment.postId"
+              :parent-comment-id="comment.commentId"
+              @comment-added="handleCommentAdded"
+            ></create-comment-dialog>
           </v-btn>
           <v-btn
             @click="handleSaveComment"
@@ -201,8 +212,8 @@
       </div>
     </v-card>
     <commentComponent
-      v-for="(reply, index) in comment.commentReplies"
-      :key="index"
+      v-for="reply in comment.commentReplies"
+      :key="reply.commentId"
       :comment="reply"
       class="mt-2 ml-6"
     ></commentComponent>

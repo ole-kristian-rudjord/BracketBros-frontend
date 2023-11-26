@@ -64,7 +64,8 @@
       await router.push(`/post/${response.data}`);
     } else {
       toast.error(
-        'Unexpected error when trying creating post, please try again later.'
+        'Unexpected error when trying creating post, please try again later.',
+        defaultToastOptions.error
       );
     }
 

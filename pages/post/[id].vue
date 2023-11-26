@@ -13,11 +13,35 @@
   const post = ref<post | null>(null);
   const comments = ref<comment[] | null>(null);
 
+  const updateComments = async () => {
+    if (post.value) {
+      const { data: commentsData, error: commentsError } = await getComments(
+        post.value?.id
+      );
+      if (commentsError) {
+        console.error('Error fetching comments:', commentsError);
+        toast.error('Error fetching comments', defaultToastOptions.error);
+      } else {
+        comments.value = commentsData;
+      }
+    }
+  };
+
+  const handleCommentAdded = () => {
+    updateComments();
+    if (post.value) {
+      post.value.totalComments++;
+    }
+  };
+
   const handleDeletedComment = (deletedCommentId: number) => {
     if (comments.value) {
       comments.value = comments.value.filter(
         (comment) => comment.commentId !== deletedCommentId
       );
+    }
+    if (post.value) {
+      post.value.totalComments--;
     }
   };
 
@@ -41,15 +65,7 @@
         toast.error('Error fetching post', defaultToastOptions.error);
       } else {
         post.value = postData;
-        const { data: commentsData, error: commentsError } = await getComments(
-          postId
-        );
-        if (commentsError) {
-          console.error('Error fetching comments:', commentsError);
-          toast.error('Error fetching comments', defaultToastOptions.error);
-        } else {
-          comments.value = commentsData;
-        }
+        await updateComments();
       }
     } else {
       console.error('Invalid Post ID');
@@ -65,6 +81,7 @@
       :post="post"
       :expandContent="true"
       :preventHighlighting="true"
+      @comment-added="handleCommentAdded"
     ></post-component>
     <div class="d-flex flex-column w-100 my-4" style="max-width: 700px">
       <comment-component
@@ -72,6 +89,7 @@
         :key="comment.commentId"
         :comment="comment"
         class="w-100 mb-4"
+        @comment-reply-added="handleCommentAdded"
         @commentDeleted="handleDeletedComment(comment.commentId)"
       ></comment-component>
     </div>
