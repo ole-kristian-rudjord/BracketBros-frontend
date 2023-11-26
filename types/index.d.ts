@@ -83,4 +83,10 @@ declare global {
   interface editPostBody extends createPostBody {
     id: number;
   }
+
+  interface createCommentBody {
+    ParentCommentId: number | null;
+    PostId: number;
+    Content: string;
+  }
 }

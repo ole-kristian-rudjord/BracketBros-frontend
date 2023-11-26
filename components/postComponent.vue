@@ -19,6 +19,8 @@
 
   watch(() => current.value, updateColors);
 
+  const emit = defineEmits(['commentAdded']);
+
   const props = withDefaults(
     defineProps<{
       post: post;
@@ -75,8 +77,8 @@
     await likePost(props.post.id);
   };
 
-  const handleCommentClick = () => {
-    goToPost();
+  const handleCommentAdded = () => {
+    emit('commentAdded');
   };
 
   const handleSaveClick = () => {
@@ -168,12 +170,17 @@
         variant="plain"
         v-ripple="{ class: `text-green` }"
         class="rounded-lg"
-        @click="handleCommentClick"
       >
         <v-icon icon="fa:fa-regular fa-comment"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="500">
           Comment on this post
         </v-tooltip>
+        <create-comment-dialog
+          type="post"
+          :post-id="post.id"
+          :title="post.title"
+          @comment-added="handleCommentAdded"
+        ></create-comment-dialog>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
         {{ formatNumber(post.totalComments) }}
@@ -239,7 +246,6 @@
           variant="plain"
           color="error"
           class="rounded-lg"
-          @click=""
         >
           <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="500">

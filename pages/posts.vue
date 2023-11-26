@@ -120,6 +120,19 @@
     });
   };
 
+  const handleCommentAdded = (postId: number) => {
+    const postIndex = allPosts.value.findIndex((p) => p.id === postId);
+
+    if (postIndex !== -1) {
+      const updatedPost = {
+        ...allPosts.value[postIndex],
+        totalComments: allPosts.value[postIndex].totalComments + 1,
+      };
+
+      allPosts.value[postIndex] = updatedPost;
+    }
+  };
+
   const isNearBottom = () => {
     const scrollY = window.scrollY;
     const visible = document.documentElement.clientHeight;
@@ -319,6 +332,7 @@
       :key="post.id"
       :post="post"
       class="mb-8"
+      @comment-added="handleCommentAdded(post.id)"
     ></post-component>
     <div v-else-if="allPosts.length > 0" class="text-center">
       No posts match these filters
