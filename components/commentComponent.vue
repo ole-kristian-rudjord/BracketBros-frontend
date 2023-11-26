@@ -155,7 +155,6 @@
             <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
           </v-btn>
           <v-btn
-            @click="handleDeleteComment"
             variant="plain"
             icon
             size="x-small"
