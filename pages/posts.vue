@@ -13,8 +13,9 @@
 
   const showFilterSidebar = ref(false);
   const search = ref('');
-  const liked = ref(false); // TODO:
+  const liked = ref(false);
   const saved = ref(false); // TODO:
+  const createdByMe = ref(false);
   const categories = ref<{ category: category; selected: boolean }[]>([]);
   const tags = ref<{ tag: tag; selected: boolean }[]>([]);
 
@@ -52,6 +53,7 @@
 
       let matchesLiked = true;
       let matchesSaved = true;
+      let matchesCreatedByMe = true;
 
       if (userActivity.value && userActivity.value.username) {
         matchesLiked = liked.value
@@ -60,6 +62,9 @@
         // matchesSaved = saved.value
         //   ? userActivity.value.savedPosts.includes(post.id)
         //   : true; TODO: implement saved posts
+        matchesCreatedByMe = createdByMe.value
+          ? userActivity.value.posts.includes(post.id)
+          : true;
       }
 
       // Only show posts that match all filters
@@ -68,7 +73,8 @@
         matchesCategory &&
         matchesTag &&
         matchesLiked &&
-        matchesSaved
+        matchesSaved &&
+        matchesCreatedByMe
       );
     });
   });
@@ -218,16 +224,13 @@
 
       <v-divider class="my-8"></v-divider>
 
-      <div v-if="!userActivity?.username" class="mb-4 text-caption">
+      <div v-if="!userActivity?.username" class="mb-2 text-caption">
         <v-icon
           icon="fa:fa-solid fa-info-circle"
           size="small"
-          class="mr-2"
+          class="mr-1"
         ></v-icon>
-        Log in to access "My interactions"
-      </div>
-      <div :class="!userActivity?.username ? 'text-disabled' : ''">
-        My interactions
+        Only accessible to logged in users
       </div>
       <v-checkbox
         label="Liked"
@@ -239,6 +242,13 @@
       <v-checkbox
         label="Saved"
         v-model="saved"
+        density="compact"
+        hide-details
+        :disabled="!userActivity?.username"
+      ></v-checkbox>
+      <v-checkbox
+        label="Created by me"
+        v-model="createdByMe"
         density="compact"
         hide-details
         :disabled="!userActivity?.username"
@@ -273,8 +283,8 @@
   <nuxt-layout name="centered-content">
     <post-component
       v-if="filteredPosts.length > 0"
-      v-for="(post, index) in filteredPosts.slice(0, numberOfDisplayedPosts)"
-      :key="index"
+      v-for="post in filteredPosts.slice(0, numberOfDisplayedPosts)"
+      :key="post.id"
       :post="post"
       class="mb-8"
     ></post-component>
