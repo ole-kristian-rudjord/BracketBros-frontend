@@ -70,8 +70,6 @@
     });
   };
 
-  const showDeletePostDialog = ref(false);
-
   const postLink = `/post/${props.post.id}`;
 
   const goToPost = async () => {
@@ -97,7 +95,7 @@
       .writeText(fullUrl)
       .then(() => {
         toast.success(
-          'Link to post copied to clipboard',
+          'Link to post copied to clipboard.',
           defaultToastOptions.success
         );
       })
@@ -109,6 +107,8 @@
   const handleEditClick = () => {
     router.push(`/edit-post/${props.post.id}`);
   };
+
+  const showDeletePostDialog = ref(false);
 
   const handleDeletePost = () => {
     showDeletePostDialog.value = false;
