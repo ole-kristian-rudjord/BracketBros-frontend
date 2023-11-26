@@ -1,5 +1,5 @@
 export default async (id: number) => {
-  if (!checkLoginAndReroute()) {
+  if (!await checkLoginAndReroute()) {
     return;
   }
 
