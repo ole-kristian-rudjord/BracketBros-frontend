@@ -85,9 +85,9 @@
     loadingState.value = false;
   };
 
-  const logout = () => {
-    logoutUser();
-    router.replace('/login');
+  const logout = async () => {
+    await logoutUser();
+    await router.replace('/login');
   };
 
   onMounted(() => {

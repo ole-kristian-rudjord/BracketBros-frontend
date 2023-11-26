@@ -34,7 +34,7 @@
     console.log(response);
 
     if (response.data) {
-      router.replace('/manage-account');
+      await router.replace('/manage-account');
     } else if (response.status === 422 || response.status === 401) {
       toast.error(
         'Invalid email/username or password.',

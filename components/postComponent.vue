@@ -72,8 +72,8 @@
 
   const postLink = `/post/${props.post.id}`;
 
-  const goToPost = () => {
-    router.push({ path: postLink });
+  const goToPost = async () => {
+    await router.push({ path: postLink });
   };
 
   const handleLikeClick = async () => {

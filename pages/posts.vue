@@ -155,7 +155,7 @@
     }
 
     if (categoryIdFromUrl || tagIdFromUrl) {
-      router.replace({
+      await router.replace({
         path: route.path,
       });
     }
