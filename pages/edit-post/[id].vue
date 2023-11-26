@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { toast } from 'vue3-toastify';
-  import { defaultToastOptions } from '~/constants';
+  import { defaultToastOptions } from '@/constants';
 
   const tabTitle = ref('BracketBros');
 
