@@ -111,6 +111,7 @@
   };
 
   const handleDeletePost = () => {
+    showDeletePostDialog.value = false;
     deletePost(props.post.id);
   };
 
