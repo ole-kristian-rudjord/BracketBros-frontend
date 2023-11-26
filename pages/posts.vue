@@ -223,8 +223,8 @@
           icon="fa:fa-solid fa-info-circle"
           size="small"
           class="mr-2"
-        ></v-icon
-        >Log in to access "My interactions"
+        ></v-icon>
+        Log in to access "My interactions"
       </div>
       <div :class="!userActivity?.username ? 'text-disabled' : ''">
         My interactions
