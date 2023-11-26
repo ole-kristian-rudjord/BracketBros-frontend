@@ -70,6 +70,8 @@
     });
   };
 
+  const showDeletePostDialog = ref(false);
+
   const postLink = `/post/${props.post.id}`;
 
   const goToPost = async () => {
@@ -85,7 +87,7 @@
   };
 
   const handleSaveClick = () => {
-    savePost(props.post.id);
+    savePost(props.post.id); // TODO: implement saving post
   };
 
   const handleShareClick = () => {
@@ -105,10 +107,12 @@
   };
 
   const handleEditClick = () => {
-  router.push(`/edit-post/${props.post.id}`)
+    router.push(`/edit-post/${props.post.id}`);
   };
 
-  const handleDeleteClick = () => {};
+  const handleDeletePost = () => {
+    deletePost(props.post.id);
+  };
 
   const handlePostClick = async (event: MouseEvent) => {
     for (let element of event.composedPath()) {
@@ -239,12 +243,45 @@
           variant="plain"
           color="error"
           class="rounded-lg"
-          @click="handleDeleteClick"
+          @click=""
         >
           <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
           <v-tooltip activator="parent" location="start" open-delay="500">
             Delete this post
           </v-tooltip>
+          <v-dialog
+            v-model="showDeletePostDialog"
+            activator="parent"
+            width="auto"
+          >
+            <v-card class="px-10 py-6 rounded-lg">
+              <v-card-item class="px-0">
+                <v-card-title class="text-h5">
+                  Delete "{{ post.title }}"
+                </v-card-title>
+              </v-card-item>
+              <v-card-text class="px-0">
+                Are you sure you want to permanently delete this post?
+              </v-card-text>
+              <v-card-actions class="px-0">
+                <v-btn
+                  variant="outlined"
+                  class="text-body-1"
+                  @click="showDeletePostDialog = false"
+                >
+                  No, cancel
+                </v-btn>
+                <v-btn
+                  variant="outlined"
+                  color="error"
+                  class="text-body-1"
+                  @click="handleDeletePost"
+                >
+                  Yes, delete post
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-btn>
       </template>
     </div>
