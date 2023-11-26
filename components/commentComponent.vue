@@ -20,11 +20,14 @@
     refUserActivity.likedComments.includes(props.comment.commentId)
       ? (liked.value = true)
       : (liked.value = false);
+    refUserActivity?.savedComments.includes(props.comment.commentId)
+      ? (saved.value = true)
+      : (saved.value = false);
   }
 
   const handleLikeComment = async () => {
     const response = await likeComment(props.comment.commentId);
-    if (response?.data) {
+    if (response && response?.data) {
       if (response.data === 'Liked comment successfully') {
         liked.value = true;
         props.comment.totalLikes += 1;
@@ -103,6 +106,7 @@
             {{ formatNumber(comment.commentReplies.length) }}
           </v-btn>
           <v-btn
+            @click="updateSaveComment"
             variant="plain"
             icon
             size="x-small"

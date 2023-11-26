@@ -42,8 +42,7 @@
     ) {
       madeByUser.value = userActivity.value.posts.includes(props.post.id);
       likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
-      // TODO: Add save post feature
-      // savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
+      savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
     }
   });
 
@@ -77,7 +76,7 @@
   };
 
   const handleLikeClick = async () => {
-    likePost(props.post.id);
+    await likePost(props.post.id);
   };
 
   const handleCommentClick = () => {
@@ -85,7 +84,7 @@
   };
 
   const handleSaveClick = () => {
-    savePost(props.post.id); // TODO: implement saving post
+    savePost(props.post.id);
   };
 
   const handleShareClick = () => {
@@ -121,7 +120,7 @@
         return;
       }
     }
-    goToPost();
+     await goToPost();
   };
 
   onMounted(() => {
