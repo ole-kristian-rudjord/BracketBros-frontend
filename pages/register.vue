@@ -1,7 +1,12 @@
 <script setup lang="ts">
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '~/constants';
+
   useHead({
     title: 'Register - BracketBros',
   });
+
+  const router = useRouter();
 
   const form = ref(false);
   const email = ref('');
@@ -46,11 +51,12 @@
     const response = await registerUser(registerData);
 
     if (response.data) {
-      console.log('success');
-      // Set user
-      error.value = null;
+      await router.replace('/manage-account');
     } else {
-      error.value = 'unexpectedError';
+      toast.error(
+        'Unexpected error when trying to register new account.',
+        defaultToastOptions.error
+      );
     }
 
     isLoading.value = false;
