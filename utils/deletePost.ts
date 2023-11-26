@@ -8,7 +8,7 @@ export default async (id: number) => {
     method: 'GET',
   });
 
-  await updateAllPosts();
+  await updateAllPostsState();
   await updateUserActivityState();
   return response;
 };

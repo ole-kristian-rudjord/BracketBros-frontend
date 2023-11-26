@@ -14,7 +14,7 @@
   const showFilterSidebar = ref(false);
   const search = ref('');
   const liked = ref(false);
-  const saved = ref(false); // TODO:
+  const saved = ref(false);
   const createdByMe = ref(false);
   const categories = ref<{ category: category; selected: boolean }[]>([]);
   const tags = ref<{ tag: tag; selected: boolean }[]>([]);
@@ -81,9 +81,9 @@
         matchesLiked = liked.value
           ? userActivity.value.likedPosts.includes(post.id)
           : true;
-        // matchesSaved = saved.value
-        //   ? userActivity.value.savedPosts.includes(post.id)
-        //   : true; TODO: implement saved posts
+        matchesSaved = saved.value
+          ? userActivity.value.savedPosts.includes(post.id)
+          : true;
         matchesCreatedByMe = createdByMe.value
           ? userActivity.value.posts.includes(post.id)
           : true;

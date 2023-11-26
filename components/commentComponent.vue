@@ -1,38 +1,38 @@
 <script setup lang="ts">
+  const emit = defineEmits(['commentDeleted']);
+
   const props = withDefaults(
     defineProps<{ comment: comment; showReplies?: boolean }>(),
     { showReplies: true }
   );
 
-  const isMadeByUser = ref(false);
-  const isLiked = ref(false);
-  const isSaved = ref(false);
+  const madeByUser = ref(false);
+  const liked = ref(false);
+  const saved = ref(false);
 
   const userActivity = useUserActivity();
 
   if (userActivity.value) {
     const refUserActivity = userActivity.value;
     refUserActivity.username === props.comment.user.username
-      ? (isMadeByUser.value = true)
-      : (isMadeByUser.value = false);
+      ? (madeByUser.value = true)
+      : (madeByUser.value = false);
     refUserActivity.likedComments.includes(props.comment.commentId)
-      ? (isLiked.value = true)
-      : (isLiked.value = false);
+      ? (liked.value = true)
+      : (liked.value = false);
     refUserActivity?.savedComments.includes(props.comment.commentId)
-        ? (isSaved.value = true)
-        : (isSaved.value = false);
+      ? (saved.value = true)
+      : (saved.value = false);
   }
 
-  const updateLikeComment = async () => {
-    await checkLoginAndReroute();
-
+  const handleLikeComment = async () => {
     const response = await likeComment(props.comment.commentId);
-    if (response && response.data) {
+    if (response && response?.data) {
       if (response.data === 'Liked comment successfully') {
-        isLiked.value = true;
+        liked.value = true;
         props.comment.totalLikes += 1;
       } else {
-        isLiked.value = false;
+        liked.value = false;
         props.comment.totalLikes -= 1;
       }
     } else {
@@ -40,28 +40,12 @@
     }
   };
 
+  const showDeleteCommentDialog = ref(false);
 
-
-  const updateSaveComment = async () => {
-    await checkLoginAndReroute();
-
-    const response = await saveComment(props.comment.commentId);
-    if (response && response.data) {
-      isSaved.value = response.data === 'Saved comment successfully';
-    } else {
-      console.log(response);
-    }
-  };
-
-  const actionDeleteComment = async () => {
-     await checkLoginAndReroute();
-
-    const response = await deleteComment(props.comment.commentId);
-    if (response.data) {
-      console.log(response.data);
-    } else {
-      console.log(response);
-    }
+  const handleDeleteComment = () => {
+    showDeleteCommentDialog.value = false;
+    deleteComment(props.comment.commentId);
+    emit('commentDeleted');
   };
 </script>
 
@@ -104,13 +88,13 @@
       </div>
       <div class="d-flex flex-row align-center justify-space-between px-1">
         <div>
-          <v-btn variant="plain" size="x-small" @click="updateLikeComment">
+          <v-btn variant="plain" size="x-small" @click="handleLikeComment">
             <template v-slot:prepend>
               <v-icon
                 :icon="
-                  isLiked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
+                  liked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
                 "
-                :color="isLiked ? 'red' : ''"
+                :color="liked ? 'red' : ''"
               ></v-icon>
             </template>
             {{ formatNumber(comment.totalLikes) }}
@@ -121,7 +105,8 @@
             </template>
             {{ formatNumber(comment.commentReplies.length) }}
           </v-btn>
-          <v-btn @click="updateSaveComment"
+          <v-btn
+            @click="updateSaveComment"
             variant="plain"
             icon
             size="x-small"
@@ -130,16 +115,14 @@
           >
             <v-icon
               :icon="
-                isSaved
-                  ? 'fa:fa-solid fa-bookmark'
-                  : 'fa:fa-regular fa-bookmark'
+                saved ? 'fa:fa-solid fa-bookmark' : 'fa:fa-regular fa-bookmark'
               "
-              :color="isSaved ? 'blue' : ''"
+              :color="saved ? 'blue' : ''"
               size="small"
             ></v-icon>
           </v-btn>
         </div>
-        <div v-if="isMadeByUser">
+        <div v-if="madeByUser">
           <v-btn
             variant="plain"
             icon
@@ -150,7 +133,7 @@
             <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
           </v-btn>
           <v-btn
-            @click="actionDeleteComment"
+            @click="handleDeleteComment"
             variant="plain"
             icon
             size="x-small"
@@ -158,6 +141,40 @@
             class="rounded"
           >
             <v-icon icon="fa:fa-solid fa-trash-can" size="small"></v-icon>
+            <v-dialog
+              v-model="showDeleteCommentDialog"
+              activator="parent"
+              width="auto"
+            >
+              <v-card class="px-10 py-6 rounded-lg">
+                <v-card-item class="px-0">
+                  <v-card-title class="text-h5">Delete comment</v-card-title>
+                </v-card-item>
+                <v-card-text class="px-0">
+                  Are you sure you want to permanently delete this comment?
+                  <v-divider class="my-2"></v-divider>
+                  "{{ comment.content }}"
+                  <v-divider class="mt-2"></v-divider>
+                </v-card-text>
+                <v-card-actions class="px-0">
+                  <v-btn
+                    variant="outlined"
+                    class="text-body-1"
+                    @click="showDeleteCommentDialog = false"
+                  >
+                    No, cancel
+                  </v-btn>
+                  <v-btn
+                    variant="outlined"
+                    color="error"
+                    class="text-body-1"
+                    @click="handleDeleteComment"
+                  >
+                    Yes, delete comment
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-btn>
         </div>
       </div>

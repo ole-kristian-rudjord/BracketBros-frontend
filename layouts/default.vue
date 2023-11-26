@@ -56,7 +56,7 @@
 
   onMounted(async () => {
     updateUserActivityState();
-    updateAllPosts();
+    updateAllPostsState();
   });
 </script>
 
