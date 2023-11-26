@@ -31,6 +31,15 @@
         /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
       return emailPattern.test(value) || 'Please enter a valid email';
     },
+    password: (value: string) => {
+      // Source https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
+      const passwordPattern =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+      return (
+        passwordPattern.test(value) ||
+        'Password must contain at least 8 characters,  one uppercase, one lowercase and one number'
+      );
+    },
     passwordMatch: () =>
       password.value === confirmPassword.value || 'Passwords must match',
   };
@@ -85,7 +94,7 @@
         v-model="password"
         :type="showPassword ? 'text' : 'password'"
         variant="outlined"
-        :rules="[rules.required]"
+        :rules="[rules.required, rules.password]"
         class="mb-3"
       >
         <template v-slot:append-inner>
@@ -103,7 +112,7 @@
         v-model="confirmPassword"
         :type="showConfirmPassword ? 'text' : 'password'"
         variant="outlined"
-        :rules="[rules.required, rules.passwordMatch]"
+        :rules="[rules.required, rules.password, rules.passwordMatch]"
       >
         <template v-slot:append-inner>
           <v-icon
