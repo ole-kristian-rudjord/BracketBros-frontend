@@ -213,7 +213,6 @@
         label="Search"
         v-model="search"
         variant="outlined"
-        clearable
         hide-details
       ></v-text-field>
 
