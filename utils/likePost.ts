@@ -4,6 +4,6 @@ export default async (id: number) => {
     url: `http://localhost:5112/api/Post/LikePost/${id}`,
   });
 
-  updateUserActivityState();
+  await updateUserActivityState();
   return response;
 };
