@@ -34,8 +34,8 @@
     console.log(response);
 
     if (response.data) {
-      router.replace('/');
-    } else if (response.status === 401) {
+      router.replace('/manage-account');
+    } else if (response.status === 422 || response.status === 401) {
       toast.error(
         'Invalid email/username or password.',
         defaultToastOptions.error
@@ -46,19 +46,6 @@
         defaultToastOptions.error
       );
     }
-
-    // // Response status can be a 200 or 204.
-    // if (
-    //   response.status !== null &&
-    //   response.status >= 200 &&
-    //   response.status <= 299
-    // ) {
-    //   await router.replace('/');
-    // } else if (response.status === 401) {
-    //   error.value = 'unauthorized';
-    // } else {
-    //   error.value = 'unexpectedError';
-    // }
 
     isLoading.value = false;
   };
