@@ -35,11 +35,7 @@
   const savedByUser = ref(false);
 
   watchEffect(() => {
-    if (
-      userActivity.value &&
-      userActivity.value.likedPosts &&
-      userActivity.value.likedComments
-    ) {
+    if (userActivity.value?.username) {
       madeByUser.value = userActivity.value.posts.includes(props.post.id);
       likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
       savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
@@ -120,7 +116,7 @@
         return;
       }
     }
-     await goToPost();
+    await goToPost();
   };
 
   onMounted(() => {
