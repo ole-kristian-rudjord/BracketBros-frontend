@@ -101,7 +101,7 @@ const save = async () => {
 
   const response = await savePost(post);
 
-  if (response.data) {
+  if (response && response.data) {
     await router.push(`/post/${response.data}`);
   } else {
     toast.error(
@@ -113,7 +113,7 @@ const save = async () => {
 };
 
 onMounted(async () => {
-  checkLoginAndReroute();
+   await checkLoginAndReroute();
 
   availableCategories_isLoading.value = true;
   availableTags_isLoading.value = true;
