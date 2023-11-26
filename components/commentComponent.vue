@@ -1,54 +1,51 @@
 <script setup lang="ts">
-const props = withDefaults(
+  const props = withDefaults(
     defineProps<{ comment: comment; showReplies?: boolean }>(),
-    {showReplies: true}
-);
+    { showReplies: true }
+  );
 
-const createRandomBoolean = () => {
-  return Math.random() < 0.5;
-};
+  const isMadeByUser = ref(false);
+  const isLiked = ref(false);
+  const isSaved = ref(false);
 
-const isMadeByUser = ref(false);
-const isLiked = ref(false);
-const hasCommented = ref(createRandomBoolean());
-const isSaved = ref(createRandomBoolean());
+  const userActivity = useUserActivity();
 
-const userActivity = useUserActivity();
+  if (userActivity.value) {
+    const refUserActivity = userActivity.value;
+    refUserActivity.username === props.comment.user.username
+      ? (isMadeByUser.value = true)
+      : (isMadeByUser.value = false);
+    refUserActivity.likedComments.includes(props.comment.commentId)
+      ? (isLiked.value = true)
+      : (isLiked.value = false);
+  }
 
-if (userActivity.value) {
-  const refUserActivity = userActivity.value;
-  refUserActivity.username === props.comment.user.username ? isMadeByUser.value = true : isMadeByUser.value = false;
-  refUserActivity.likedComments.includes(props.comment.commentId) ? isLiked.value = true : isLiked.value = false;
-}
+  const updateLikeComment = async () => {
+    checkLoginAndReroute();
 
-
-const updateLikeComment = async () => {
-  checkLoginAndReroute();
-
-  const response = await likeComment(props.comment.commentId);
-  if (response.data) {
-    if (response.data === "Liked comment successfully") {
-      isLiked.value = true;
-      props.comment.totalLikes += 1;
+    const response = await likeComment(props.comment.commentId);
+    if (response.data) {
+      if (response.data === 'Liked comment successfully') {
+        isLiked.value = true;
+        props.comment.totalLikes += 1;
+      } else {
+        isLiked.value = false;
+        props.comment.totalLikes -= 1;
+      }
     } else {
-      isLiked.value = false;
-      props.comment.totalLikes -= 1;
+      console.log(response);
     }
-  } else {
-    console.log(response);
-  }
-};
-const actionDeleteComment = async () => {
-  checkLoginAndReroute();
+  };
+  const actionDeleteComment = async () => {
+    checkLoginAndReroute();
 
-  const response = await deleteComment(props.comment.commentId);
-  if (response.data) {
-    console.log(response.data);
-  } else {
-    console.log(response);
-  }
-};
-
+    const response = await deleteComment(props.comment.commentId);
+    if (response.data) {
+      console.log(response.data);
+    } else {
+      console.log(response);
+    }
+  };
 </script>
 
 <template>
@@ -58,20 +55,20 @@ const actionDeleteComment = async () => {
         <v-hover>
           <template v-slot:default="{ isHovering, props }">
             <v-avatar
-                v-bind="props"
-                size="12px"
-                class="user-avatar mr-2 border"
-                :class="isHovering ? 'is-hovering' : ''"
+              v-bind="props"
+              size="12px"
+              class="user-avatar mr-2 border"
+              :class="isHovering ? 'is-hovering' : ''"
             >
               <v-img
-                  v-if="comment.user.profilePicture"
-                  :src="comment.user.profilePicture"
+                v-if="comment.user.profilePicture"
+                :src="comment.user.profilePicture"
               ></v-img>
               <v-icon
-                  v-else
-                  color="primary"
-                  icon="fa:fa-solid fa-user"
-                  size="xx-small"
+                v-else
+                color="primary"
+                icon="fa:fa-solid fa-user"
+                size="xx-small"
               ></v-icon>
             </v-avatar>
           </template>
@@ -93,61 +90,55 @@ const actionDeleteComment = async () => {
           <v-btn variant="plain" size="x-small" @click="updateLikeComment">
             <template v-slot:prepend>
               <v-icon
-                  :icon="
+                :icon="
                   isLiked ? 'fa:fa-solid fa-heart' : 'fa:fa-regular fa-heart'
                 "
-                  :color="isLiked ? 'red' : ''"
+                :color="isLiked ? 'red' : ''"
               ></v-icon>
             </template>
             {{ formatNumber(comment.totalLikes) }}
           </v-btn>
           <v-btn variant="plain" size="x-small">
             <template v-slot:prepend>
-              <v-icon
-                  :icon="
-                  hasCommented
-                    ? 'fa:fa-solid fa-comment'
-                    : 'fa:fa-regular fa-comment'
-                "
-                  :color="hasCommented ? 'green' : ''"
-              ></v-icon>
+              <v-icon icon="fa:fa-regular fa-comment"></v-icon>
             </template>
             {{ formatNumber(comment.commentReplies.length) }}
           </v-btn>
           <v-btn
-              variant="plain"
-              icon
-              size="x-small"
-              density="comfortable"
-              class="rounded"
+            variant="plain"
+            icon
+            size="x-small"
+            density="comfortable"
+            class="rounded"
           >
             <v-icon
-                :icon="
+              :icon="
                 isSaved
                   ? 'fa:fa-solid fa-bookmark'
                   : 'fa:fa-regular fa-bookmark'
               "
-                :color="isSaved ? 'blue' : ''"
-                size="small"
+              :color="isSaved ? 'blue' : ''"
+              size="small"
             ></v-icon>
           </v-btn>
         </div>
         <div v-if="isMadeByUser">
           <v-btn
-              variant="plain"
-              icon
-              size="x-small"
-              density="comfortable"
-              class="rounded"
+            variant="plain"
+            icon
+            size="x-small"
+            density="comfortable"
+            class="rounded"
           >
             <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
           </v-btn>
-          <v-btn @click="actionDeleteComment"
-              variant="plain"
-              icon
-              size="x-small"
-              density="comfortable"
-              class="rounded"
+          <v-btn
+            @click="actionDeleteComment"
+            variant="plain"
+            icon
+            size="x-small"
+            density="comfortable"
+            class="rounded"
           >
             <v-icon icon="fa:fa-solid fa-trash-can" size="small"></v-icon>
           </v-btn>
@@ -155,20 +146,20 @@ const actionDeleteComment = async () => {
       </div>
     </v-card>
     <commentComponent
-        v-for="(reply, index) in comment.commentReplies"
-        :key="index"
-        :comment="reply"
-        class="mt-2 ml-6"
+      v-for="(reply, index) in comment.commentReplies"
+      :key="index"
+      :comment="reply"
+      class="mt-2 ml-6"
     ></commentComponent>
   </div>
 </template>
 
 <style scoped lang="scss">
-.user-avatar {
-  transition: transform 200ms ease;
+  .user-avatar {
+    transition: transform 200ms ease;
 
-  &.is-hovering {
-    transform: scale(2.25);
+    &.is-hovering {
+      transform: scale(2.25);
+    }
   }
-}
 </style>
