@@ -19,6 +19,28 @@
   const categories = ref<{ category: category; selected: boolean }[]>([]);
   const tags = ref<{ tag: tag; selected: boolean }[]>([]);
 
+  const isAnyFilterApplied = computed(() => {
+    // Check if search is not empty
+    const isSearchApplied = search.value.trim() !== '';
+
+    // Check if liked, saved, or createdByMe is true
+    const isUserFilterApplied = liked.value || saved.value || createdByMe.value;
+
+    // Check if any category is selected
+    const isAnyCategorySelected = categories.value.some((cat) => cat.selected);
+
+    // Check if any tag is selected
+    const isAnyTagSelected = tags.value.some((tag) => tag.selected);
+
+    // Return true if any of these conditions are true
+    return (
+      isSearchApplied ||
+      isUserFilterApplied ||
+      isAnyCategorySelected ||
+      isAnyTagSelected
+    );
+  });
+
   const filteredPosts = computed(() => {
     return allPosts.value.filter((post) => {
       // Existing search and category/tag matching logic
@@ -96,8 +118,6 @@
     tags.value.forEach((tag) => {
       tag.selected = false;
     });
-
-    toast.success('Filters have been reset', defaultToastOptions.success);
   };
 
   const isNearBottom = () => {
@@ -191,12 +211,23 @@
       <template v-slot:activator="{ props }">
         <v-list-item
           v-bind="props"
-          prepend-icon="fa:fa-solid fa-filter"
+          prepend-icon=""
           :active="showFilterSidebar"
           variant="text"
           class="py-4 text-cyan"
           @click="showFilterSidebar = !showFilterSidebar"
         >
+          <template v-slot:prepend>
+            <v-badge
+              v-if="isAnyFilterApplied"
+              dot
+              location="bottom end"
+              color="orange"
+            >
+              <v-icon icon="fa:fa-solid fa-filter"></v-icon>
+            </v-badge>
+            <v-icon v-else icon="fa:fa-solid fa-filter"></v-icon>
+          </template>
         </v-list-item>
       </template>
     </v-tooltip>
@@ -207,6 +238,7 @@
           prepend-icon="fa:fa-solid fa-rotate-left"
           variant="text"
           class="py-4 text-cyan"
+          :disabled="!isAnyFilterApplied"
           @click="resetFilters"
         ></v-list-item>
       </template>
