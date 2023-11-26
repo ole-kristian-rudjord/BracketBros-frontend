@@ -5,7 +5,7 @@ export default async (id: number) => {
 
   const response = await genericFetch({
     method: 'GET',
-    url: `http://localhost:5112/api/Post/SavePost/${id}`,
+    url: `http://localhost:5112/api/Post/SaveComment/${id}`,
   });
 
   await updateUserActivityState();

@@ -18,13 +18,16 @@
     refUserActivity.likedComments.includes(props.comment.commentId)
       ? (isLiked.value = true)
       : (isLiked.value = false);
+    refUserActivity?.savedComments.includes(props.comment.commentId)
+        ? (isSaved.value = true)
+        : (isSaved.value = false);
   }
 
   const updateLikeComment = async () => {
-    checkLoginAndReroute();
+    await checkLoginAndReroute();
 
     const response = await likeComment(props.comment.commentId);
-    if (response.data) {
+    if (response && response.data) {
       if (response.data === 'Liked comment successfully') {
         isLiked.value = true;
         props.comment.totalLikes += 1;
@@ -36,8 +39,22 @@
       console.log(response);
     }
   };
+
+
+
+  const updateSaveComment = async () => {
+    await checkLoginAndReroute();
+
+    const response = await saveComment(props.comment.commentId);
+    if (response && response.data) {
+      isSaved.value = response.data === 'Saved comment successfully';
+    } else {
+      console.log(response);
+    }
+  };
+
   const actionDeleteComment = async () => {
-    checkLoginAndReroute();
+     await checkLoginAndReroute();
 
     const response = await deleteComment(props.comment.commentId);
     if (response.data) {
@@ -104,7 +121,7 @@
             </template>
             {{ formatNumber(comment.commentReplies.length) }}
           </v-btn>
-          <v-btn
+          <v-btn @click="updateSaveComment"
             variant="plain"
             icon
             size="x-small"

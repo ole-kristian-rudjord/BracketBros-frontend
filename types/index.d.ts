@@ -7,8 +7,10 @@ declare global {
     createationdate: string;
     posts: number[];
     likedPosts: number[];
+    savedPosts: number[];
     comments: number[];
     likedComments: number[];
+    savedComments: number[];
   }
 
   interface user {
@@ -17,8 +19,10 @@ declare global {
     creationdate: string;
     posts: int[] | null;
     likedPosts: int[] | null;
+    savedPosts: int[] | null;
     comments: int[] | null;
     likedComments: int[] | null;
+    savedComments: int[] | null;
   }
 
   interface category {
