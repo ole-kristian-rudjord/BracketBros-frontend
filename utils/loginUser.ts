@@ -5,6 +5,6 @@ export default async (loginData: loginData) => {
     body: loginData,
   });
 
-  updateUserActivityState();
+  await updateUserActivityState();
   return response;
 };
