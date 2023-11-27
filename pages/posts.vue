@@ -108,6 +108,7 @@
     // Unselect "My interactions"
     liked.value = false;
     saved.value = false;
+    createdByMe.value = false;
 
     // Unselect all categories
     categories.value.forEach((category) => {
