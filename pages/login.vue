@@ -31,6 +31,7 @@
     const response = await loginUser(loginData);
 
     if (response.data || response.status === 204) {
+      await updateUserActivityState();
       await router.replace('/manage-account');
     } else if (response.status === 422 || response.status === 401) {
       toast.error(
