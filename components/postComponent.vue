@@ -318,8 +318,8 @@
           </div>
           <v-avatar size="28px" class="ml-2">
             <v-img
-              v-if="post.user.profilePicture"
-              :src="post.user.profilePicture"
+              v-if="madeByUser ? userActivity.profilePicture : post.user.profilePicture"
+              :src="madeByUser ? userActivity.profilePicture : post.user.profilePicture"
             ></v-img>
             <v-icon v-else color="primary" icon="fa:fa-solid fa-user"></v-icon>
           </v-avatar>

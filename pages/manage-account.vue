@@ -94,6 +94,7 @@ const uploadProfilePicture = async () => {
 
 
   if (response.status === 200) {
+    await updateUserActivityState();
     toast.success(
         `Profile picture has been updated`,
         defaultToastOptions.success
@@ -118,6 +119,7 @@ const removeProfilePicture = async () => {
   const response = await deleteProfilePicture();
 
   if (response?.status === 200) {
+    await updateUserActivityState();
     toast.success(
         `Profile picture has been removed`,
         defaultToastOptions.success)
