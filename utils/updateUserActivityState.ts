@@ -6,7 +6,7 @@ export default async () => {
 
   const userActivity = useUserActivity();
 
-  // FIXME: temp fix by using username because it the API returns login-page from backend, instead of null
+  // FIXME: temp fix by using username because it is the API returns login-page from backend, instead of null
   if (data.username) {
     userActivity.value = data;
   } else {
