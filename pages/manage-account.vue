@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import {toast} from 'vue3-toastify';
 import {defaultToastOptions} from '@/constants';
-import {fa} from "vuetify/iconsets/fa";
-import {append} from "domutils";
+import fileFetch from "~/utils/fileFetch";
 
 useHead({
   title: 'Manage your account - BracketBros',
@@ -64,15 +63,19 @@ const previewProfilePicture = computed(() => {
 
 
 //https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
-const fileInput = ref<HTMLInputElement | null>(null)
 const files = ref()
 
 function handleFileChange() {
-  files.value = fileInput.value?.files
+  //files.value = fileInput.value?.files
+  console.log("handleFileChange")
+  files.value = profilePicture.value
 }
 
 // Source https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
-const doSomething = async () => {
+const uploadProfilePicture = async () => {
+  changeProfilePicture_isLoading.value = true;
+
+
   const file = files.value[0]
   console.log(file)
   // and do other things...
@@ -81,21 +84,35 @@ const doSomething = async () => {
 
   body.append('profilePicture', file);
 
-  /*
-    const body = new FormData()
-    body.append('profilePicture', file)*/
-  //body.append("RemoveProfilePicture", "false")
-  const res = await fetch('http://localhost:5112/api/Account/changeProfilePicture', {
-    body,
+  const response = await fileFetch({
     method: 'POST',
-    credentials: 'include',
-  })
+    url: 'http://localhost:5112/api/Account/uploadProfilePicture',
+    body: body,
+  });
 
-  console.log(res)
+
+  console.log(response)
 
 
+  if (response.status === 200) {
+    toast.success(
+        `Profile picture has been updated`,
+        defaultToastOptions.success
+    );
+  } else if (response.status === 422) {
+    toast.error(
+        'You are not authorized to update the profile picture of this user.',
+        defaultToastOptions.error
+    );
+  } else {
+    toast.error(
+        'An unexpected error occurred, please try again later.',
+        defaultToastOptions.error
+    );
+  }
+
+  changeProfilePicture_isLoading.value = false;
 }
-
 
 
 const updateProfilePicture = async (picture: File[], isRemoving = false) => {
@@ -135,7 +152,7 @@ const removeProfilePicture = async () => {
 
   const response = await deleteProfilePicture();
 
-  if (response?.status === 200){
+  if (response?.status === 200) {
     console.log("Removed picture ")
 
   }
@@ -152,20 +169,9 @@ onMounted(() => {
 });
 
 
-
 </script>
 
 <template>
-
-  <!--
-    https://stackoverflow.com/questions/65703814/how-to-upload-file-in-vue-js-version-3
-  -->
-  <main>
-    <input ref="fileInput" type="file" @change="handleFileChange"/>
-    <button @click="doSomething">do something</button>
-  </main>
-
-
   <nuxt-layout name="login-register">
     <v-form
         ref="passwordFormRef"
@@ -240,7 +246,7 @@ onMounted(() => {
       Profile Picture
     </h1>
 
-    <v-file-input @change="previewProfilePicture"
+    <v-file-input @change="handleFileChange"
                   label="Select profile picture"
                   v-model="profilePicture"
                   accept="image/png, image/jpeg"
@@ -267,7 +273,7 @@ onMounted(() => {
         class="text-body-1 mb-6"
         :disabled="profilePicture.length === 0"
         :loading="changeProfilePicture_isLoading"
-        @click="removeProfilePicture()"
+        @click="uploadProfilePicture()"
     >
       Change profile picture
     </v-btn>
