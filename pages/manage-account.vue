@@ -75,7 +75,6 @@ function handleFileChange() {
 const uploadProfilePicture = async () => {
   changeProfilePicture_isLoading.value = true;
 
-
   const file = files.value[0]
   console.log(file)
   // and do other things...
@@ -114,24 +113,17 @@ const uploadProfilePicture = async () => {
   changeProfilePicture_isLoading.value = false;
 }
 
+const removeProfilePicture = async () => {
+  removeProfilePicture_isLoading.value = true;
+  const response = await deleteProfilePicture();
 
-const updateProfilePicture = async (picture: File[], isRemoving = false) => {
-  const loadingState = isRemoving
-      ? removeProfilePicture_isLoading
-      : changeProfilePicture_isLoading;
-  loadingState.value = true;
-
-
-  const response = await changeProfilePicture(picture, isRemoving);
-
-  if (response.data) {
+  if (response?.status === 200) {
     toast.success(
-        `Profile picture has been ${isRemoving ? 'removed' : 'updated'}.`,
-        defaultToastOptions.success
-    );
-  } else if (response.status === 422) {
+        `Profile picture has been removed`,
+        defaultToastOptions.success)
+  } else if (response?.status === 422) {
     toast.error(
-        'You are not authorized to update the profile picture of this user.',
+        'You are not authorized to remove the profile picture of this user.',
         defaultToastOptions.error
     );
   } else {
@@ -139,22 +131,7 @@ const updateProfilePicture = async (picture: File[], isRemoving = false) => {
         'An unexpected error occurred, please try again later.',
         defaultToastOptions.error
     );
-  }
-
-  if (!isRemoving) {
-    profilePicture.value = [];
-  }
-  loadingState.value = false;
-};
-
-
-const removeProfilePicture = async () => {
-
-  const response = await deleteProfilePicture();
-
-  if (response?.status === 200) {
-    console.log("Removed picture ")
-
+    removeProfilePicture_isLoading.value = false;
   }
 }
 
@@ -278,13 +255,13 @@ onMounted(() => {
       Change profile picture
     </v-btn>
 
-    <v-btn
-        type="submit"
-        size="large"
-        variant="tonal"
-        block
-        class="text-body-1"
-        :loading="removeProfilePicture_isLoading"
+    <v-btn @click="removeProfilePicture()"
+           type="submit"
+           size="large"
+           variant="tonal"
+           block
+           class="text-body-1"
+           :loading="removeProfilePicture_isLoading"
     >
       Remove profile picture
     </v-btn>
