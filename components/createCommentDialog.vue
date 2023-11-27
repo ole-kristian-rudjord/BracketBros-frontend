@@ -16,10 +16,19 @@
 
   const showCreateCommentDialog = ref(false);
   const commentDialogContent = ref('');
+  const isLoading = ref(false);
 
   // TODO: Add validation
 
+  watch(showCreateCommentDialog, (newValue, oldValue) => {
+    if (newValue === true) {
+      checkLoginAndReroute();
+    }
+  });
+
   const handleCreateComment = async () => {
+    isLoading.value = true;
+
     const comment: createCommentBody = {
       ParentCommentId: props.parentCommentId,
       PostId: props.postId,
@@ -38,13 +47,9 @@
         defaultToastOptions.error
       );
     }
-  };
 
-  onMounted(() => {
-    if (!checkLoginAndReroute()) {
-      showCreateCommentDialog.value = false;
-    }
-  });
+    isLoading.value = false;
+  };
 </script>
 
 <template>
@@ -79,6 +84,7 @@
           variant="outlined"
           color="cyan"
           class="text-body-1"
+          :loading="isLoading"
           @click="handleCreateComment"
         >
           Publish

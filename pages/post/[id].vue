@@ -15,14 +15,12 @@
 
   const updateComments = async () => {
     if (post.value) {
-      const { data: commentsData, error: commentsError } = await getComments(
-        post.value?.id
-      );
-      if (commentsError) {
-        console.error('Error fetching comments:', commentsError);
+      const { data, error, status } = await getComments(post.value?.id);
+      if (error && status !== 404) {
+        console.error('Error fetching comments:', error);
         toast.error('Error fetching comments', defaultToastOptions.error);
       } else {
-        comments.value = commentsData;
+        comments.value = data;
       }
     }
   };
