@@ -99,7 +99,7 @@ script
       Content: content.value,
     };
 
-    const response = await savePost(post);
+    const response = await updatePost(post);
 
     if (response && response.data) {
       await router.push(`/post/${response.data}`);
