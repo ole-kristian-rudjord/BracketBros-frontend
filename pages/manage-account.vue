@@ -131,8 +131,8 @@ const removeProfilePicture = async () => {
         'An unexpected error occurred, please try again later.',
         defaultToastOptions.error
     );
-    removeProfilePicture_isLoading.value = false;
   }
+  removeProfilePicture_isLoading.value = false;
 }
 
 
