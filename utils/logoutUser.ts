@@ -5,6 +5,7 @@ export default async () => {
   });
 
   sessionStorage.clear();
-  await updateUserActivityState();
+  const userActivity = useUserActivity();
+  userActivity.value = null;
   return response;
 };
