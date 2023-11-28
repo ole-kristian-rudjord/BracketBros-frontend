@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { toast } from 'vue3-toastify';
-  import { defaultToastOptions } from '~/constants';
+  import { defaultToastOptions } from '@/constants';
 
   useHead({
     title: 'My activity - BracketBros',
@@ -16,6 +16,22 @@
   const createdComments = ref<comment[]>([]);
   const likedComments = ref<comment[]>([]);
   const savedComments = ref<comment[]>([]);
+
+  const updatePostRefValues = () => {
+    if (userActivity.value?.username && allPosts.value) {
+      createdPosts.value = allPosts.value.filter((p: post) =>
+        userActivity.value?.posts.includes(p.id)
+      );
+
+      likedPosts.value = allPosts.value.filter((p: post) =>
+        userActivity.value?.likedPosts.includes(p.id)
+      );
+
+      savedPosts.value = allPosts.value.filter((p: post) =>
+        userActivity.value?.savedPosts.includes(p.id)
+      );
+    }
+  };
 
   const fetchCommentData = async () => {
     if (userActivity.value?.username && allPosts.value) {
@@ -35,26 +51,13 @@
 
   onMounted(async () => {
     await checkLoginAndReroute();
-
-    if (userActivity.value?.username && allPosts.value) {
-      createdPosts.value = allPosts.value.filter((p: post) =>
-        userActivity.value?.posts.includes(p.id)
-      );
-
-      likedPosts.value = allPosts.value.filter((p: post) =>
-        userActivity.value?.likedPosts.includes(p.id)
-      );
-
-      savedPosts.value = allPosts.value.filter((p: post) =>
-        userActivity.value?.savedPosts.includes(p.id)
-      );
-
-      fetchCommentData();
-    }
+    updatePostRefValues();
+    fetchCommentData();
   });
 
   watchEffect(async () => {
-    await fetchCommentData();
+    updatePostRefValues();
+    fetchCommentData();
   });
 </script>
 
