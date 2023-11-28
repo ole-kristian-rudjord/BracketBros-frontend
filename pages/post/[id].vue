@@ -32,6 +32,10 @@
     }
   };
 
+  const handleCommentEdited = () => {
+    updateComments();
+  };
+
   const handleDeletedComment = (deletedCommentId: number) => {
     if (comments.value) {
       comments.value = comments.value.filter(
@@ -88,6 +92,7 @@
         :comment="comment"
         class="w-100 mb-4"
         @comment-reply-added="handleCommentAdded"
+        @comment-edited="handleCommentEdited"
         @commentDeleted="handleDeletedComment(comment.commentId)"
       ></comment-component>
     </div>
