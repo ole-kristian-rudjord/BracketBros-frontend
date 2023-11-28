@@ -162,6 +162,8 @@
               v-for="comment in createdComments"
               :key="comment.commentId"
               :comment="comment"
+              :show-replies="false"
+              :show-go-to-post="true"
             ></comment-component>
           </div>
           <div v-else class="pt-2">You have not created any comments yet.</div>
@@ -187,6 +189,8 @@
               v-for="comment in likedComments"
               :key="comment.commentId"
               :comment="comment"
+              :show-replies="false"
+              :show-go-to-post="true"
             ></comment-component>
           </div>
           <div v-else class="pt-2">You have not liked any comments yet.</div>
@@ -212,6 +216,8 @@
               v-for="comment in savedComments"
               :key="comment.commentId"
               :comment="comment"
+              :show-replies="false"
+              :show-go-to-post="true"
             ></comment-component>
           </div>
           <div v-else class="pt-2">You have not saved any comments yet.</div>
