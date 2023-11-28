@@ -52,6 +52,7 @@ declare global {
 
   interface comment {
     commentId: number;
+    parentCommentId: number;
     content: string;
     totalLikes: number;
     dateCreated: string;
@@ -88,5 +89,9 @@ declare global {
     ParentCommentId: number | null;
     PostId: number;
     Content: string;
+  }
+
+  interface updateCommentBody extends createCommentBody {
+    commentId: number;
   }
 }
