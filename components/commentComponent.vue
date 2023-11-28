@@ -2,8 +2,12 @@
   const emit = defineEmits(['commentReplyAdded', 'commentDeleted']);
 
   const props = withDefaults(
-    defineProps<{ comment: comment; showReplies?: boolean }>(),
-    { showReplies: true }
+    defineProps<{
+      comment: comment;
+      showReplies?: boolean;
+      showGoToPost?: boolean;
+    }>(),
+    { showReplies: true, showGoToPost: false }
   );
 
   const madeByUser = ref(false);
@@ -69,12 +73,18 @@
     deleteComment(props.comment.commentId);
     emit('commentDeleted');
   };
+
+  const router = useRouter();
+
+  const goToPost = async () => {
+    await router.push(`/post/${props.comment.postId}`);
+  };
 </script>
 
 <template>
   <div>
     <v-card class="px-1 py-2 rounded-lg elevation-4">
-      <div class="d-flex flex-row align-center px-2">
+      <div class="d-flex flex-row align-center pl-2">
         <v-hover>
           <template v-slot:default="{ isHovering, props }">
             <v-avatar
@@ -104,6 +114,18 @@
             {{ formatTimeAgo(comment.dateCreated) }}
           </span>
         </span>
+        <v-btn
+          v-if="showGoToPost"
+          icon
+          size="x-small"
+          variant="plain"
+          density="comfortable"
+          class="ml-auto mr-1 text-caption"
+          @click="goToPost"
+        >
+          <v-icon icon="fa:fa-solid fa-arrow-right" size="small"></v-icon>
+          <v-tooltip activator="parent">Go to post</v-tooltip>
+        </v-btn>
       </div>
       <div class="px-2 py-1">
         {{ comment.content }}
@@ -212,6 +234,7 @@
       </div>
     </v-card>
     <commentComponent
+      v-if="showReplies"
       v-for="reply in comment.commentReplies"
       :key="reply.commentId"
       :comment="reply"
