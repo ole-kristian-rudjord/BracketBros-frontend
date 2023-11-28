@@ -36,6 +36,8 @@
       const response = await getUserComments();
       if (response.data) {
         createdComments.value = response.data.comments;
+        likedComments.value = response.data.likedComments;
+        savedComments.value = response.data.savedComments;
       } else {
         toast.error(
           'Error fetching comments from database.',
