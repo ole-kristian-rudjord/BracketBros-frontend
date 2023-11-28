@@ -6,5 +6,6 @@ export default async (post: createPostBody) => {
   });
 
   await updateAllPostsState();
+  await updateUserActivityState();
   return response;
 };
