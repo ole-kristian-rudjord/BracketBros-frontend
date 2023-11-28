@@ -41,7 +41,7 @@
     content: (value: string) => {
       const contentPattern = /.{2,4096}$/;
       return (
-        contentPattern.test(value) ||
+        contentPattern.test(value.trimEnd()) ||
         'The content must be between 2 to 4096 characters.'
       );
     },
