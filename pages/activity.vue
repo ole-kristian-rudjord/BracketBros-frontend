@@ -17,6 +17,22 @@
   const likedComments = ref<comment[]>([]);
   const savedComments = ref<comment[]>([]);
 
+  const fetchCommentData = async () => {
+    if (userActivity.value?.username && allPosts.value) {
+      const response = await getUserComments();
+      if (response.data) {
+        createdComments.value = response.data.comments;
+        likedComments.value = response.data.likedComments;
+        savedComments.value = response.data.savedComments;
+      } else {
+        toast.error(
+          'Error fetching comments from database.',
+          defaultToastOptions.error
+        );
+      }
+    }
+  };
+
   onMounted(async () => {
     await checkLoginAndReroute();
 
@@ -33,18 +49,12 @@
         userActivity.value?.savedPosts.includes(p.id)
       );
 
-      const response = await getUserComments();
-      if (response.data) {
-        createdComments.value = response.data.comments;
-        likedComments.value = response.data.likedComments;
-        savedComments.value = response.data.savedComments;
-      } else {
-        toast.error(
-          'Error fetching comments from database.',
-          defaultToastOptions.error
-        );
-      }
+      fetchCommentData();
     }
+  });
+
+  watchEffect(async () => {
+    await fetchCommentData();
   });
 </script>
 
