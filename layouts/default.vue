@@ -35,15 +35,15 @@
             icon: 'fa:fa-solid fa-line-chart',
           },
           {
-            to: '/manage-account',
-            title: 'Manage Account',
+            to: '/activity',
+            title: 'Activity',
             icon: 'fa:fa-solid fa-user',
           },
         ]
       : [
           {
             to: '/login',
-            title: 'Log in',
+            title: 'Log In',
             icon: 'fa:fa-solid fa-right-to-bracket',
           },
           {
