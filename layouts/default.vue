@@ -30,13 +30,13 @@
             icon: 'fa:fa-solid fa-square-plus',
           },
           {
-            to: '/user-dashboard',
-            title: 'Dashboard',
+            to: '/activity',
+            title: 'Activity',
             icon: 'fa:fa-solid fa-line-chart',
           },
           {
-            to: '/activity',
-            title: 'Activity',
+            to: '/manage-account',
+            title: 'Manage Account',
             icon: 'fa:fa-solid fa-user',
           },
         ]
