@@ -1,9 +1,20 @@
 <script setup lang="ts">
-  const emit = defineEmits(['commentReplyAdded', 'commentDeleted']);
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
+
+  const emit = defineEmits([
+    'commentReplyAdded',
+    'commentEdited',
+    'commentDeleted',
+  ]);
 
   const props = withDefaults(
-    defineProps<{ comment: comment; showReplies?: boolean }>(),
-    { showReplies: true }
+    defineProps<{
+      comment: comment;
+      showReplies?: boolean;
+      showGoToPost?: boolean;
+    }>(),
+    { showReplies: true, showGoToPost: false }
   );
 
   const madeByUser = ref(false);
@@ -62,6 +73,49 @@
     emit('commentReplyAdded');
   };
 
+  const showEditCommentDialog = ref(false);
+  const editCommentForm = ref(false);
+  const editCommentContent = ref(props.comment.content);
+  const editComment_isLoading = ref(false);
+
+  const rules = {
+    required: (value: string) => {
+      return value.trim().length > 0 || 'Field is required';
+    },
+    content: (value: string) => {
+      value = value.trimEnd();
+      return (
+        (value.length >= 2 && value.length <= 512) ||
+        'The content must be between 2 to 512 characters.'
+      );
+    },
+  };
+
+  const handleEditComment = async () => {
+    editComment_isLoading.value = true;
+
+    const updateCommentBody: updateCommentBody = {
+      commentId: props.comment.commentId,
+      ParentCommentId: props.comment.parentCommentId,
+      PostId: props.comment.postId,
+      Content: props.comment.content,
+    };
+
+    const response = await updateComment(updateCommentBody);
+    if (response) {
+      toast.success('Comment has been edited.', defaultToastOptions.success);
+      showEditCommentDialog.value = false;
+    } else {
+      toast.error(
+        'Error when trying to edit comment.',
+        defaultToastOptions.error
+      );
+    }
+
+    emit('commentEdited');
+    editComment_isLoading.value = false;
+  };
+
   const showDeleteCommentDialog = ref(false);
 
   const handleDeleteComment = () => {
@@ -69,12 +123,18 @@
     deleteComment(props.comment.commentId);
     emit('commentDeleted');
   };
+
+  const router = useRouter();
+
+  const goToPost = async () => {
+    await router.push(`/post/${props.comment.postId}`);
+  };
 </script>
 
 <template>
   <div>
     <v-card class="px-1 py-2 rounded-lg elevation-4">
-      <div class="d-flex flex-row align-center px-2">
+      <div class="d-flex flex-row align-center pl-2">
         <v-hover>
           <template v-slot:default="{ isHovering, props }">
             <v-avatar
@@ -104,6 +164,18 @@
             {{ formatTimeAgo(comment.dateCreated) }}
           </span>
         </span>
+        <v-btn
+          v-if="showGoToPost"
+          icon
+          size="x-small"
+          variant="plain"
+          density="comfortable"
+          class="ml-auto mr-1 text-caption"
+          @click="goToPost"
+        >
+          <v-icon icon="fa:fa-solid fa-arrow-right" size="small"></v-icon>
+          <v-tooltip activator="parent">Go to post</v-tooltip>
+        </v-btn>
       </div>
       <div class="px-2 py-1">
         {{ comment.content }}
@@ -164,6 +236,49 @@
             class="rounded"
           >
             <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
+            <v-dialog
+              v-model="showEditCommentDialog"
+              activator="parent"
+              max-width="600"
+            >
+              <v-card class="px-10 py-6 rounded-lg">
+                <div class="text-h6">Edit comment:</div>
+                <v-divider class="my-2"></v-divider>
+                <div class="text-body-1">
+                  {{ comment.content }}
+                </div>
+                <v-divider class="my-2"></v-divider>
+                <v-card-text class="px-0">
+                  <v-form v-model="editCommentForm">
+                    <v-textarea
+                      v-model="editCommentContent"
+                      variant="outlined"
+                      :rules="[rules.required, rules.content]"
+                      counter="512"
+                    ></v-textarea>
+                  </v-form>
+                </v-card-text>
+                <v-card-actions class="px-0">
+                  <v-btn
+                    variant="outlined"
+                    class="text-body-1"
+                    @click="showEditCommentDialog = false"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    variant="outlined"
+                    color="cyan"
+                    class="text-body-1"
+                    :disabled="!editCommentForm"
+                    :loading="editComment_isLoading"
+                    @click="handleEditComment"
+                  >
+                    Edit
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-btn>
           <v-btn
             variant="plain"
@@ -212,6 +327,7 @@
       </div>
     </v-card>
     <commentComponent
+      v-if="showReplies"
       v-for="reply in comment.commentReplies"
       :key="reply.commentId"
       :comment="reply"

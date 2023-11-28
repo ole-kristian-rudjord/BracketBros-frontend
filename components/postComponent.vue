@@ -289,7 +289,7 @@
 
     <v-divider vertical class="my-5"></v-divider>
 
-    <div class="main-container w-100 pa-5">
+    <v-card class="main-container w-100 pa-5">
       <div class="d-flex justify-space-between align-center mb-4">
         <div class="text-medium-emphasis">
           <v-chip variant="flat" size="small" :color="post.category.color">
@@ -319,12 +319,12 @@
             <v-img
               v-if="
                 madeByUser
-                  ? userActivity.profilePicture
+                  ? userActivity?.profilePicture
                   : post.user.profilePicture
               "
               :src="
                 madeByUser
-                  ? userActivity.profilePicture
+                  ? userActivity?.profilePicture
                   : post.user.profilePicture
               "
             ></v-img>
@@ -359,10 +359,7 @@
                   : ''
               "
             >
-              <div
-                ref="content_ref"
-                class="content d-flex flex-column justify-center align-center"
-              >
+              <div ref="content_ref" class="content">
                 <markdown-renderer :content="post.content"></markdown-renderer>
               </div>
               <v-btn
@@ -394,7 +391,7 @@
           </template>
         </v-hover>
       </div>
-    </div>
+    </v-card>
   </v-card>
 </template>
 

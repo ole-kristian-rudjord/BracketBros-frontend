@@ -79,9 +79,9 @@ script
       );
     },
     content: (value: string) => {
-      const contentPattern = /.{2,4096}$/;
+      value = value.trimEnd();
       return (
-        contentPattern.test(value) ||
+        (value.length >= 2 && value.length <= 4096) ||
         'The content must be between 2 to 4096 characters.'
       );
     },
@@ -195,6 +195,7 @@ script
           v-model="content"
           variant="outlined"
           :rules="[rules.required, rules.content]"
+          :counter="4096"
           class="mb-3"
         ></v-textarea>
 
