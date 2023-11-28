@@ -1,33 +1,32 @@
 <script setup lang="ts">
-useHead({
-  title: 'Browse posts - BracketBros',
-});
-
-const router = useRouter();
-
-const createdPosts = ref<post[]>([]);
-const likedPosts = ref<post[]>([]);
-const createdComments = ref<comment[]>([]);
-const likedComments = ref<comment[]>([]);
-const savedComments = ref<comment[]>([]);
-
-const basicUserActivity = ref<user>();
-
-onMounted(async () => {
-  onMounted(() => {
-    checkLoginAndReroute();
+  useHead({
+    title: 'Browse posts - BracketBros',
   });
 
-  const response = await getUserComments();
-  console.log(response);
+  const router = useRouter();
 
+  const createdPosts = ref<post[]>([]);
+  const likedPosts = ref<post[]>([]);
+  const createdComments = ref<comment[]>([]);
+  const likedComments = ref<comment[]>([]);
+  const savedComments = ref<comment[]>([]);
 
- /* if (response) {
+  const basicUserActivity = ref<user>();
+
+  onMounted(async () => {
+    onMounted(() => {
+      checkLoginAndReroute();
+    });
+
+    const response = await getUserComments();
+    console.log(response);
+
+    /* if (response) {
     createdComments.value = response.createdComments;
     likedComments.value = response.likedComments;
     savedComments.value = response.savedComments;
   }*/
-});
+  });
 </script>
 
 <template>
