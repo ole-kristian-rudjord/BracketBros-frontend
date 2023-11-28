@@ -74,8 +74,22 @@
   };
 
   const showEditCommentDialog = ref(false);
+  const editCommentForm = ref(false);
   const editCommentContent = ref(props.comment.content);
   const editComment_isLoading = ref(false);
+
+  const rules = {
+    required: (value: string) => {
+      return value.trim().length > 0 || 'Field is required';
+    },
+    content: (value: string) => {
+      value = value.trimEnd();
+      return (
+        (value.length >= 2 && value.length <= 512) ||
+        'The content must be between 2 to 512 characters.'
+      );
+    },
+  };
 
   const handleEditComment = async () => {
     editComment_isLoading.value = true;
@@ -235,10 +249,14 @@
                 </div>
                 <v-divider class="my-2"></v-divider>
                 <v-card-text class="px-0">
-                  <v-textarea
-                    v-model="editCommentContent"
-                    variant="outlined"
-                  ></v-textarea>
+                  <v-form v-model="editCommentForm">
+                    <v-textarea
+                      v-model="editCommentContent"
+                      variant="outlined"
+                      :rules="[rules.required, rules.content]"
+                      counter="512"
+                    ></v-textarea>
+                  </v-form>
                 </v-card-text>
                 <v-card-actions class="px-0">
                   <v-btn
@@ -252,6 +270,7 @@
                     variant="outlined"
                     color="cyan"
                     class="text-body-1"
+                    :disabled="!editCommentForm"
                     :loading="editComment_isLoading"
                     @click="handleEditComment"
                   >

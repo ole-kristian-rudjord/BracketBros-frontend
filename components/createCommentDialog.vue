@@ -15,10 +15,22 @@
   );
 
   const showCreateCommentDialog = ref(false);
+  const commentDialogForm = ref(false);
   const commentDialogContent = ref('');
   const isLoading = ref(false);
 
-  // TODO: Add validation
+  const rules = {
+    required: (value: string) => {
+      return value.trim().length > 0 || 'Field is required';
+    },
+    content: (value: string) => {
+      value = value.trimEnd();
+      return (
+        (value.length >= 2 && value.length <= 512) ||
+        'The content must be between 2 to 512 characters.'
+      );
+    },
+  };
 
   watch(showCreateCommentDialog, (newValue, oldValue) => {
     if (newValue === true) {
@@ -36,7 +48,7 @@
     };
 
     const response = await createComment(comment);
-    if (!response.error) {
+    if (!response.error && response.status !== 400) {
       showCreateCommentDialog.value = false;
       commentDialogContent.value = '';
       emit('commentAdded');
@@ -67,10 +79,14 @@
       </div>
 
       <v-card-text class="px-0">
-        <v-textarea
-          v-model="commentDialogContent"
-          variant="outlined"
-        ></v-textarea>
+        <v-form v-model="commentDialogForm">
+          <v-textarea
+            v-model="commentDialogContent"
+            variant="outlined"
+            :rules="[rules.required, rules.content]"
+            counter="512"
+          ></v-textarea>
+        </v-form>
       </v-card-text>
       <v-card-actions class="px-0">
         <v-btn
@@ -84,6 +100,7 @@
           variant="outlined"
           color="cyan"
           class="text-body-1"
+          :disabled="!commentDialogForm"
           :loading="isLoading"
           @click="handleCreateComment"
         >
