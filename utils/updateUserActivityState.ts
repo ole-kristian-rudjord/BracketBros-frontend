@@ -1,7 +1,7 @@
 export default async () => {
   const { data } = await genericFetch({
     method: 'GET',
-    url: 'http://localhost:5112/api/DashBoard/UserActivity',
+    url: 'http://localhost:5112/api/Account/UserActivity',
   });
 
   const userActivity = useUserActivity();
