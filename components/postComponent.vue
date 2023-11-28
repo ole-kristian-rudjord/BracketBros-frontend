@@ -319,12 +319,12 @@
             <v-img
               v-if="
                 madeByUser
-                  ? userActivity.profilePicture
+                  ? userActivity?.profilePicture
                   : post.user.profilePicture
               "
               :src="
                 madeByUser
-                  ? userActivity.profilePicture
+                  ? userActivity?.profilePicture
                   : post.user.profilePicture
               "
             ></v-img>
