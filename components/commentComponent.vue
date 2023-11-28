@@ -1,5 +1,12 @@
 <script setup lang="ts">
-  const emit = defineEmits(['commentReplyAdded', 'commentDeleted']);
+  import { toast } from 'vue3-toastify';
+  import { defaultToastOptions } from '@/constants';
+
+  const emit = defineEmits([
+    'commentReplyAdded',
+    'commentEdited',
+    'commentDeleted',
+  ]);
 
   const props = withDefaults(
     defineProps<{
@@ -64,6 +71,35 @@
 
   const handleCommentAdded = () => {
     emit('commentReplyAdded');
+  };
+
+  const showEditCommentDialog = ref(false);
+  const editCommentContent = ref(props.comment.content);
+  const editComment_isLoading = ref(false);
+
+  const handleEditComment = async () => {
+    editComment_isLoading.value = true;
+
+    const updateCommentBody: updateCommentBody = {
+      commentId: props.comment.commentId,
+      ParentCommentId: props.comment.parentCommentId,
+      PostId: props.comment.postId,
+      Content: props.comment.content,
+    };
+
+    const response = await updateComment(updateCommentBody);
+    if (response) {
+      toast.success('Comment has been edited.', defaultToastOptions.success);
+      showEditCommentDialog.value = false;
+    } else {
+      toast.error(
+        'Error when trying to edit comment.',
+        defaultToastOptions.error
+      );
+    }
+
+    emit('commentEdited');
+    editComment_isLoading.value = false;
   };
 
   const showDeleteCommentDialog = ref(false);
@@ -186,6 +222,44 @@
             class="rounded"
           >
             <v-icon icon="fa:fa-solid fa-pen-to-square" size="small"></v-icon>
+            <v-dialog
+              v-model="showEditCommentDialog"
+              activator="parent"
+              max-width="600"
+            >
+              <v-card class="px-10 py-6 rounded-lg">
+                <div class="text-h6">Edit comment:</div>
+                <v-divider class="my-2"></v-divider>
+                <div class="text-body-1">
+                  {{ comment.content }}
+                </div>
+                <v-divider class="my-2"></v-divider>
+                <v-card-text class="px-0">
+                  <v-textarea
+                    v-model="editCommentContent"
+                    variant="outlined"
+                  ></v-textarea>
+                </v-card-text>
+                <v-card-actions class="px-0">
+                  <v-btn
+                    variant="outlined"
+                    class="text-body-1"
+                    @click="showEditCommentDialog = false"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    variant="outlined"
+                    color="cyan"
+                    class="text-body-1"
+                    :loading="editComment_isLoading"
+                    @click="handleEditComment"
+                  >
+                    Edit
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-btn>
           <v-btn
             variant="plain"
