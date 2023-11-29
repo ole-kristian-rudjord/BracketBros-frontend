@@ -2,12 +2,14 @@
   import { toast } from 'vue3-toastify';
   import { defaultToastOptions } from '@/constants';
 
+  // Define component emits for various comment actions
   const emit = defineEmits([
     'commentReplyAdded',
     'commentEdited',
     'commentDeleted',
   ]);
 
+  // Define props with defaults for component
   const props = withDefaults(
     defineProps<{
       comment: comment;
@@ -17,19 +19,22 @@
     { showReplies: true, showGoToPost: false }
   );
 
+  // Reactive variables to track comment status
   const madeByUser = ref(false);
   const isAdmin = ref(false);
   const likedByUser = ref(false);
   const savedByUser = ref(false);
 
+  // Custom state to track user activities
   const userActivity = useUserActivity();
 
+  // Checking and updating the status of the comment based on user activity
   if (userActivity.value) {
     const refUserActivity = userActivity.value;
     refUserActivity.username === props.comment.user.username
       ? (madeByUser.value = true)
       : (madeByUser.value = false);
-    refUserActivity.role === 'Admin' ? (isAdmin.value = true) : {}
+    refUserActivity.role === 'Admin' ? (isAdmin.value = true) : {};
     refUserActivity.likedComments.includes(props.comment.commentId)
       ? (likedByUser.value = true)
       : (likedByUser.value = false);
@@ -38,6 +43,7 @@
       : (savedByUser.value = false);
   }
 
+  // Watch for changes in userActivity and update comment status accordingly
   watchEffect(() => {
     if (userActivity.value?.username) {
       madeByUser.value = userActivity.value.comments.includes(
@@ -52,6 +58,7 @@
     }
   });
 
+  // Handles liking a comment
   const handleLikeComment = async () => {
     const response = await likeComment(props.comment.commentId);
     if (response && response?.data) {
@@ -67,19 +74,23 @@
     }
   };
 
+  // Saves a comment
   const handleSaveComment = () => {
     saveComment(props.comment.commentId);
   };
 
+  // Emit event when a comment reply is added
   const handleCommentAdded = () => {
     emit('commentReplyAdded');
   };
 
+  // Reactive variables for comment editing
   const showEditCommentDialog = ref(false);
   const editCommentForm = ref(false);
   const editCommentContent = ref(props.comment.content);
   const editComment_isLoading = ref(false);
 
+  // Validation rules for comment editing
   const rules = {
     required: (value: string) => {
       return value.trim().length > 0 || 'Field is required';
@@ -93,6 +104,7 @@
     },
   };
 
+  // Handles editing a comment
   const handleEditComment = async () => {
     editComment_isLoading.value = true;
 
@@ -118,8 +130,10 @@
     editComment_isLoading.value = false;
   };
 
+  // Reactive variable for comment deletion confirmation
   const showDeleteCommentDialog = ref(false);
 
+  // Handles deleting a comment
   const handleDeleteComment = () => {
     showDeleteCommentDialog.value = false;
     deleteComment(props.comment.commentId);
@@ -128,6 +142,7 @@
 
   const router = useRouter();
 
+  // Navigates to the post associated with the comment
   const goToPost = async () => {
     await router.push(`/post/${props.comment.postId}`);
   };
@@ -230,7 +245,8 @@
           </v-btn>
         </div>
         <div v-if="madeByUser || isAdmin">
-          <v-btn :disabled="!madeByUser"
+          <v-btn
+            :disabled="!madeByUser"
             variant="plain"
             icon
             size="x-small"
