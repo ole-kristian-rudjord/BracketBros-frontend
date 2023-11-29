@@ -80,7 +80,8 @@
 
     const categoriesData = await getAllCategories();
     if (categoriesData) {
-      availableCategories.value = categoriesData;
+      availableCategories.value = categoriesData.sort(
+          (a: category, b: category) => a.name.localeCompare(b.name));
     } else {
       toast.error(
         'Error fetching categories from the database.',
@@ -91,7 +92,9 @@
 
     const { data: tagsData } = await getAllTags();
     if (tagsData) {
-      availableTags.value = tagsData;
+      // @ts-ignore
+      availableTags.value = tagsData.sort((a: tag, b: tag) =>
+      a.name.localeCompare(b.name));
     } else {
       toast.error(
         'Error fetching tags from the database.',
