@@ -326,7 +326,7 @@
 
     <v-divider vertical class="my-5"></v-divider>
 
-    <v-card class="main-container w-100 pa-5">
+    <v-card class="main-container w-100 pa-5 rounded-0 elevation-0">
       <div class="d-flex justify-space-between align-center mb-4">
         <div class="text-medium-emphasis">
           <v-chip variant="flat" size="small" :color="post.category.color">
@@ -435,7 +435,6 @@
 <style scoped lang="scss">
   .post {
     outline: 1px solid transparent;
-    outline-offset: -1px;
     transition: outline-color 200ms ease;
 
     &.highlight {
