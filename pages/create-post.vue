@@ -8,19 +8,23 @@
 
   const router = useRouter();
 
+  // Reactive references for available categories and tags for a post
   const availableCategories = ref<category[]>([]);
   const availableTags = ref<tag[]>([]);
 
+  // Reactive variables for form state and inputs
   const form = ref(false);
   const title = ref('');
   const selectedCategoryId = ref<number>();
   const selectedTagIds = ref<number[]>([]);
   const content = ref('');
 
+  // Reactive variables for loading states of categories and tags
   const availableCategories_isLoading = ref(false);
   const availableTags_isLoading = ref(false);
   const createPost_isLoading = ref(false);
 
+  // Validation rules for form fields
   const rules = {
     required: (value: any) => {
       if (typeof value === 'string') {
@@ -47,9 +51,11 @@
     },
   };
 
+  // Asynchronous function to handle post creation
   const register = async () => {
     createPost_isLoading.value = true;
 
+    // Constructing the post data
     const post: createPostBody = {
       Title: title.value,
       // @ts-ignore - CategoryId is handled by Vuetify validation
@@ -58,8 +64,10 @@
       Content: content.value,
     };
 
+    // Sending the create post request
     const response = await createPost(post);
 
+    // Handling the response
     if (response.data) {
       await router.push(`/post/${response.data}`);
     } else {
@@ -69,19 +77,23 @@
       );
     }
 
+    // Resetting the loading state
     createPost_isLoading.value = false;
   };
 
+  // Lifecycle hook for initial setup
   onMounted(async () => {
-    await checkLoginAndReroute();
+    await checkLoginAndReroute(); // Ensuring the user is logged in
 
+    // Fetching available categories and tags for the post form
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
 
     const categoriesData = await getAllCategories();
     if (categoriesData) {
       availableCategories.value = categoriesData.sort(
-          (a: category, b: category) => a.name.localeCompare(b.name));
+        (a: category, b: category) => a.name.localeCompare(b.name)
+      );
     } else {
       toast.error(
         'Error fetching categories from the database.',
@@ -92,9 +104,9 @@
 
     const { data: tagsData } = await getAllTags();
     if (tagsData) {
-      // @ts-ignore
       availableTags.value = tagsData.sort((a: tag, b: tag) =>
-      a.name.localeCompare(b.name));
+        a.name.localeCompare(b.name)
+      );
     } else {
       toast.error(
         'Error fetching tags from the database.',

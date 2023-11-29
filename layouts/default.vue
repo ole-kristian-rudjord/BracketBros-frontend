@@ -1,31 +1,40 @@
 <script setup lang="ts">
   import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
 
+  // Setting the favicon using the useHead function
   useHead({
     link: [{ rel: 'icon', type: 'image/svg', href: '/BracketBros-logo.svg' }],
   });
 
   const display = useDisplay();
   const theme = useTheme();
+
+  // Reactive variable to control the visibility of the navigation drawer
   const showNavigationDrawer = ref(false);
+
+  // Custom hook to track user activities
   const userActivity = useUserActivity();
 
+  // Function to toggle between light and dark themes
   const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark
       ? 'customLightTheme'
       : 'customDarkTheme';
   };
 
+  // Interface to define the structure of a page object
   interface Page {
     to: string;
     title: string;
     icon: string;
   }
 
+  // Computed property to dynamically generate navigation pages
   const pages = computed<Page[]>(() => [
     { to: '/', title: 'Home', icon: 'fa:fa-solid fa-house' },
     { to: '/posts', title: 'Posts', icon: 'fa:fa-solid fa-comments' },
 
+    // Conditional pages based on user activity
     ...(userActivity.value
       ? [
           {
@@ -58,6 +67,7 @@
         ]),
   ]);
 
+  // Lifecycle hook to update user activity and posts state on component mount
   onMounted(async () => {
     updateUserActivityState();
     updateAllPostsState();

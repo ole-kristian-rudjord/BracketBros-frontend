@@ -11,6 +11,7 @@
   const allPosts = useAllPosts();
   const numberOfDisplayedPosts = ref(5);
 
+  // Reactive variables for managing filter sidebar state and filter inputs
   const showFilterSidebar = ref(false);
   const search = ref('');
   const liked = ref(false);
@@ -19,6 +20,7 @@
   const categories = ref<{ category: category; selected: boolean }[]>([]);
   const tags = ref<{ tag: tag; selected: boolean }[]>([]);
 
+  // Computed property to check if any filter is applied
   const isAnyFilterApplied = computed(() => {
     // Check if search is not empty
     const isSearchApplied = search.value.trim() !== '';
@@ -43,8 +45,10 @@
 
   const filteredPosts = computed(() => {
     return allPosts.value.filter((post) => {
-      // Existing search and category/tag matching logic
+      // Convert search query to lowercase for case-insensitive comparison
       const lowerCaseSearch = search.value.toLowerCase();
+
+      // Check if post matches the search query in title, content, category, tags, or username
       const matchesSearch = lowerCaseSearch
         ? post.title.toLowerCase().includes(lowerCaseSearch) ||
           post.content.toLowerCase().includes(lowerCaseSearch) ||
@@ -53,30 +57,40 @@
             tag.name.toLowerCase().includes(lowerCaseSearch)
           ) ||
           post.user.username.toLowerCase().includes(lowerCaseSearch)
-        : true;
+        : true; // If no search query is provided, all posts match
+
+      // Check if any category is selected
       const isAnyCategorySelected = categories.value.some(
         (cat) => cat.selected
       );
+
+      // Check if post matches any of the selected categories
       const matchesCategory = isAnyCategorySelected
         ? categories.value.some(
             (cat) =>
               cat.selected &&
               cat.category.categoryId === post.category.categoryId
           )
-        : true;
+        : true; // If no category is selected, all posts match
+
+      // Check if any tag is selected
       const isAnyTagSelected = tags.value.some((tag) => tag.selected);
+
+      // Check if post matches any of the selected tags
       const matchesTag = isAnyTagSelected
         ? post.tags.some((postTag) =>
             tags.value.some(
               (tag) => tag.selected && tag.tag.tagId === postTag.tagId
             )
           )
-        : true;
+        : true; // If no tag is selected, all posts match
 
+      // Initialize flags for user-specific filters
       let matchesLiked = true;
       let matchesSaved = true;
       let matchesCreatedByMe = true;
 
+      // Apply user-specific filters (liked, saved, created by me) if user is logged in
       if (userActivity.value && userActivity.value.username) {
         matchesLiked = liked.value
           ? userActivity.value.likedPosts.includes(post.id)
@@ -89,7 +103,7 @@
           : true;
       }
 
-      // Only show posts that match all filters
+      // Combine all filter conditions
       return (
         matchesSearch &&
         matchesCategory &&
@@ -121,6 +135,7 @@
     });
   };
 
+  // Function to handle addition of comments to posts
   const handleCommentAdded = (postId: number) => {
     const postIndex = allPosts.value.findIndex((p) => p.id === postId);
 
@@ -134,6 +149,7 @@
     }
   };
 
+  // Function to check if the user has scrolled near the bottom of the page
   const isNearBottom = () => {
     const scrollY = window.scrollY;
     const visible = document.documentElement.clientHeight;
@@ -141,6 +157,7 @@
     return visible + scrollY >= pageHeight - 200;
   };
 
+  // Function to handle scroll events for infinite scrolling
   const handleScroll = () => {
     if (
       numberOfDisplayedPosts.value < allPosts.value.length &&
@@ -153,6 +170,7 @@
   const route = useRoute();
   const router = useRouter();
 
+  // Lifecycle hook for fetching categories, tags, and handling query parameters
   onMounted(async () => {
     const getAllCategories_response = await getAllCategories();
     if (getAllCategories_response) {
@@ -214,6 +232,7 @@
     window.addEventListener('scroll', handleScroll);
   });
 
+  // Lifecycle hook to remove event listener on component unmount
   onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
   });

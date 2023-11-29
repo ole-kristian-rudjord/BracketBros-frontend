@@ -8,6 +8,7 @@
 
   const router = useRouter();
 
+  // Reactive variables for form state and inputs
   const form = ref(false);
   const email = ref('');
   const username = ref('');
@@ -15,59 +16,72 @@
   const confirmPassword = ref('');
   const rememberMe = ref(false);
 
+  // Reactive variables for showing passwords and loading state
   const showPassword = ref(false);
   const showConfirmPassword = ref(false);
   const isLoading = ref(false);
   const error = ref<null | 'unexpectedError'>(null);
 
+  // Validation rules for form fields
   const rules = {
     required: (value: string) => !!value || 'Field is required',
     username: (value: string) => {
+      // Regular expression pattern for validating the username
       const usernamePattern = /^[a-zA-Z0-9]{3,20}$/;
       return usernamePattern.test(value) || 'Please enter a valid username';
     },
     email: (value: string) => {
+      // Regular expression pattern for validating the email
       const emailPattern =
         /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
       return emailPattern.test(value) || 'Please enter a valid email';
     },
     password: (value: string) => {
+      // Regular expression pattern for validating the password
       // Source https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
-      const passwordPattern =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
       return (
         passwordPattern.test(value) ||
-        'Password must contain at least 8 characters,  one uppercase, one lowercase and one number'
+        'Password must contain at least 8 characters, one uppercase, one lowercase, and one number'
       );
     },
     passwordMatch: () =>
       password.value === confirmPassword.value || 'Passwords must match',
   };
 
+  // Watcher to trigger re-validation for confirmPassword when password changes
   watch(password, () => {
-    confirmPassword.value; // Trigger re-validation for the confirmPassword field
+    confirmPassword.value; // Accessing confirmPassword value to trigger reactivity
   });
 
+  // Asynchronous function to handle user registration
   const register = async () => {
     isLoading.value = true;
 
+    // Constructing registration data
     const registerData: registerData = {
       email: email.value,
       username: username.value,
       password: password.value,
     };
 
+    // Sending the registration request
     const response = await registerUser(registerData);
 
+    // Handling the registration response
     if (response.data) {
+      // Navigating to manage-account page upon successful registration
       await router.replace('/manage-account');
     } else {
+      // Displaying error toast if registration fails
       toast.error(
         'Unexpected error when trying to register new account.',
         defaultToastOptions.error
       );
     }
 
+    // Resetting the loading state
     isLoading.value = false;
   };
 </script>

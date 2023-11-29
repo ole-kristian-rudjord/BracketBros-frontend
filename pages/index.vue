@@ -9,26 +9,32 @@
 
   const display = useDisplay();
 
+  // Computed property to determine the number of columns for categories based on screen size
   const numberOfCategoryCols = computed(() => {
     return display.mdAndUp.value ? 4 : display.smAndUp.value ? 6 : 12;
   });
 
+  // Reactive references for storing available categories and tags
   const availableCategories = ref<category[]>([]);
   const availableTags = ref<tag[]>([]);
 
+  // Lifecycle hook for fetching categories and tags on component mount
   onMounted(async () => {
+    // Fetching all categories and sorting them by name
     const getAllCategories_data = await getAllCategories();
     if (getAllCategories_data) {
       availableCategories.value = getAllCategories_data.sort(
         (a: category, b: category) => a.name.localeCompare(b.name)
       );
     } else {
+      // Displaying an error toast if fetching categories fails
       toast.error(
         'Error fetching categories from the database.',
         defaultToastOptions.error
       );
     }
 
+    // Fetching all tags and sorting them by name
     const getAllTags_response = await getAllTags();
     if (getAllTags_response.data) {
       // @ts-ignore
@@ -36,6 +42,7 @@
         a.name.localeCompare(b.name)
       );
     } else {
+      // Displaying an error toast if fetching tags fails
       toast.error(
         'Error fetching tags from the database.',
         defaultToastOptions.error

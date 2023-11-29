@@ -5,52 +5,64 @@
   useHead({
     title: 'Log in - BracketBros',
   });
+
   const router = useRouter();
 
+  // Reactive variables for form state, user inputs, and loading state
   const form = ref(false);
   const identifier = ref('');
   const password = ref('');
   const rememberMe = ref(false);
-
   const showPassword = ref(false);
   const isLoading = ref(false);
 
+  // Validation rules for form fields
   const rules = {
     required: (value: string) => !!value || 'Field is required',
   };
 
+  // Asynchronous function to handle user login
   const login = async () => {
     isLoading.value = true;
 
+    // Constructing login data
     const loginData: loginData = {
       Identifier: identifier.value,
       Password: password.value,
       RememberMe: rememberMe.value,
     };
 
+    // Sending the login request
     const response = await loginUser(loginData);
 
+    // Handling the login response
     if (response.data || response.status === 204) {
+      // Updating user activity state and redirecting
       await updateUserActivityState();
       await router.replace('/manage-account');
     } else if (response.status === 422 || response.status === 401) {
+      // Handling invalid login credentials
       toast.error(
         'Invalid email/username or password.',
         defaultToastOptions.error
       );
     } else {
+      // Handling other errors
       toast.error(
         'Unexpected error when trying to log in, please try again later.',
         defaultToastOptions.error
       );
     }
 
+    // Resetting the loading state
     isLoading.value = false;
   };
 
+  // Lifecycle hook to redirect if the user is already logged in
   onMounted(async () => {
     const userActivity = useUserActivity();
     if (userActivity.value) {
+      // Redirecting to the homepage if the user is already logged in
       await router.replace('/');
     }
   });

@@ -1,4 +1,3 @@
-script
 <script setup lang="ts">
   import { toast } from 'vue3-toastify';
   import { defaultToastOptions } from '~/constants';
@@ -12,21 +11,26 @@ script
   const router = useRouter();
   const route = useRoute();
 
+  // Reactive reference to hold the post data
   const post = ref<post | null>(null);
 
+  // Reactive arrays to store available categories and tags
   const availableCategories = ref<category[]>([]);
   const availableTags = ref<tag[]>([]);
 
+  // Reactive variables for form data
   const form = ref(false);
   const title = ref('');
   const selectedCategoryId = ref<number>();
   const selectedTagIds = ref<number[]>([]);
   const content = ref('');
 
+  // Reactive variables to indicate loading states
   const availableCategories_isLoading = ref(false);
   const availableTags_isLoading = ref(false);
   const editPost_isLoading = ref(false);
 
+  // Watch for changes in the post data to update the tab title
   watch(
     post,
     (newValue) => {
@@ -37,9 +41,11 @@ script
     { immediate: true }
   );
 
+  // Mounted hook to fetch post data and populate the form
   onMounted(async () => {
     const postId = Number(route.params.id);
 
+    // Fetch post data if postId is valid
     if (!isNaN(postId)) {
       const { data: postData, error: postError } = await getPostById(postId);
       if (postError) {
@@ -48,6 +54,7 @@ script
       } else {
         post.value = postData;
 
+        // Populate the form with fetched data
         title.value = postData.title;
         selectedCategoryId.value = postData.category.categoryId;
         selectedTagIds.value = postData.tags.map(
@@ -61,6 +68,7 @@ script
     }
   });
 
+  // Validation rules for the form fields
   const rules = {
     required: (value: any) => {
       if (typeof value === 'string') {
@@ -87,6 +95,7 @@ script
     },
   };
 
+  // Function to save the edited post
   const save = async () => {
     editPost_isLoading.value = true;
 
@@ -99,8 +108,10 @@ script
       Content: content.value,
     };
 
+    // Update the post
     const response = await updatePost(post);
 
+    // Navigate to the updated post or show error toast
     if (response && response.data) {
       await router.push(`/post/${response.data}`);
     } else {
@@ -113,16 +124,19 @@ script
     editPost_isLoading.value = false;
   };
 
+  // Another mounted hook for additional data fetching
   onMounted(async () => {
     await checkLoginAndReroute();
 
+    // Fetch and populate categories and tags
     availableCategories_isLoading.value = true;
     availableTags_isLoading.value = true;
 
     const categoriesData = await getAllCategories();
     if (categoriesData) {
       availableCategories.value = categoriesData.sort(
-          (a: category, b: category) => a.name.localeCompare(b.name));
+        (a: category, b: category) => a.name.localeCompare(b.name)
+      );
     } else {
       toast.error(
         'Error fetching categories from the database.',
@@ -135,7 +149,8 @@ script
     if (tagsData) {
       // @ts-ignore
       availableTags.value = tagsData.sort((a: tag, b: tag) =>
-          a.name.localeCompare(b.name));
+        a.name.localeCompare(b.name)
+      );
     } else {
       toast.error(
         'Error fetching tags from the database.',
