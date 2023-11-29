@@ -158,7 +158,7 @@
           :color="likedByUser ? 'red' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="500">
-          Like this post
+          Like post
         </v-tooltip>
       </v-btn>
       <div class="mx-auto mb-1 text-caption text-medium-emphasis">
@@ -206,7 +206,7 @@
           :color="savedByUser ? 'blue' : ''"
         ></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="500">
-          Save this post
+          Save post
         </v-tooltip>
       </v-btn>
 
@@ -220,73 +220,83 @@
       >
         <v-icon icon="fa:fa-regular fa-share-from-square"></v-icon>
         <v-tooltip activator="parent" location="start" open-delay="500">
-          Share this post
+          Share post
         </v-tooltip>
       </v-btn>
 
-      <template v-if="madeByUser || isAdmin">
-        <v-divider class="w-75 mx-auto my-3"></v-divider>
+      <v-divider
+        v-if="madeByUser || isAdmin"
+        class="w-75 mx-auto my-3"
+      ></v-divider>
 
-        <v-btn :disabled="!madeByUser"
-          icon
-          size="small"
-          variant="plain"
-          color="warning"
-          class="rounded-lg"
-          @click="handleEditClick"
-        >
-          <v-icon icon="fa:fa-solid fa-pen-to-square"></v-icon>
-          <v-tooltip activator="parent" location="start" open-delay="500">
-            Edit this post
-          </v-tooltip>
-        </v-btn>
+      <v-btn
+        v-if="madeByUser"
+        icon
+        size="small"
+        variant="plain"
+        color="warning"
+        class="rounded-lg"
+        @click="handleEditClick"
+      >
+        <v-icon icon="fa:fa-solid fa-pen-to-square"></v-icon>
+        <v-tooltip activator="parent" location="start" open-delay="500">
+          Edit post
+        </v-tooltip>
+      </v-btn>
 
-        <v-btn
-          icon
-          size="small"
-          variant="plain"
-          color="error"
-          class="rounded-lg"
+      <v-btn
+        v-if="madeByUser || isAdmin"
+        icon
+        size="small"
+        variant="plain"
+        color="error"
+        class="rounded-lg"
+      >
+        <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
+        <v-tooltip
+          activator="parent"
+          location="start"
+          open-delay="500"
+          class="text-center"
         >
-          <v-icon icon="fa:fa-solid fa-trash-can"></v-icon>
-          <v-tooltip activator="parent" location="start" open-delay="500">
-            Delete this post
-          </v-tooltip>
-          <v-dialog
-            v-model="showDeletePostDialog"
-            activator="parent"
-            width="auto"
-          >
-            <v-card class="px-10 py-6 rounded-lg">
-              <v-card-item class="px-0">
-                <v-card-title class="text-h5">
-                  Delete "{{ post.title }}"
-                </v-card-title>
-              </v-card-item>
-              <v-card-text class="px-0">
-                Are you sure you want to permanently delete this post?
-              </v-card-text>
-              <v-card-actions class="px-0">
-                <v-btn
-                  variant="outlined"
-                  class="text-body-1"
-                  @click="showDeletePostDialog = false"
-                >
-                  No, cancel
-                </v-btn>
-                <v-btn
-                  variant="outlined"
-                  color="error"
-                  class="text-body-1"
-                  @click="handleDeletePost"
-                >
-                  Yes, delete post
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-btn>
-      </template>
+          Delete post
+          <div v-if="madeByUser">(as creator)</div>
+          <div v-else>(as admin)</div>
+        </v-tooltip>
+        <v-dialog
+          v-model="showDeletePostDialog"
+          activator="parent"
+          width="auto"
+        >
+          <v-card class="px-10 py-6 rounded-lg">
+            <v-card-item class="px-0">
+              <v-card-title class="text-h5">
+                Delete "{{ post.title }}"
+              </v-card-title>
+            </v-card-item>
+            <v-card-text class="px-0">
+              Are you sure you want to permanently delete this post?
+            </v-card-text>
+            <v-card-actions class="px-0">
+              <v-btn
+                variant="outlined"
+                class="text-body-1"
+                @click="showDeletePostDialog = false"
+              >
+                No, cancel
+              </v-btn>
+              <v-btn
+                variant="outlined"
+                color="error"
+                class="text-body-1"
+                @click="handleDeletePost"
+              >
+                Yes, delete post
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-btn>
     </div>
 
     <v-divider vertical class="my-5"></v-divider>
