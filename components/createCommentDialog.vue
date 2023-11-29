@@ -2,8 +2,10 @@
   import { toast } from 'vue3-toastify';
   import { defaultToastOptions } from '@/constants';
 
+  // Defining emit events for the component
   const emit = defineEmits(['commentAdded']);
 
+  // Define component props with types and default values
   const props = withDefaults(
     defineProps<{
       type: 'post' | 'comment';
@@ -14,11 +16,13 @@
     { parentCommentId: null }
   );
 
+  // Reactive variables for comment dialog state and content
   const showCreateCommentDialog = ref(false);
   const commentDialogForm = ref(false);
   const commentDialogContent = ref('');
   const isLoading = ref(false);
 
+  // Validation rules for comment creation
   const rules = {
     required: (value: string) => {
       return value.trim().length > 0 || 'Field is required';
@@ -32,34 +36,41 @@
     },
   };
 
+  // Watch for changes in the comment dialog's visibility
   watch(showCreateCommentDialog, (newValue, oldValue) => {
     if (newValue === true) {
       checkLoginAndReroute();
     }
   });
 
+  // Handles the creation of a new comment
   const handleCreateComment = async () => {
     isLoading.value = true;
 
+    // Creating the comment payload
     const comment: createCommentBody = {
       ParentCommentId: props.parentCommentId,
       PostId: props.postId,
       Content: commentDialogContent.value,
     };
 
+    // Sending the create comment request
     const response = await createComment(comment);
     if (!response.error && response.status !== 400) {
+      // Reset dialog and emit success event
       showCreateCommentDialog.value = false;
       commentDialogContent.value = '';
       emit('commentAdded');
       toast.success('Comment has been created.', defaultToastOptions.success);
     } else {
+      // Handle error case
       toast.error(
         'Error when trying to create comment.',
         defaultToastOptions.error
       );
     }
 
+    // Reset loading state
     isLoading.value = false;
   };
 </script>

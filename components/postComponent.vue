@@ -7,9 +7,12 @@
   const theme = useTheme();
 
   const { current } = theme;
+
+  // Reactive references for dynamic surface and post highlight colors
   const surfaceColor = ref('');
   const postHighlightColor = ref('');
 
+  // Function to update the color values based on the theme
   const updateColors = () => {
     surfaceColor.value = current.value.colors.surface;
     postHighlightColor.value = current.value.dark
@@ -17,10 +20,13 @@
       : current.value.colors['on-surface'];
   };
 
+  // Watcher to update colors when the theme changes
   watch(() => current.value, updateColors);
 
+  // Defining emit events for the component
   const emit = defineEmits(['commentAdded']);
 
+  // Define component props with defaults
   const props = withDefaults(
     defineProps<{
       post: post;
@@ -30,31 +36,38 @@
     { expandContent: false, preventHighlighting: false }
   );
 
+  // Custom hook to track user activities
   const userActivity = useUserActivity();
 
+  // Reactive variables to track post status related to the user
   const madeByUser = ref(false);
   const isAdmin = ref(false);
   const likedByUser = ref(false);
   const savedByUser = ref(false);
 
+  // Watch for changes in userActivity and update post status accordingly
   watchEffect(() => {
     if (userActivity.value?.username) {
       madeByUser.value = userActivity.value.posts.includes(props.post.id);
-      userActivity.value.role === 'Admin' ? (isAdmin.value = true) : {};
+      isAdmin.value = userActivity.value.role === 'Admin';
       likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
       savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
     }
   });
 
+  // References for content container and content for overflow checks
   const contentContainer_ref = ref<HTMLElement | null>(null);
   const content_ref = ref<HTMLElement | null>(null);
 
+  // Reactive variables to handle content overflow
   const contentContainer_isOverflowing = ref(false);
   const contentContainer_showOverflow = ref(false);
 
+  // Variables for post highlighting logic
   const highlightPost = ref(false);
   const stop_highlightPost = ref(false);
 
+  // Function to check for content overflow
   const checkOverflow = () => {
     nextTick(() => {
       if (
@@ -69,24 +82,30 @@
     });
   };
 
+  // Constructing a link to the post
   const postLink = `/post/${props.post.id}`;
 
+  // Function to navigate to the post
   const goToPost = async () => {
     await router.push({ path: postLink });
   };
 
+  // Function to handle liking a post
   const handleLikeClick = async () => {
     await likePost(props.post.id);
   };
 
+  // Emit event when a comment is added to the post
   const handleCommentAdded = () => {
     emit('commentAdded');
   };
 
+  // Function to save a post
   const handleSaveClick = () => {
     savePost(props.post.id);
   };
 
+  // Function to share the post link
   const handleShareClick = () => {
     const fullUrl = window.location.origin + postLink;
     navigator.clipboard
@@ -102,17 +121,21 @@
       });
   };
 
+  // Function to navigate to post editing
   const handleEditClick = () => {
     router.push(`/edit-post/${props.post.id}`);
   };
 
+  // Reactive variable for delete post dialog
   const showDeletePostDialog = ref(false);
 
+  // Function to handle post deletion
   const handleDeletePost = () => {
     showDeletePostDialog.value = false;
     deletePost(props.post.id);
   };
 
+  // Function to handle post click, avoiding navigation if clicking on a link
   const handlePostClick = async (event: MouseEvent) => {
     for (let element of event.composedPath()) {
       if ((element as HTMLElement).tagName === 'A') {
@@ -122,6 +145,7 @@
     await goToPost();
   };
 
+  // Lifecycle hook for initial setup
   onMounted(() => {
     updateColors();
     if (!props.expandContent) {
@@ -130,6 +154,7 @@
     }
   });
 
+  // Lifecycle hook for cleanup
   onUnmounted(() => {
     window.removeEventListener('resize', checkOverflow);
   });
@@ -336,8 +361,8 @@
               "
               :src="
                 madeByUser
-                  ? userActivity?.profilePicture
-                  : post.user.profilePicture
+                  ? userActivity?.profilePicture || ''
+                  : post.user.profilePicture || ''
               "
             ></v-img>
             <v-icon v-else color="primary" icon="fa:fa-solid fa-user"></v-icon>

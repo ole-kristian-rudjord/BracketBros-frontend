@@ -1,20 +1,24 @@
 <script setup lang="ts">
   import { useTheme } from 'vuetify/lib/framework.mjs';
 
+  // Accessing the theme object
   const theme = useTheme();
 
+  // Ref to track the 'on-surface-variant' color from the theme
   const onSurfaceVariant = ref(
     theme.current.value.colors['on-surface-variant']
   );
 
+  // Watching for changes in the 'on-surface-variant' theme color
   watch(
     () => theme.current.value.colors['on-surface-variant'],
     (newColor) => {
-      onSurfaceVariant.value = newColor;
+      onSurfaceVariant.value = newColor; // Update the ref when the color changes
     },
-    { immediate: true }
+    { immediate: true } // Immediate flag to run on component mount
   );
 
+  // Define props accepted by the component
   defineProps<{ content: string }>();
 </script>
 
