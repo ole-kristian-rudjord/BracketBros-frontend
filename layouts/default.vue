@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
 
+  useHead({
+    link: [{ rel: 'icon', type: 'image/svg', href: '/BracketBros-logo.svg' }],
+  });
+
   const display = useDisplay();
   const theme = useTheme();
   const showNavigationDrawer = ref(false);
