@@ -4,6 +4,7 @@ declare global {
   interface UserActivity {
     username: string;
     profilePicture: string | null;
+    role: "User" | "Admin";
     createationdate: string;
     posts: number[];
     likedPosts: number[];
@@ -16,6 +17,7 @@ declare global {
   interface user {
     username: string;
     profilePicture: string | null;
+    role: "User" | "Admin";
     creationdate: string;
     posts: int[] | null;
     likedPosts: int[] | null;

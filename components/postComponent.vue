@@ -33,12 +33,14 @@
   const userActivity = useUserActivity();
 
   const madeByUser = ref(false);
+  const isAdmin = ref(false);
   const likedByUser = ref(false);
   const savedByUser = ref(false);
 
   watchEffect(() => {
     if (userActivity.value?.username) {
       madeByUser.value = userActivity.value.posts.includes(props.post.id);
+      userActivity.value.role === 'Admin' ? (isAdmin.value = true) : {};
       likedByUser.value = userActivity.value.likedPosts.includes(props.post.id);
       savedByUser.value = userActivity.value.savedPosts.includes(props.post.id);
     }
@@ -222,10 +224,10 @@
         </v-tooltip>
       </v-btn>
 
-      <template v-if="madeByUser">
+      <template v-if="madeByUser || isAdmin">
         <v-divider class="w-75 mx-auto my-3"></v-divider>
 
-        <v-btn
+        <v-btn :disabled="!madeByUser"
           icon
           size="small"
           variant="plain"

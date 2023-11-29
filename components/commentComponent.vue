@@ -18,6 +18,7 @@
   );
 
   const madeByUser = ref(false);
+  const isAdmin = ref(false);
   const likedByUser = ref(false);
   const savedByUser = ref(false);
 
@@ -28,6 +29,7 @@
     refUserActivity.username === props.comment.user.username
       ? (madeByUser.value = true)
       : (madeByUser.value = false);
+    refUserActivity.role === 'Admin' ? (isAdmin.value = true) : {}
     refUserActivity.likedComments.includes(props.comment.commentId)
       ? (likedByUser.value = true)
       : (likedByUser.value = false);
@@ -227,8 +229,8 @@
             ></v-icon>
           </v-btn>
         </div>
-        <div v-if="madeByUser">
-          <v-btn
+        <div v-if="madeByUser || isAdmin">
+          <v-btn :disabled="!madeByUser"
             variant="plain"
             icon
             size="x-small"
